@@ -145,6 +145,7 @@
 - (IBAction)addGrid:(NSButton *)sender;
 - (IBAction)addPanel:(NSButton *)sender;
 - (IBAction)addMultiSlider:(NSButton *)sender;
+- (IBAction)addLCD:(NSButton *)sender;
 
 - (IBAction)propDelete:(NSButton *)sender;
 - (IBAction)bringForward:(NSButton *)sender;
@@ -242,6 +243,7 @@
 @property (strong) IBOutlet NSPopUpButton *propLabelFontTypeButton;
 @property (strong) IBOutlet NSColorWell *propKnobIndicatorColorWell;
 @property (strong) IBOutlet NSButton *addMultiSliderButton;
+@property (strong) IBOutlet NSButton *addLCDButton;
 @property (strong) IBOutlet NSView *propMultiSliderView;
 @property (strong) IBOutlet NSTextField *propMultiSliderRangeField;
 @property (strong) IBOutlet NSView *propToggleView;

@@ -120,6 +120,8 @@
         else if([control isKindOfClass:[MMPToggle class]]){
             [GUIDict setObject:[NSNumber numberWithInt:[(MMPToggle*)control borderThickness]] forKey:@"borderThickness"] ;
         }
+        //LCD and Button have no properties
+        
             
         
         [jsonControlDictArray addObject:GUIDict];
@@ -261,7 +263,9 @@
                 if([guiDict objectForKey:@"range"])
                     [(MMPMultiSlider*)control setRange:[[guiDict objectForKey:@"range"] intValue] ];
             }
-
+            else if([classString isEqualToString:@"MMPLCD"]){
+                control = [[MMPLCD alloc] initWithFrame:newFrame];
+            }
             else continue;//had a class, but something other than the above
         
                         

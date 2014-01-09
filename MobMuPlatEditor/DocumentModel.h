@@ -19,6 +19,7 @@
 #import "MMPGrid.h"
 #import "MMPPanel.h"
 #import "MMPMultiSlider.h"
+#import "MMPLCD.h"
 
 
 typedef enum{

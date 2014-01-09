@@ -431,6 +431,11 @@
     [self addControlHelper:newControl];
 }
 
+- (IBAction)addLCD:(NSButton *)sender {
+    MMPLCD* newControl = [[MMPLCD alloc]initWithFrame:CGRectMake(-canvasView.frame.origin.x,0,100,100)];
+    [self addControlHelper:newControl];
+}
+
 //undoable
 -(void)deleteControl:(MMPControl*)control{
     [[self undoManager] registerUndoWithTarget:self selector:@selector(addControlHelper:) object:control ];

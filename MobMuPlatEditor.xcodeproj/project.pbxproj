@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		90BD3FF1187EF79000EDA44C /* MMPLCD.m in Sources */ = {isa = PBXBuildFile; fileRef = 90BD3FF0187EF79000EDA44C /* MMPLCD.m */; };
 		DC34E248168BB79800648C2F /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DC34E247168BB79800648C2F /* Cocoa.framework */; };
 		DC8146A91732BF750041F394 /* IpEndpointName.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC8146A81732BF750041F394 /* IpEndpointName.cpp */; };
 		DC8146AF1732BF980041F394 /* OSCManager.mm in Sources */ = {isa = PBXBuildFile; fileRef = DC8146AE1732BF980041F394 /* OSCManager.mm */; };
@@ -43,6 +44,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		90BD3FEF187EF79000EDA44C /* MMPLCD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMPLCD.h; sourceTree = SOURCE_ROOT; };
+		90BD3FF0187EF79000EDA44C /* MMPLCD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMPLCD.m; sourceTree = SOURCE_ROOT; };
 		DC084BA9168E13B100664E0E /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		DC34E243168BB79800648C2F /* MobMuPlatEditor.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MobMuPlatEditor.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		DC34E247168BB79800648C2F /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
@@ -281,6 +284,8 @@
 				DCE2F00A1732BAA6002B897C /* MMPToggle.m */,
 				DCE2F00B1732BAA6002B897C /* MMPXYSlider.h */,
 				DCE2F00C1732BAA6002B897C /* MMPXYSlider.m */,
+				90BD3FEF187EF79000EDA44C /* MMPLCD.h */,
+				90BD3FF0187EF79000EDA44C /* MMPLCD.m */,
 			);
 			name = Controls;
 			sourceTree = "<group>";
@@ -367,6 +372,7 @@
 				DCE2F0131732BAA6002B897C /* MMPPanel.m in Sources */,
 				DCE2F0141732BAA6002B897C /* MMPSlider.m in Sources */,
 				DCE2F0151732BAA6002B897C /* MMPToggle.m in Sources */,
+				90BD3FF1187EF79000EDA44C /* MMPLCD.m in Sources */,
 				DCE2F0161732BAA6002B897C /* MMPXYSlider.m in Sources */,
 				DCE2F0211732BAD3002B897C /* CanvasView.m in Sources */,
 				DCE2F0221732BAD3002B897C /* Document.mm in Sources */,
