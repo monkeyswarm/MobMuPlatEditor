@@ -161,6 +161,9 @@ CGContextRef createBitmapContext (int pixelsWide,
     CGContextSetRGBStrokeColor(_cacheContext, r,g,b,a);
 	CGRect newRect = CGRectMake( MIN(x,x2)*self.frame.size.width, MIN(y,y2)*self.frame.size.height, fabsf(x2-x)*self.frame.size.width, fabs(y2-y)*self.frame.size.height);
     CGContextStrokeEllipseInRect(_cacheContext, newRect);
+    
+    newRect = CGRectMake( newRect.origin.x-penWidth, newRect.origin.y-penWidth, newRect.size.width+(2*penWidth), newRect.size.height+(2*penWidth));
+
     [self setNeedsDisplayInRect:newRect];
 }
 
@@ -185,23 +188,95 @@ CGContextRef createBitmapContext (int pixelsWide,
     
 }
 
--(void)lineToX:(float)x Y:(float)y{
+-(void)lineToX:(float)x Y:(float)y R:(float)r G:(float)g B:(float)b A:(float)a{
     //convert to coords
     x = x*self.frame.size.width;
     y = y*self.frame.size.height;
     
     NSLog(@"pen x %.2f y %.2f TO x %.2f y %.2f ", penPoint.x, penPoint.y, x, y);
+    CGContextSetRGBStrokeColor(_cacheContext, r,g,b,a);
     CGContextMoveToPoint(_cacheContext, penPoint.x,penPoint.y);
 	CGContextAddLineToPoint(_cacheContext, x, y);
 	CGContextStrokePath(_cacheContext);
-    CGRect newRect = CGRectMake(MIN(penPoint.x, x), MIN(penPoint.y, y), fabs(penPoint.x-x), fabs(penPoint.y-y));
+    CGRect newRect = CGRectMake(MIN(penPoint.x, x)-penWidth, MIN(penPoint.y, y)-penWidth, fabs(penPoint.x-x)+(2*penWidth), fabs(penPoint.y-y)+(2*penWidth));
     [self setNeedsDisplayInRect:newRect];
+    //[self setNeedsDisplay];
     
+    CGContextMoveToPoint(_cacheContext, x,y);
+    penPoint.x = x;
+    penPoint.y = y;
+    
+}
+
+-(void)lineToX:(float)x Y:(float)y{
+    [self lineToX:x Y:y R:fR G:fG B:fB A:fA];
 }
 
 -(void)setPenWidth:(float)w{
     penWidth = w;
     CGContextSetLineWidth(_cacheContext, w);
+}
+
+//
+
+-(void)mouseDown:(NSEvent *)theEvent{
+    [super mouseDown:theEvent];
+    
+    if(![self.editingDelegate isEditing]){
+        
+        CGPoint point = [self convertPoint:[theEvent locationInWindow] fromView:nil];//[[touches anyObject] locationInView:self];
+        float valX = point.x/self.frame.size.width;
+        float valY = point.y/self.frame.size.height;
+        if(valX>1)valX=1; if(valX<0)valX=0;
+        if(valY>1)valY=1; if(valY<0)valY=0;
+        
+        [self sendValueState:1.f X:valX Y:valY];
+        
+
+    }
+}
+
+-(void)mouseDragged:(NSEvent *)theEvent{
+    [super mouseDragged:theEvent];
+    
+    if(![self.editingDelegate isEditing]){
+        
+        CGPoint point = [self convertPoint:[theEvent locationInWindow] fromView:nil];//[[touches anyObject] locationInView:self];
+        float valX = point.x/self.frame.size.width;
+        float valY = point.y/self.frame.size.height;
+        if(valX>1)valX=1; if(valX<0)valX=0;
+        if(valY>1)valY=1; if(valY<0)valY=0;
+        
+        [self sendValueState:2.f X:valX Y:valY];
+    }
+}
+
+-(void)mouseUp:(NSEvent *)theEvent{
+    [super mouseUp:theEvent];
+    if(![self.editingDelegate isEditing]){
+        
+        CGPoint point = [self convertPoint:[theEvent locationInWindow] fromView:nil];//[[touches anyObject] locationInView:self];
+        float valX = point.x/self.frame.size.width;
+        float valY = point.y/self.frame.size.height;
+        if(valX>1)valX=1; if(valX<0)valX=0;
+        if(valY>1)valY=1; if(valY<0)valY=0;
+        
+        [self sendValueState:0.f X:valX Y:valY];    }
+    
+}
+
+
+
+//send out OSC message - state is 1 on touch down, 2 on drag, 0 on touch up
+-(void)sendValueState:(float)state X:(float)x Y:(float)y{
+    NSMutableArray* formattedMessageArray = [[NSMutableArray alloc]init];
+    [formattedMessageArray addObject:self.address];
+    
+    [formattedMessageArray  addObject:[[NSMutableString alloc]initWithString:@"fff"]];//tags
+    [formattedMessageArray addObject:[NSNumber numberWithFloat:state]];
+    [formattedMessageArray addObject:[NSNumber numberWithFloat:x]];
+    [formattedMessageArray addObject:[NSNumber numberWithFloat:y]];
+    [self.editingDelegate sendFormattedMessageArray:formattedMessageArray];
 }
 
 //receive messages from PureData (via [send toGUI], routed through the PdWrapper.pd patch), routed from Document via the address to this object
@@ -233,6 +308,9 @@ CGContextRef createBitmapContext (int pixelsWide,
     }
     else if([inArray count]==3 && [[inArray objectAtIndex:0] isEqualToString:@"lineto"] && [[inArray objectAtIndex:1] isKindOfClass:[NSNumber class]]){
         [self lineToX:[[inArray objectAtIndex:1] floatValue] Y:[[inArray objectAtIndex:2] floatValue]  ];
+    }
+    else if([inArray count]==7 && [[inArray objectAtIndex:0] isEqualToString:@"lineto"] && [[inArray objectAtIndex:1] isKindOfClass:[NSNumber class]]){
+        [self lineToX:[[inArray objectAtIndex:1] floatValue] Y:[[inArray objectAtIndex:2] floatValue] R:[[inArray objectAtIndex:3] floatValue] G:[[inArray objectAtIndex:4] floatValue] B:[[inArray objectAtIndex:5] floatValue] A:[[inArray objectAtIndex:6] floatValue] ];
     }
     else if([inArray count]==3 && [[inArray objectAtIndex:0] isEqualToString:@"moveto"] && [[inArray objectAtIndex:1] isKindOfClass:[NSNumber class]]){
         [self moveToX:[[inArray objectAtIndex:1] floatValue] Y:[[inArray objectAtIndex:2] floatValue]  ];
