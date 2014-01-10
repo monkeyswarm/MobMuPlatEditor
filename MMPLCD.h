@@ -10,7 +10,5 @@
 
 @interface MMPLCD : MMPControl
 
-@property float width;
-@property CGContextRef cacheContext;
 
 @end
