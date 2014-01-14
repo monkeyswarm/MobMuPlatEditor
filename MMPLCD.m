@@ -59,54 +59,30 @@ CGContextRef createBitmapContext (int pixelsWide,
     CGContextRef    context = NULL;
     CGColorSpaceRef colorSpace;
     //void *          bitmapData;
-    int             bitmapByteCount;
-    int             bitmapBytesPerRow;
+    //int             bitmapByteCount;
+    //int             bitmapBytesPerRow;
     
-    bitmapBytesPerRow   = (pixelsWide * 4);// 1
-    bitmapByteCount     = (bitmapBytesPerRow * pixelsHigh);
+    //bitmapBytesPerRow   = (pixelsWide * 4);
+    //bitmapByteCount     = (bitmapBytesPerRow * pixelsHigh);
     
-    colorSpace = CGColorSpaceCreateWithName(kCGColorSpaceGenericRGB);// 2
-    /*bitmapData = malloc( bitmapByteCount );// 3
-    if (bitmapData == NULL)
-    {
-        fprintf (stderr, "Memory not allocated!");
-        return NULL;
-    }*/
-    context = CGBitmapContextCreate (nil,// 4
+    colorSpace = CGColorSpaceCreateWithName(kCGColorSpaceGenericRGB);
+    
+    context = CGBitmapContextCreate (nil,
                                      pixelsWide,
                                      pixelsHigh,
-                                     8,      // bits per component
+                                     8,
                                      0,
                                      colorSpace,
                                      kCGImageAlphaPremultipliedLast);
     if (context== NULL)
     {
-        //free (bitmapData);// 5
         fprintf (stderr, "Context not created!");
         return NULL;
     }
-    CGColorSpaceRelease( colorSpace );// 6
+    CGColorSpaceRelease( colorSpace );
     
-    return context;// 7
+    return context;
 }
-
-//TESTING
--(void)drawSquare{
-    float x = drand48();
-    float y = drand48();
-    
-    [self frameRectX:x Y:y X2:x+.1 Y2:y+.1];
-    
-    /*CGRect myBoundingBox;// 1
-    
-    myBoundingBox = CGRectMake (x*self.frame.size.width, y*self.frame.size.height, (x+.1)*self.frame.size.width, (y+.1)*self.frame.size.height);// 2
-    // ********** Your drawing code here ********** // 4
-    CGContextSetRGBStrokeColor (_cacheContext, 1, 0, 0, 1);
-    CGContextStrokeRect (_cacheContext, myBoundingBox);
-    [self setNeedsDisplayInRect:myBoundingBox];*/
-    
-}
-//
 
 -(void)setColor:(NSColor *)color{
     [super setColor:color];
@@ -123,7 +99,7 @@ CGContextRef createBitmapContext (int pixelsWide,
     fB  = [highlightColor blueComponent];
     fA  = [highlightColor alphaComponent];
 }
-//
+
 
 -(void)clear{
     CGContextClearRect(_cacheContext, self.bounds);
