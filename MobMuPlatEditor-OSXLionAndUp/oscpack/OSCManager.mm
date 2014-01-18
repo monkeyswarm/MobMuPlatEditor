@@ -21,25 +21,15 @@ class ExamplePacketListener : public osc::OscPacketListener {
 protected:
 
     virtual void ProcessMessage( const osc::ReceivedMessage& m, const IpEndpointName& remoteEndpoint ) {
-	//	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-		NSString *oscAddress = [NSString stringWithUTF8String:m.AddressPattern()];
-		/*if([_oscManager.addresses objectForKey:oscAddress] != nil) {
-			[_oscManager performSelector:NSSelectorFromString([_oscManager.addresses objectForKey:oscAddress]) withObject:[NSValue valueWithPointer:&m]];
-		}else{*/
-			osc::ReceivedMessage::const_iterator arg = m.ArgumentsBegin();
-			//NSLog(@"%s %d", m.AddressPattern(), m.ArgumentCount());
-		//	NSMutableString *jsString = [NSMutableString stringWithFormat:@"oscManager.processOSCMessage(\"%s\", \"%s\", ", m.AddressPattern(), m.TypeTags(), nil];
-
+	
+        osc::ReceivedMessage::const_iterator arg = m.ArgumentsBegin();
+			
         NSMutableArray* msgArray = [[NSMutableArray alloc]init];//for pd
         NSMutableString *jsString = [[NSMutableString alloc]init];//for printing, 
         [jsString appendString:@"[in] "];
         [jsString appendString:[NSMutableString stringWithFormat:@"%s", m.AddressPattern()]];
         [msgArray addObject:[NSMutableString stringWithFormat:@"%s", m.AddressPattern()]];
-        /*NSArray *tokenizedAddress = [[NSMutableString stringWithFormat:@"%s", m.AddressPattern()] componentsSeparatedByString:@"/"] ;
-        for(NSString* token in tokenizedAddress){
-            [jsString appendString:token];
-            [msgArray addObject:token];
-        }*/
+        
         
 			const char * tags = m.TypeTags();
 
@@ -78,7 +68,7 @@ protected:
 };
 
 @implementation OSCManager
-@synthesize addresses, receivePort, delegate;
+@synthesize receivePort, delegate;
 
 - (id) init{
 
@@ -86,10 +76,6 @@ protected:
         shouldPoll = NO;
 		listener = new ExamplePacketListener();
 		[NSThread detachNewThreadSelector:@selector(pollJavascriptStart:) toTarget:self withObject:nil];
-		
-		NSArray * keys = [NSArray arrayWithObjects:@"/pushInterface", @"/pushDestination", @"/control/pushInterface", @"/control/pushDestination", nil];
-		NSArray * objects = [NSArray arrayWithObjects:NSStringFromSelector(@selector(pushInterface:)), NSStringFromSelector(@selector(pushDestination:)), NSStringFromSelector(@selector(pushInterface:)), NSStringFromSelector(@selector(pushDestination:)), nil];
-		addresses = [[NSMutableDictionary alloc] initWithObjects:objects forKeys:keys];		
 	}
 	_oscManager = self;
 	return self;
@@ -121,58 +107,6 @@ protected:
     s->AsynchronousBreak();
 }
 
-/*- (void)pushInterface:(NSValue *)msgPointer {
-   osc::ReceivedMessage& msg = *(osc::ReceivedMessage *)[msgPointer pointerValue];
-   try{
-		osc::ReceivedMessageArgumentStream args = msg.ArgumentStream();
-		osc::ReceivedMessage::const_iterator arg = msg.ArgumentsBegin();
-				
-		if(msg.ArgumentCount() == 1) { // push interface ony
-			const char * a1;
-			args >> a1 >> osc::EndMessage;
-				
-			NSMutableString *jsStringStart = [NSMutableString stringWithUTF8String:a1];
-			
-			[jsStringStart replaceOccurrencesOfString:@"\n" withString:@"" options:1 range:NSMakeRange(0, [jsStringStart length])]; // will not work with newlines present
-			
-			NSString *jsString = [NSString stringWithFormat:@"interfaceManager.pushInterface('%@')", jsStringStart];
-
-		//	[webView performSelectorOnMainThread:@selector(stringByEvaluatingJavaScriptFromString:) withObject:jsString waitUntilDone:NO];
-		}else{	// push interface + destination;
-			const char * a1, *a2, *a3;
-			args >> a1 >> a2 >> a3 >> osc::EndMessage;
-
-			NSMutableString *jsStringStart = [[NSMutableString alloc] initWithCString:a1 encoding:1];
-			[jsStringStart replaceOccurrencesOfString:@"\n" withString:@"" options:1 range:NSMakeRange(0, [jsStringStart length])]; // will not work with newlines present
-			
-			NSString *name = [[NSString alloc] initWithCString:a2 encoding:1];
-			NSString *destination = [[NSString alloc] initWithCString:a3 encoding:1];
-
-			NSString *jsString = [[NSString alloc] initWithFormat:@"interfaceManager.pushInterfaceWithDestination('%@', '%@', '%@')", jsStringStart, name, destination];
-			
-			[webView performSelectorOnMainThread:@selector(stringByEvaluatingJavaScriptFromString:) withObject:jsString waitUntilDone:NO];
-		}
-	}catch( osc::Exception& e ){
-		NSLog(@"an exception occurred");
-	}
-}
-
-- (void)pushDestination:(NSValue *) msgPointer {
-	osc::ReceivedMessage& msg = *(osc::ReceivedMessage *)[msgPointer pointerValue];
-	try{
-		osc::ReceivedMessageArgumentStream args = msg.ArgumentStream();
-		osc::ReceivedMessage::const_iterator arg = msg.ArgumentsBegin();
-		const char * a1;
-		args >> a1 >> osc::EndMessage;
-		NSString *destination = [[NSString alloc] initWithCString:a1 encoding:1];
-
-		NSString *jsString = [[NSString alloc] initWithFormat:@"destinationManager.pushDestination('%@')", destination];
-		NSLog(jsString);
-		//[_oscManager.webView performSelectorOnMainThread:@selector(stringByEvaluatingJavaScriptFromString:) withObject:jsString waitUntilDone:NO];
-	}catch( osc::Exception& e ){
-		NSLog(@"an exception occurred");
-	}
-}*/
 
 
 - (void)startPolling:(NSMutableArray*)arguments withDict:(NSMutableDictionary*)options {

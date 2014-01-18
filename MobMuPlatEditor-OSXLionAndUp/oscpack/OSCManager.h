@@ -23,14 +23,14 @@ class ExamplePacketListener;
     BOOL shouldPoll;
 	ExamplePacketListener  * listener;
 	UdpListeningReceiveSocket * s;
-	NSMutableDictionary * addresses;
+	//NSMutableDictionary * addresses;
 	
 	IpEndpointName    * destinationAddress;
 	UdpTransmitSocket * output;
 	int receivePort;
 }
 
-@property (retain) NSMutableDictionary * addresses;
+//@property (retain) NSMutableDictionary * addresses;
 @property (nonatomic) int receivePort;
 @property id<OSCManagerDelegate> delegate;
 

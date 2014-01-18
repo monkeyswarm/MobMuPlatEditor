@@ -7,8 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		90BD3FF1187EF79000EDA44C /* MMPLCD.m in Sources */ = {isa = PBXBuildFile; fileRef = 90BD3FF0187EF79000EDA44C /* MMPLCD.m */; };
 		DC34E248168BB79800648C2F /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DC34E247168BB79800648C2F /* Cocoa.framework */; };
+		DC5A5ADE18825DFB00FC97D5 /* MMPUnknown.m in Sources */ = {isa = PBXBuildFile; fileRef = DC5A5ADD18825DFB00FC97D5 /* MMPUnknown.m */; };
+		DC5A5AE118825E3200FC97D5 /* MMPLCD.m in Sources */ = {isa = PBXBuildFile; fileRef = DC5A5AE018825E3200FC97D5 /* MMPLCD.m */; };
 		DC8146A91732BF750041F394 /* IpEndpointName.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC8146A81732BF750041F394 /* IpEndpointName.cpp */; };
 		DC8146AF1732BF980041F394 /* OSCManager.mm in Sources */ = {isa = PBXBuildFile; fileRef = DC8146AE1732BF980041F394 /* OSCManager.mm */; };
 		DC8146B21732C0090041F394 /* NetworkingUtils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC8146B01732C0090041F394 /* NetworkingUtils.cpp */; };
@@ -44,14 +45,16 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		90BD3FEF187EF79000EDA44C /* MMPLCD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMPLCD.h; sourceTree = SOURCE_ROOT; };
-		90BD3FF0187EF79000EDA44C /* MMPLCD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMPLCD.m; sourceTree = SOURCE_ROOT; };
 		DC084BA9168E13B100664E0E /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		DC34E243168BB79800648C2F /* MobMuPlatEditor.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MobMuPlatEditor.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		DC34E247168BB79800648C2F /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		DC34E24A168BB79800648C2F /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
 		DC34E24B168BB79800648C2F /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		DC34E24C168BB79800648C2F /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		DC5A5ADC18825DFB00FC97D5 /* MMPUnknown.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MMPUnknown.h; path = MobMuPlatEditor/Controls/MMPUnknown.h; sourceTree = SOURCE_ROOT; };
+		DC5A5ADD18825DFB00FC97D5 /* MMPUnknown.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MMPUnknown.m; path = MobMuPlatEditor/Controls/MMPUnknown.m; sourceTree = SOURCE_ROOT; };
+		DC5A5ADF18825E3200FC97D5 /* MMPLCD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MMPLCD.h; path = MobMuPlatEditor/Controls/MMPLCD.h; sourceTree = SOURCE_ROOT; };
+		DC5A5AE018825E3200FC97D5 /* MMPLCD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MMPLCD.m; path = MobMuPlatEditor/Controls/MMPLCD.m; sourceTree = SOURCE_ROOT; };
 		DC8146A81732BF750041F394 /* IpEndpointName.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = IpEndpointName.cpp; path = oscpack/ip/IpEndpointName.cpp; sourceTree = SOURCE_ROOT; };
 		DC8146AE1732BF980041F394 /* OSCManager.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = OSCManager.mm; path = oscpack/OSCManager.mm; sourceTree = SOURCE_ROOT; };
 		DC8146B01732C0090041F394 /* NetworkingUtils.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = NetworkingUtils.cpp; path = oscpack/ip/NetworkingUtils.cpp; sourceTree = SOURCE_ROOT; };
@@ -284,8 +287,10 @@
 				DCE2F00A1732BAA6002B897C /* MMPToggle.m */,
 				DCE2F00B1732BAA6002B897C /* MMPXYSlider.h */,
 				DCE2F00C1732BAA6002B897C /* MMPXYSlider.m */,
-				90BD3FEF187EF79000EDA44C /* MMPLCD.h */,
-				90BD3FF0187EF79000EDA44C /* MMPLCD.m */,
+				DC5A5ADF18825E3200FC97D5 /* MMPLCD.h */,
+				DC5A5AE018825E3200FC97D5 /* MMPLCD.m */,
+				DC5A5ADC18825DFB00FC97D5 /* MMPUnknown.h */,
+				DC5A5ADD18825DFB00FC97D5 /* MMPUnknown.m */,
 			);
 			name = Controls;
 			sourceTree = "<group>";
@@ -366,13 +371,14 @@
 				DCE2F00D1732BAA6002B897C /* MMPButton.m in Sources */,
 				DCE2F00E1732BAA6002B897C /* MMPControl.m in Sources */,
 				DCE2F00F1732BAA6002B897C /* MMPGrid.m in Sources */,
+				DC5A5AE118825E3200FC97D5 /* MMPLCD.m in Sources */,
 				DCE2F0101732BAA6002B897C /* MMPKnob.m in Sources */,
 				DCE2F0111732BAA6002B897C /* MMPLabel.m in Sources */,
 				DCE2F0121732BAA6002B897C /* MMPMultiSlider.m in Sources */,
 				DCE2F0131732BAA6002B897C /* MMPPanel.m in Sources */,
 				DCE2F0141732BAA6002B897C /* MMPSlider.m in Sources */,
+				DC5A5ADE18825DFB00FC97D5 /* MMPUnknown.m in Sources */,
 				DCE2F0151732BAA6002B897C /* MMPToggle.m in Sources */,
-				90BD3FF1187EF79000EDA44C /* MMPLCD.m in Sources */,
 				DCE2F0161732BAA6002B897C /* MMPXYSlider.m in Sources */,
 				DCE2F0211732BAD3002B897C /* CanvasView.m in Sources */,
 				DCE2F0221732BAD3002B897C /* Document.mm in Sources */,

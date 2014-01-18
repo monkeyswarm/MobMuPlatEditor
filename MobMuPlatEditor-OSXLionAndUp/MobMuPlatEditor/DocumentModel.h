@@ -20,7 +20,7 @@
 #import "MMPPanel.h"
 #import "MMPMultiSlider.h"
 #import "MMPLCD.h"
-
+#import "MMPUnknown.h"
 
 typedef enum{
     canvasTypeIPhone3p5Inch = 0,

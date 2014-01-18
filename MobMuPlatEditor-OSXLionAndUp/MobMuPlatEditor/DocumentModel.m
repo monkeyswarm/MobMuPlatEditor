@@ -121,8 +121,11 @@
             [GUIDict setObject:[NSNumber numberWithInt:[(MMPToggle*)control borderThickness]] forKey:@"borderThickness"] ;
         }
         //LCD and Button have no properties
+        //pass along original bad class
+        /*else if([control isKindOfClass:[MMPUnknown class]]){
+            [GUIDict setObject:NSStringFromClass([control class]) forKey:@"class"];
+        }*/
         
-            
         
         [jsonControlDictArray addObject:GUIDict];
     }
@@ -266,9 +269,11 @@
             else if([classString isEqualToString:@"MMPLCD"]){
                 control = [[MMPLCD alloc] initWithFrame:newFrame];
             }
-            else continue;//had a class, but something other than the above
-        
-                        
+            else{//unkown
+                control = [[MMPUnknown alloc] initWithFrame:newFrame];
+                [(MMPUnknown*)control setBadName:classString];
+            }
+           
         //set color
             if([control respondsToSelector:@selector(setColor:)]){//in theory all mecontrol respond to these
                 [control setColor:color];
