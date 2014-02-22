@@ -144,6 +144,25 @@
         NSView* currHead = [headViewArray objectAtIndex:headIndex];
         CGRect newFrame = CGRectMake(headIndex*headWidth, clippedPointY-SLIDER_HEIGHT/2, headWidth, SLIDER_HEIGHT);
         currHead.frame=newFrame;
+      
+      //also set elements between prev touch and move, to avoid "skipping" on fast drag
+      if(abs(headIndex-currHeadIndex)>1){
+        int minTouchIndex = MIN(headIndex, currHeadIndex);
+        int maxTouchIndex = MAX(headIndex, currHeadIndex);
+        
+        float minTouchedValue = [[_valueArray objectAtIndex:minTouchIndex] floatValue];
+        float maxTouchedValue = [[_valueArray objectAtIndex:maxTouchIndex] floatValue];
+        //NSLog(@"skip within %d (%.2f) to %d(%.2f)", minTouchIndex, [[_valueArray objectAtIndex:minTouchIndex] floatValue], maxTouchIndex, [[_valueArray objectAtIndex:maxTouchIndex] floatValue]);
+        for(int i=minTouchIndex+1;i<maxTouchIndex;i++){
+          float percent = ((float)(i-minTouchIndex))/(maxTouchIndex-minTouchIndex);
+          float interpVal = (maxTouchedValue - minTouchedValue) * percent  + minTouchedValue ;
+          //NSLog(@"%d %.2f %.2f", i, percent, interpVal);
+          [_valueArray setObject:[NSNumber numberWithFloat:interpVal] atIndexedSubscript:i];
+        }
+        //[self updateThumbs];//TODO optimize - this does everything
+        [self updateThumbsFrom:minTouchIndex+1 to:maxTouchIndex-1];
+      }
+
         
         if(headIndex!=currHeadIndex){//dragged to new head
             NSView* prevHead = [headViewArray objectAtIndex:currHeadIndex];
@@ -168,13 +187,18 @@
 }
 
 //on receive a new list into valueArray, redraw the slider positions
+
+-(void)updateThumbsFrom:(int)start to:(int)end{
+  for(int i=start;i<=end;i++){
+    NSNumber* val = [_valueArray objectAtIndex:i];
+    NSView* currHead = [headViewArray objectAtIndex:i];
+    CGRect newFrame = CGRectMake(i*headWidth, (1.0-[val floatValue])*(self.frame.size.height-SLIDER_HEIGHT), headWidth, SLIDER_HEIGHT);
+    currHead.frame=newFrame;
+  }
+}
+
 -(void)updateThumbs{
-    for(int i=0;i<[_valueArray count];i++){
-        NSNumber* val = [_valueArray objectAtIndex:i];
-        NSView* currHead = [headViewArray objectAtIndex:i];
-        CGRect newFrame = CGRectMake(i*headWidth, (1.0-[val floatValue])*(self.frame.size.height-SLIDER_HEIGHT), headWidth, SLIDER_HEIGHT);
-        currHead.frame=newFrame;
-    }
+  [self updateThumbsFrom:0 to:[_valueArray count]-1];
 }
 
 //receive messages from PureData (via [send toGUI], routed through the PdWrapper.pd patch), routed from Document via the address to this object
@@ -187,8 +211,20 @@
         //printf("\nset!");
         sendVal=NO;
     }
+  
+  if ([inArray count]>1 && [[inArray objectAtIndex:0] isKindOfClass:[NSString class]] && [[inArray objectAtIndex:0] isEqualToString:@"allVal"] ){
+    
+    float val = [[inArray objectAtIndex:1] floatValue];
+    for(int i=0;i<[_valueArray count];i++){
+      [_valueArray setObject:[NSNumber numberWithFloat:val] atIndexedSubscript:i];
+    }
+    [self updateThumbs];
+    if(sendVal)[self sendValue];
+  }
+  
+  
     //list of values to be interpreted as new slider positions (and new length of multislider)
-    if ([inArray count]>0 ){
+   else if ([inArray count]>0 ){
         NSMutableArray* newValArray = [[NSMutableArray alloc]init];
         
         for(NSNumber* val in inArray)[newValArray addObject:val];
