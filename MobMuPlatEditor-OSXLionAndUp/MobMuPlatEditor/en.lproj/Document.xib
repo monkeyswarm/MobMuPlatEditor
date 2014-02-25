@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="4510" systemVersion="12E3200" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="4514" systemVersion="13B42" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
     <dependencies>
         <deployment defaultVersion="1070" identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="4510"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="4514"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="Document">
@@ -13,6 +13,7 @@
                 <outlet property="addLCDButton" destination="esw-II-ISr" id="bRM-Ft-L6Q"/>
                 <outlet property="addLabelButton" destination="100330" id="100344"/>
                 <outlet property="addMultiSliderButton" destination="101183" id="101185"/>
+                <outlet property="addMultiTouchButton" destination="UxV-1v-LtB" id="3zG-0X-KV1"/>
                 <outlet property="addPanelButton" destination="101062" id="101064"/>
                 <outlet property="addSlider" destination="100187" id="100192"/>
                 <outlet property="addSliderButton" destination="100187" id="100190"/>
@@ -116,7 +117,7 @@
                                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                                 <popUpButtonCell key="cell" type="push" title="iPhone/iPod - 3.5&quot;" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" selectedItem="100155" id="100153">
                                                                     <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
-                                                                    <font key="font" metaFont="system"/>
+                                                                    <font key="font" metaFont="menu"/>
                                                                     <menu key="menu" title="OtherViews" id="100154">
                                                                         <items>
                                                                             <menuItem title="iPhone/iPod - 3.5&quot;" state="on" id="100155"/>
@@ -136,7 +137,7 @@
                                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                                 <popUpButtonCell key="cell" type="push" title="Portrait" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" selectedItem="100166" id="100164">
                                                                     <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
-                                                                    <font key="font" metaFont="system"/>
+                                                                    <font key="font" metaFont="menu"/>
                                                                     <menu key="menu" title="OtherViews" id="100165">
                                                                         <items>
                                                                             <menuItem title="Portrait" state="on" id="100166"/>
@@ -437,6 +438,19 @@ slider</string>
                                                                     <action selector="addLCD:" target="-2" id="mQx-ZU-cc7"/>
                                                                 </connections>
                                                             </button>
+                                                            <button id="UxV-1v-LtB">
+                                                                <rect key="frame" x="74" y="78" width="58" height="55"/>
+                                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                                                <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" imagePosition="overlaps" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="KlX-5l-Usx">
+                                                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                                                    <string key="title">multi
+touch</string>
+                                                                    <font key="font" metaFont="system"/>
+                                                                </buttonCell>
+                                                                <connections>
+                                                                    <action selector="addMultiTouch:" target="-2" id="z1a-o8-Xmo"/>
+                                                                </connections>
+                                                            </button>
                                                         </subviews>
                                                     </view>
                                                 </tabViewItem>
@@ -565,11 +579,11 @@ slider</string>
                                                                     </subviews>
                                                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                                 </clipView>
-                                                                <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" doubleValue="1" id="100359">
+                                                                <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" doubleValue="1" horizontal="YES" id="100359">
                                                                     <rect key="frame" x="-100" y="-100" width="196" height="15"/>
                                                                     <autoresizingMask key="autoresizingMask"/>
                                                                 </scroller>
-                                                                <scroller key="verticalScroller" hidden="YES" verticalHuggingPriority="750" doubleValue="1" id="100360">
+                                                                <scroller key="verticalScroller" hidden="YES" verticalHuggingPriority="750" doubleValue="1" horizontal="NO" id="100360">
                                                                     <rect key="frame" x="-100" y="-100" width="15" height="172"/>
                                                                     <autoresizingMask key="autoresizingMask"/>
                                                                 </scroller>
@@ -721,11 +735,11 @@ not rotate with landscape orientation</string>
                                 </view>
                             </subviews>
                         </clipView>
-                        <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" id="101116">
+                        <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="YES" id="101116">
                             <rect key="frame" x="-100" y="-100" width="605" height="15"/>
                             <autoresizingMask key="autoresizingMask"/>
                         </scroller>
-                        <scroller key="verticalScroller" hidden="YES" verticalHuggingPriority="750" doubleValue="1" id="101117">
+                        <scroller key="verticalScroller" hidden="YES" verticalHuggingPriority="750" doubleValue="1" horizontal="NO" id="101117">
                             <rect key="frame" x="606" y="1" width="15" height="537"/>
                             <autoresizingMask key="autoresizingMask"/>
                         </scroller>
@@ -744,12 +758,12 @@ not rotate with landscape orientation</string>
                 <popUpButton verticalHuggingPriority="750" id="100229">
                     <rect key="frame" x="3" y="89" width="145" height="26"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                    <popUpButtonCell key="cell" type="push" title="Vertical" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" id="100230">
+                    <popUpButtonCell key="cell" type="push" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" id="100230">
                         <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
-                        <font key="font" metaFont="system"/>
+                        <font key="font" metaFont="menu"/>
                         <menu key="menu" title="OtherViews" id="100231">
                             <items>
-                                <menuItem title="Vertical" state="on" id="100232"/>
+                                <menuItem title="Vertical" id="100232"/>
                                 <menuItem title="Horizontal" id="100233"/>
                             </items>
                         </menu>
@@ -800,7 +814,7 @@ not rotate with landscape orientation</string>
                     <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" id="100245">
                         <font key="font" metaFont="smallSystem"/>
                         <string key="title">A range of 2 sends 0-1 float. 
-A range of >2 sends integers.</string>
+A range of &gt;2 sends integers.</string>
                         <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                     </textFieldCell>
@@ -853,7 +867,7 @@ A range of >2 sends integers.</string>
                     <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" id="100268">
                         <font key="font" metaFont="system"/>
                         <string key="title">A range of 2 sends 0-1 float. 
-A range of >2 sends integers.</string>
+A range of &gt;2 sends integers.</string>
                         <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                     </textFieldCell>
@@ -925,7 +939,7 @@ A range of >2 sends integers.</string>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <popUpButtonCell key="cell" type="push" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" id="101043">
                         <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
-                        <font key="font" metaFont="system"/>
+                        <font key="font" metaFont="menu"/>
                         <menu key="menu" title="OtherViews" id="101044"/>
                     </popUpButtonCell>
                     <connections>
@@ -946,7 +960,7 @@ A range of >2 sends integers.</string>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <popUpButtonCell key="cell" type="push" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" id="101154">
                         <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
-                        <font key="font" metaFont="system"/>
+                        <font key="font" metaFont="menu"/>
                         <menu key="menu" title="OtherViews" id="101155"/>
                     </popUpButtonCell>
                     <connections>

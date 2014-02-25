@@ -269,6 +269,9 @@
             else if([classString isEqualToString:@"MMPLCD"]){
                 control = [[MMPLCD alloc] initWithFrame:newFrame];
             }
+            else if([classString isEqualToString:@"MMPMultiTouch"]){
+              control = [[MMPMultiTouch alloc] initWithFrame:newFrame];
+            }
             else{//unkown
                 control = [[MMPUnknown alloc] initWithFrame:newFrame];
                 [(MMPUnknown*)control setBadName:classString];

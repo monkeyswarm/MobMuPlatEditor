@@ -20,6 +20,7 @@
 #import "MMPPanel.h"
 #import "MMPMultiSlider.h"
 #import "MMPLCD.h"
+#import "MMPMultiTouch.h"
 #import "MMPUnknown.h"
 
 typedef enum{

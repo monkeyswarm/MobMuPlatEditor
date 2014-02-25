@@ -19,6 +19,7 @@
 #import "MMPGrid.h"
 #import "MMPPanel.h"
 #import "MMPMultiSlider.h"
+#import "MMPMultiTouch.h"
 #import "OSCManager.h"
 #import "MMPDocumentController.h"
 #define LOGLINES 12
@@ -146,6 +147,7 @@
 - (IBAction)addPanel:(NSButton *)sender;
 - (IBAction)addMultiSlider:(NSButton *)sender;
 - (IBAction)addLCD:(NSButton *)sender;
+- (IBAction)addMultiTouch:(NSButton *)sender;
 
 - (IBAction)propDelete:(NSButton *)sender;
 - (IBAction)bringForward:(NSButton *)sender;
@@ -244,6 +246,7 @@
 @property (strong) IBOutlet NSColorWell *propKnobIndicatorColorWell;
 @property (strong) IBOutlet NSButton *addMultiSliderButton;
 @property (strong) IBOutlet NSButton *addLCDButton;
+@property (strong) IBOutlet NSButton *addMultiTouchButton;
 @property (strong) IBOutlet NSView *propMultiSliderView;
 @property (strong) IBOutlet NSTextField *propMultiSliderRangeField;
 @property (strong) IBOutlet NSView *propToggleView;

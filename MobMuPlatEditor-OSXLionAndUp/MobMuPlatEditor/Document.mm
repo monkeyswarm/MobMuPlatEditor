@@ -431,6 +431,11 @@
     [self addControlHelper:newControl];
 }
 
+- (IBAction)addMultiTouch:(NSButton *)sender {
+  MMPMultiTouch* newControl = [[MMPMultiTouch alloc]initWithFrame:CGRectMake(-canvasView.frame.origin.x,0,100,100)];
+  [self addControlHelper:newControl];
+}
+
 - (IBAction)addLCD:(NSButton *)sender {
     MMPLCD* newControl = [[MMPLCD alloc]initWithFrame:CGRectMake(-canvasView.frame.origin.x,0,100,100)];
     [self addControlHelper:newControl];
@@ -1026,6 +1031,10 @@
             case 'f':
                 [theString appendString:[NSString stringWithFormat:@" %.3f", [[formattedMessageArray objectAtIndex:i+2] floatValue]]];
                 break;
+            case 's':
+                [theString appendString:[formattedMessageArray objectAtIndex:i+2]];
+                 break;
+
         }
     }
     //console
