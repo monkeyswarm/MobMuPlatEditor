@@ -9,6 +9,8 @@
 #import "MMPMultiTouch.h"
 #define BORDER_WIDTH 3
 #define CURSOR_WIDTH 2
+#define TOUCH_VIEW_RADIUS 20
+
 
 @interface MMPMultiTouch () {
   NSMutableArray* _cursorStack;
@@ -16,6 +18,9 @@
   NSMutableArray* _touchByVoxArray;//add, then hold NSNull values for empty voices
   
   NSView* borderView;
+  TouchView* _currTouchView;
+  BOOL _createdTouchOnMouseDown;
+  MyTouch* _currMyTouch;
 }
 
 @end
@@ -56,7 +61,8 @@
 -(void)setFrame:(NSRect)frameRect{
   [super setFrame:frameRect];
   [borderView setFrame:CGRectMake(0, 0, self.frame.size.width, self.frame.size.height)];
-  //todo clear mock touches
+  [self removeTouches:[_touchStack copy]];
+  
 }
 
 -(void)setColor:(NSColor *)inColor{
@@ -65,6 +71,13 @@
 
 }
 
+//clip touch views to bounds
+-(CGPoint)clipPoint:(CGPoint)inPoint{
+  CGPoint outPoint;
+  outPoint.x = MIN(MAX(0, inPoint.x), self.frame.size.width);
+  outPoint.y = MIN(MAX(0, inPoint.y), self.frame.size.height);
+  return outPoint;
+}
 
 -(CGPoint)normAndClipPoint:(CGPoint)inPoint{
   CGPoint outPoint;
@@ -77,97 +90,140 @@
 
 -(void)mouseDown:(NSEvent *)theEvent{
   [super mouseDown:theEvent];
-  
+  //NSLog(@"down view");
   if(![self.editingDelegate isEditing]){
     
+    CGPoint hitTestPoint = [[self superview] convertPoint:[theEvent locationInWindow] fromView:nil];
+    CGPoint localPoint = [self convertPoint:[theEvent locationInWindow] fromView:nil];
     
-    CGPoint point = [self convertPoint:[theEvent locationInWindow] fromView:nil];
-    
-    //stack
-    MyTouch* myTouch = [[MyTouch alloc]init];
-    myTouch.point = [self normAndClipPoint:point];
-    myTouch.origEvent = theEvent;
-    //myTouch.state = 1;
-    
-    [_touchStack addObject:myTouch];
-    
-    //cursor
-    Cursor* cursor = [[Cursor alloc]init];
-    
-    
-    cursor.cursorX = [[NSView alloc]initWithFrame:CGRectMake(5, 5, self.frame.size.width, CURSOR_WIDTH)];
-    cursor.cursorY = [[NSView alloc]initWithFrame:CGRectMake(5, 5, CURSOR_WIDTH, self.frame.size.height)];
-    [cursor.cursorX setWantsLayer:YES];
-    [cursor.cursorY setWantsLayer:YES];
-    cursor.cursorX.layer.backgroundColor = [self.highlightColor CGColor];
-    cursor.cursorY.layer.backgroundColor = [self.highlightColor CGColor];
-    //cursor.cursorX.userInteractionEnabled=NO;
-    //cursor.cursorY.userInteractionEnabled=NO;
-    [self addSubview:cursor.cursorX];
-    [self addSubview:cursor.cursorY];
-    
-    [_cursorStack addObject:cursor];
-    
-    //poly vox
-    BOOL added=NO;
-    for(id element in _touchByVoxArray){//find NSNull vox slot
-      if(element == [NSNull null]){
-        int index = [_touchByVoxArray indexOfObject:element];
-        myTouch.polyVox = index+1;
-        [_touchByVoxArray replaceObjectAtIndex:index withObject:myTouch];
-        added=YES;
-        break;
+    NSView* topView = [self hitTest:hitTestPoint];
+    if(topView==borderView || [topView isMemberOfClass:[NSView class]]){//topview or cursors
+      //cursor
+      Cursor* cursor = [[Cursor alloc]init];
+      
+      
+      cursor.cursorX = [[NSView alloc]initWithFrame:CGRectMake(5, 5, self.frame.size.width, CURSOR_WIDTH)];
+      cursor.cursorY = [[NSView alloc]initWithFrame:CGRectMake(5, 5, CURSOR_WIDTH, self.frame.size.height)];
+      [cursor.cursorX setWantsLayer:YES];
+      [cursor.cursorY setWantsLayer:YES];
+      cursor.cursorX.layer.backgroundColor = [self.highlightColor CGColor];
+      cursor.cursorY.layer.backgroundColor = [self.highlightColor CGColor];
+      //cursor.cursorX.userInteractionEnabled=NO;
+      //cursor.cursorY.userInteractionEnabled=NO;
+      [self addSubview:cursor.cursorX];
+      [self addSubview:cursor.cursorY];
+      
+      [_cursorStack addObject:cursor];
+      
+      
+      //Touchview
+      TouchView* tv = [[TouchView alloc]initAtPoint:[self clipPoint:localPoint]];
+      [tv setWantsLayer:YES];
+      //tv.layer.backgroundColor = [self.highlightColor CGColor];
+      tv.layer.borderColor = [[NSColor blackColor] CGColor];
+      tv.layer.borderWidth = CURSOR_WIDTH;
+      tv.layer.cornerRadius = TOUCH_VIEW_RADIUS;
+      
+      tv.editingDelegate = self.editingDelegate;
+      tv.parentView = self;
+      [self addSubview:tv];
+      
+      _currTouchView = tv;
+      _createdTouchOnMouseDown = YES;
+      
+      //stack
+      MyTouch* myTouch = [[MyTouch alloc]init];
+      myTouch.point = [self normAndClipPoint:localPoint];
+      //myTouch.origEvent = theEvent;
+      //myTouch.state = 1;
+      
+      myTouch.touchView = tv;
+      tv.myTouch = myTouch;
+      _currMyTouch = myTouch;
+      
+      [_touchStack addObject:myTouch];
+      
+      
+      
+      
+      
+      //poly vox
+      BOOL added=NO;
+      for(id element in _touchByVoxArray){//find NSNull vox slot
+        if(element == [NSNull null]){
+          int index = [_touchByVoxArray indexOfObject:element];
+          myTouch.polyVox = index+1;
+          [_touchByVoxArray replaceObjectAtIndex:index withObject:myTouch];
+          added=YES;
+          break;
+        }
       }
-    }
-    if(!added){
-      [_touchByVoxArray addObject:myTouch];//add to end
-      int index = [_touchByVoxArray indexOfObject:myTouch];
-      myTouch.polyVox = index+1;
-    }
-    
-    
-    /*ios [self.controlDelegate sendGUIMessageArray:[NSArray arrayWithObjects:self.address, @"touch", [NSNumber numberWithInt:myTouch.polyVox], [NSNumber numberWithInt:1], [NSNumber numberWithFloat:myTouch.point.x], [NSNumber numberWithFloat:myTouch.point.y], nil]];*/
-    
-    NSMutableArray* formattedMessageArray = [[NSMutableArray alloc]init];
-    [formattedMessageArray addObject:self.address];
-    [formattedMessageArray  addObject:[[NSMutableString alloc]initWithString:@"siiff"]];//tags
-    [formattedMessageArray addObject:@"touch"];
-    [formattedMessageArray addObject:[NSNumber numberWithInt:myTouch.polyVox]];
-    [formattedMessageArray addObject:[NSNumber numberWithInt:1]];
-    [formattedMessageArray addObject:[NSNumber numberWithFloat:myTouch.point.x]];
-    [formattedMessageArray addObject:[NSNumber numberWithFloat:myTouch.point.y]];
-    [self.editingDelegate sendFormattedMessageArray:formattedMessageArray];
-    
+      if(!added){
+        [_touchByVoxArray addObject:myTouch];//add to end
+        int index = [_touchByVoxArray indexOfObject:myTouch];
+        myTouch.polyVox = index+1;
+      }
+      
+      
+      NSMutableArray* formattedMessageArray = [[NSMutableArray alloc]init];
+      [formattedMessageArray addObject:self.address];
+      [formattedMessageArray  addObject:[[NSMutableString alloc]initWithString:@"siiff"]];//tags
+      [formattedMessageArray addObject:@"touch"];
+      [formattedMessageArray addObject:[NSNumber numberWithInt:myTouch.polyVox]];
+      [formattedMessageArray addObject:[NSNumber numberWithInt:1]];
+      [formattedMessageArray addObject:[NSNumber numberWithFloat:myTouch.point.x]];
+      [formattedMessageArray addObject:[NSNumber numberWithFloat:myTouch.point.y]];
+      [self.editingDelegate sendFormattedMessageArray:formattedMessageArray];
+      
+      
+      [self sendState];
+      
+      if([_touchStack count]>0) borderView.layer.borderColor=[MMPControl CGColorFromNSColor: self.highlightColor];
+      [self redrawCursors];
   
-  [self sendState];
-  
-    if([_touchStack count]>0) borderView.layer.borderColor=[MMPControl CGColorFromNSColor: self.highlightColor];
-  [self redrawCursors];
+    }
+    else if ([topView isKindOfClass:[TouchView class]]){
+      _currTouchView = (TouchView*)topView;
+      _currMyTouch = _currTouchView.myTouch;
+      _createdTouchOnMouseDown=NO;
+    }
+    else {
+      _currTouchView = nil;
+      _createdTouchOnMouseDown=NO;
+    }
   }
+  
 }
 
 -(void)mouseDragged:(NSEvent *)theEvent{
   [super mouseDragged:theEvent];
+  //NSLog(@"drag view");
   if(![self.editingDelegate isEditing]){
-    for(MyTouch* myTouch in _touchStack){//TODO optimze! just get object by reference somehow? or use "indexOfObject"
+    
+    //touchview
+    CGPoint point = [self convertPoint:[theEvent locationInWindow] fromView:nil];
+    CGPoint clipPoint = [self clipPoint:point];
+    [_currTouchView setFrame:CGRectMake(clipPoint.x-TOUCH_VIEW_RADIUS, clipPoint.y-TOUCH_VIEW_RADIUS, TOUCH_VIEW_RADIUS*2, TOUCH_VIEW_RADIUS*2)];
+    
+    
+    //for(MyTouch* myTouch in _touchStack){//TODO optimze! just get object by reference somehow? or use "indexOfObject"
       //if(myTouch.origEvent==theEvent){
-        CGPoint point = [self convertPoint:[theEvent locationInWindow] fromView:nil];
-        myTouch.point = [self normAndClipPoint:point];
-        
-        /*ios
-        [self.controlDelegate sendGUIMessageArray:[NSArray arrayWithObjects:self.address, @"touch", [NSNumber numberWithInt:myTouch.polyVox], [NSNumber numberWithInt:2], [NSNumber numberWithFloat:myTouch.point.x], [NSNumber numberWithFloat:myTouch.point.y], nil]];
-         */
+        _currMyTouch.point = [self normAndClipPoint:point];
+      
+        //touchview
+        //[_currTouchView setFrame:CGRectMake(point.x-TouchViewRadius, point.y-TouchViewRadius, TouchViewRadius*2, TouchViewRadius*2)];
+     
         NSMutableArray* formattedMessageArray = [[NSMutableArray alloc]init];
         [formattedMessageArray addObject:self.address];
         [formattedMessageArray  addObject:[[NSMutableString alloc]initWithString:@"siiff"]];//tags
         [formattedMessageArray addObject:@"touch"];
-        [formattedMessageArray addObject:[NSNumber numberWithInt:myTouch.polyVox]];
+        [formattedMessageArray addObject:[NSNumber numberWithInt:_currMyTouch.polyVox]];
         [formattedMessageArray addObject:[NSNumber numberWithInt:2]];
-        [formattedMessageArray addObject:[NSNumber numberWithFloat:myTouch.point.x]];
-        [formattedMessageArray addObject:[NSNumber numberWithFloat:myTouch.point.y]];
+        [formattedMessageArray addObject:[NSNumber numberWithFloat:_currMyTouch.point.x]];
+        [formattedMessageArray addObject:[NSNumber numberWithFloat:_currMyTouch.point.y]];
         [self.editingDelegate sendFormattedMessageArray:formattedMessageArray];
-      //}
-    }
+     
+    //}
   
   [self sendState];
   [self redrawCursors];
@@ -177,18 +233,28 @@
 -(void)mouseUp:(NSEvent *)theEvent{
   [super mouseUp:theEvent];
   if(![self.editingDelegate isEditing]){
-    NSMutableArray* touchesToRemoveArray = [[NSMutableArray alloc] init];
-    for(MyTouch* myTouch in _touchStack){//TODO optimze! just get object by reference somehow? or use "indexOfObject"!
+    
+    //NSLog(@"click count %d", [theEvent clickCount]);
+    if([theEvent clickCount]==1 && _createdTouchOnMouseDown==NO){
+      //[_currTouchView removeFromSuperview];
+    
+      NSMutableArray* touchesToRemoveArray = [[NSMutableArray alloc] init];
+      //for(MyTouch* myTouch in _touchStack){//TODO optimze! just get object by reference somehow? or use "indexOfObject"!
 			//if(myTouch.origEvent==theEvent){
         CGPoint point = [self convertPoint:[theEvent locationInWindow] fromView:nil];
-        myTouch.point = [self normAndClipPoint:point];//necc??
-        [touchesToRemoveArray addObject:myTouch];
+        _currMyTouch.point = [self normAndClipPoint:point];//necc??
+        [touchesToRemoveArray addObject:_currMyTouch];
         //CGPoint currPoint= [touch locationInView:self];
         //NSLog(@"remove touches : %.2f %.2f", currPoint.x, currPoint.y);
       //}
-    }
+      //}
+      [self removeTouches:touchesToRemoveArray];
   
-  
+          }
+  }
+}
+
+-(void)removeTouches:(NSArray*)touchesToRemoveArray{
   [_touchStack removeObjectsInArray:touchesToRemoveArray];
   //curosrs
   for(Cursor* cursor in [_cursorStack subarrayWithRange:NSMakeRange([_touchStack count], [_cursorStack count]-[_touchStack count])] ){
@@ -199,9 +265,8 @@
   
   //
   for(MyTouch* myTouch in touchesToRemoveArray){
+    [myTouch.touchView removeFromSuperview];
     
-    
-    /*[self.controlDelegate sendGUIMessageArray:[NSArray arrayWithObjects:self.address, @"touch", [NSNumber numberWithInt:myTouch.polyVox], [NSNumber numberWithInt:2], [NSNumber numberWithFloat:myTouch.point.x], [NSNumber numberWithFloat:myTouch.point.y], nil]];*/
     
     NSMutableArray* formattedMessageArray = [[NSMutableArray alloc]init];
     [formattedMessageArray addObject:self.address];
@@ -212,15 +277,15 @@
     [formattedMessageArray addObject:[NSNumber numberWithFloat:myTouch.point.x]];
     [formattedMessageArray addObject:[NSNumber numberWithFloat:myTouch.point.y]];
     [self.editingDelegate sendFormattedMessageArray:formattedMessageArray];
-
+    
     
     [_touchByVoxArray replaceObjectAtIndex:[_touchByVoxArray indexOfObject:myTouch] withObject:[NSNull null]];
   }
   
   [self sendState];
-    if([_touchStack count]==0) borderView.layer.borderColor=[MMPControl CGColorFromNSColor:self.color ];
+  if([_touchStack count]==0) borderView.layer.borderColor=[MMPControl CGColorFromNSColor:self.color ];
   [self redrawCursors];
-  }
+
 }
 
 /*-(void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event{
@@ -354,5 +419,15 @@
 @end
 
 @implementation MyTouch
+
+@end
+
+
+@implementation TouchView
+
+-(id)initAtPoint:(CGPoint)point{
+  self = [super initWithFrame:CGRectMake(point.x-TOUCH_VIEW_RADIUS, point.y-TOUCH_VIEW_RADIUS, TOUCH_VIEW_RADIUS*2, TOUCH_VIEW_RADIUS*2)];
+  return self;
+}
 
 @end

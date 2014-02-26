@@ -8,6 +8,8 @@
 
 #import "MMPControl.h"
 
+@class TouchView;
+
 @interface MMPMultiTouch : MMPControl
 
 @end
@@ -22,5 +24,13 @@
 @property (nonatomic) CGPoint point;
 @property (nonatomic) int state;//0,1,2
 @property (nonatomic) int polyVox;
-@property (weak, nonatomic) NSEvent* origEvent;
+//@property (weak, nonatomic) NSEvent* origEvent;
+@property (weak, nonatomic) TouchView* touchView;
+@end
+
+@interface TouchView : NSView
+@property (nonatomic, weak) id<MMPControlEditingDelegate> editingDelegate;
+@property (nonatomic, weak) NSView* parentView;
+@property (nonatomic, weak) MyTouch* myTouch;
+-(id)initAtPoint:(CGPoint)point;
 @end
