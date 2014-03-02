@@ -1085,6 +1085,13 @@
     currentPageIndex = newIndex;
     [canvasView setPageViewIndex:currentPageIndex];
     self.pageIndexLabel.stringValue = [NSString stringWithFormat:@"Page %d/%d", currentPageIndex+1, [documentModel pageCount]];
+  
+  NSMutableArray* formattedMessageArray = [[NSMutableArray alloc]init];
+  [formattedMessageArray addObject:@"/system/page"];
+  [formattedMessageArray  addObject:[[NSMutableString alloc]initWithString:@"i"]];//tags
+  [formattedMessageArray addObject:[NSNumber numberWithInt:currentPageIndex]];
+  
+    [self sendFormattedMessageArray:formattedMessageArray];
 }
 
 
