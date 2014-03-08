@@ -35,8 +35,8 @@ class ExamplePacketListener;
 @property id<OSCManagerDelegate> delegate;
 
 - (void)oscThread;
-- (void)pushInterface:(NSValue *)msgPointer;
-- (void)pushDestination:(NSValue *) msgPointer;
+//- (void)pushInterface:(NSValue *)msgPointer;
+//- (void)pushDestination:(NSValue *) msgPointer;
 
 - (void)setOSCReceivePort:(NSMutableArray*)arguments withDict:(NSMutableDictionary*)options;
 - (void)setIPAddressAndPort:(NSMutableArray*)arguments withDict:(NSMutableDictionary*)options;

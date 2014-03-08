@@ -10,6 +10,15 @@
 #define DEFAULT_FONT @"HelveticaNeue"
 @implementation MMPLabel
 
+//+ (BOOL)numberIsFloat:(NSNumber*)num ;
+
++ (BOOL)numberIsFloat:(NSNumber*)num {
+  if(strcmp([num objCType], @encode(float)) == 0 || strcmp([num objCType], @encode(double)) == 0) {
+    return YES;
+  }
+  else return NO;
+}
+
 - (id)initWithFrame:(NSRect)frame{
     
     self = [super initWithFrame:frame];
@@ -111,7 +120,14 @@
                 [newString appendString:(NSString*)thing];
             }
             else if ([thing isKindOfClass:[NSNumber class]]){
-                [newString appendString:[NSString stringWithFormat:@"%.3f", [(NSNumber*)thing floatValue]]];
+              NSNumber* thingNumber = (NSNumber*)thing;
+              if ([MMPLabel numberIsFloat:thingNumber] ){
+                [newString appendString:[NSString stringWithFormat:@"%.3f", [thingNumber floatValue]]];
+              }
+              else {
+                [newString appendString:[NSString stringWithFormat:@"%d", [thingNumber intValue]]];
+              }
+              
             }
             [newString appendString:@" "];
         }
