@@ -61,7 +61,7 @@
 -(void)setFrame:(NSRect)frameRect{
   [super setFrame:frameRect];
   [borderView setFrame:CGRectMake(0, 0, self.frame.size.width, self.frame.size.height)];
-  [self removeTouches:[_touchStack copy]];
+    [self removeTouches:[_touchStack copy]];//copy becase remove touches send s list of touches to remove from touchstack...
   
 }
 
@@ -82,9 +82,9 @@
 -(CGPoint)normAndClipPoint:(CGPoint)inPoint{
   CGPoint outPoint;
   outPoint.x = inPoint.x/self.frame.size.width;
-  outPoint.x = MIN(1, MAX(-1, outPoint.x));
+  outPoint.x = MIN(1, MAX(0, outPoint.x));
   outPoint.y = 1.0-(inPoint.y/self.frame.size.height);
-  outPoint.y = MIN(1, MAX(-1, outPoint.y));
+  outPoint.y = MIN(1, MAX(0, outPoint.y));
   return outPoint;
 }
 
@@ -124,8 +124,8 @@
       tv.layer.borderWidth = CURSOR_WIDTH;
       tv.layer.cornerRadius = TOUCH_VIEW_RADIUS;
       
-      tv.editingDelegate = self.editingDelegate;
-      tv.parentView = self;
+      //tv.editingDelegate = self.editingDelegate;//necc?
+      //tv.parentView = self;//necc?
       [self addSubview:tv];
       
       _currTouchView = tv;
@@ -160,7 +160,7 @@
       }
       if(!added){
         [_touchByVoxArray addObject:myTouch];//add to end
-        int index = [_touchByVoxArray indexOfObject:myTouch];
+        int index = [_touchByVoxArray indexOfObject:myTouch];//or just array size
         myTouch.polyVox = index+1;
       }
       

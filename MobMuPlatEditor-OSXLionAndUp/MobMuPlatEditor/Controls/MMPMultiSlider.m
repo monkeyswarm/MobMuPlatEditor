@@ -159,7 +159,6 @@
           //NSLog(@"%d %.2f %.2f", i, percent, interpVal);
           [_valueArray setObject:[NSNumber numberWithFloat:interpVal] atIndexedSubscript:i];
         }
-        //[self updateThumbs];//TODO optimize - this does everything
         [self updateThumbsFrom:minTouchIndex+1 to:maxTouchIndex-1];
       }
 

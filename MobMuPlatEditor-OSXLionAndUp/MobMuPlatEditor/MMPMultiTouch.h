@@ -29,7 +29,7 @@
 @end
 
 @interface TouchView : NSView
-@property (nonatomic, weak) id<MMPControlEditingDelegate> editingDelegate;
+//@property (nonatomic, weak) id<MMPControlEditingDelegate> editingDelegate;
 @property (nonatomic, weak) NSView* parentView;
 @property (nonatomic, weak) MyTouch* myTouch;
 -(id)initAtPoint:(CGPoint)point;
