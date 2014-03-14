@@ -10,7 +10,6 @@
 #define DEFAULT_FONT @"HelveticaNeue"
 @implementation MMPLabel
 
-//+ (BOOL)numberIsFloat:(NSNumber*)num ;
 
 + (BOOL)numberIsFloat:(NSNumber*)num {
   if(strcmp([num objCType], @encode(float)) == 0 || strcmp([num objCType], @encode(double)) == 0) {
@@ -31,6 +30,7 @@
         
         [textView setEditable:NO];
         [textView setTextColor:self.color];
+      
         [self setStringValue:@"my text goes here"];
         [self setTextSize:16];
         [self addSubview:textView];

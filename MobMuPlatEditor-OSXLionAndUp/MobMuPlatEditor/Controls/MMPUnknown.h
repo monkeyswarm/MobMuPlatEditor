@@ -14,4 +14,5 @@
 
 //-(void)setWarning:(NSString*)badName;
 @property (nonatomic, strong) NSString* badName;
+@property (nonatomic, strong) NSDictionary* badGUIDict;
 @end

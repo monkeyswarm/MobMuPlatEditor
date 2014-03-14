@@ -7,7 +7,7 @@
 //
 
 #import "DocumentModel.h"
-#define VERSION 1.3
+
 
 
 @implementation DocumentModel
@@ -27,7 +27,7 @@
     _canvasType=canvasTypeIPhone3p5Inch;
     _port=54321;
     
-    _version=VERSION;
+    _version=[[[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"] floatValue ];
     
     
     return self;
@@ -68,7 +68,7 @@
     [topDict setObject:[NSNumber numberWithInt:_startPageIndex] forKey:@"startPageIndex"];
     [topDict setObject:[NSNumber numberWithInt:_port] forKey:@"port"];
     //[topDict setObject:[NSNumber numberWithFloat:_version] forKey:@"version"];
-    [topDict setObject:[NSNumber numberWithFloat:VERSION] forKey:@"version"];//save as Global version, not as this objects version (in case it was loaded from an older version
+    [topDict setObject:[NSNumber numberWithFloat:_version] forKey:@"version"];//save as Global version, not as this objects version (in case it was loaded from an older version
     
     NSMutableArray* jsonControlDictArray = [[NSMutableArray alloc]init];//array of dictionaries
    
@@ -122,9 +122,12 @@
         }
         //LCD and Button have no properties
         //pass along original bad class
-        /*else if([control isKindOfClass:[MMPUnknown class]]){
-            [GUIDict setObject:NSStringFromClass([control class]) forKey:@"class"];
-        }*/
+        else if([control isKindOfClass:[MMPUnknown class]]){
+            //[GUIDict setObject:NSStringFromClass([control class]) forKey:@"class"];
+            GUIDict = ((MMPUnknown*)control).badGUIDict.mutableCopy;
+           NSArray* frameArray = [NSArray arrayWithObjects:[NSNumber numberWithFloat:control.frame.origin.x], [NSNumber numberWithFloat:control.frame.origin.y ], [NSNumber numberWithFloat:control.frame.size.width], [NSNumber numberWithFloat:control.frame.size.height], nil];
+           [GUIDict setObject:frameArray forKey:@"frame"];
+        }
         
         
         [jsonControlDictArray addObject:GUIDict];
@@ -275,6 +278,7 @@
             else{//unkown
                 control = [[MMPUnknown alloc] initWithFrame:newFrame];
                 [(MMPUnknown*)control setBadName:classString];
+                [(MMPUnknown*)control setBadGUIDict:guiDict];
             }
            
         //set color

@@ -45,7 +45,8 @@
     NSButton *_pageDownButton;
     NSButton *_pageUpButton;
     NSTextField *_pageIndexLabel;
-    
+    NSTextField *_controlGuideLabel;
+  
     //tab view (doc,add,prop,lock)
     //doc
     NSPopUpButton *_canvasTypePopButton;
@@ -231,6 +232,7 @@
 @property (strong) IBOutlet NSButton *pageDownButton;
 @property (strong) IBOutlet NSButton *pageUpButton;
 @property (strong) IBOutlet NSTextField *pageIndexLabel;
+@property (strong) IBOutlet NSTextField *controlGuideLabel;
 @property (strong) IBOutlet NSView *propSliderView;
 @property (strong) IBOutlet NSPopUpButton *propSliderOrientationPopButton;
 @property (strong) IBOutlet NSTextField *propSliderRangeTextField;

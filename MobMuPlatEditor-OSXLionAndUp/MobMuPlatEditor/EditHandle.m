@@ -27,6 +27,8 @@
 {
     [[self undoManager] beginUndoGrouping];
     startDragPoint=[[[self superview] superview] convertPoint:[event locationInWindow] fromView:nil];
+    MMPControl* control = (MMPControl*)[self superview];
+    [control.editingDelegate updateGuide:control];
 }
 
 -(void)mouseDragged:(NSEvent *)event{
@@ -37,13 +39,18 @@
     CGRect newFrame = CGRectMake([self superview].frame.origin.x, [self superview].frame.origin.y, newWidth, newHeight);
     
     //keep it from getting too small
-    if(newWidth>40 && newHeight>40)[(MMPControl*)[self superview] setFrameObjectUndoable:[NSValue valueWithRect: newFrame]];
-    
+    if(newWidth>40 && newHeight>40){
+      MMPControl* control = (MMPControl*)[self superview];
+      [control setFrameObjectUndoable:[NSValue valueWithRect: newFrame]];
+      [control.editingDelegate updateGuide:control];
+    }
     startDragPoint=newDragLocation;
 }
 
 -(void)mouseUp:(NSEvent *)theEvent{
     [[self undoManager] endUndoGrouping];
+    MMPControl* control = (MMPControl*)[self superview];
+    [control.editingDelegate updateGuide:nil];
 }
 
 @end

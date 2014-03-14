@@ -330,7 +330,10 @@
 - (IBAction)docChooseFile:(NSButton *)sender {
     NSOpenPanel* openDlg = [NSOpenPanel openPanel];
     [openDlg setAllowsMultipleSelection:NO];
-    
+    [openDlg setAllowedFileTypes:[[NSArray alloc] initWithObjects:@"pd",nil]];
+    [openDlg setAllowsOtherFileTypes:NO];
+  
+  
     // Enable the selection of files in the dialog.
     [openDlg setCanChooseFiles:YES];
     
@@ -339,23 +342,13 @@
     
     // Display the dialog.  If the OK button was pressed,
     // process the files.
-    if ( [openDlg runModalForDirectory:nil file:nil] == NSOKButton )
-    {
-        // Get an array containing the full filenames of all
-        // files and directories selected.
-        NSArray* files = [openDlg filenames];
-        
-        // Loop through all the files and process them.
-        for( int i = 0; i < [files count]; i++ )
-        {
-            NSString* fileName = [files objectAtIndex:i];
+    if ( [openDlg runModal] == NSOKButton ){
+        NSString* fileName = [[openDlg URL] absoluteString];
+      
+        [documentModel setPdFile:[fileName lastPathComponent]];
+        [self.docFileTextField setStringValue:[fileName lastPathComponent]];
             
-            //printf("\nfile %s", [fileName cString]);
-            
-            [documentModel setPdFile:[fileName lastPathComponent]];
-            [self.docFileTextField setStringValue:[fileName lastPathComponent]];
-            
-        }
+      
     }
 }
 
@@ -637,6 +630,15 @@
     else [self setIsEditing:YES];
     
    
+}
+
+- (void)updateGuide:(MMPControl*)control {
+  if(!control)_controlGuideLabel.hidden = YES;
+  else {
+    _controlGuideLabel.hidden = NO;
+    [_controlGuideLabel setStringValue:[NSString stringWithFormat:@"x:%.2f y:%.2f w:%.2f h:%.2f", control.frame.origin.x, control.frame.origin.y, control.frame.size.width, control.frame.size.height]];
+  }
+  
 }
 
 //================all the NIB GUI element methods...
@@ -1088,7 +1090,7 @@
   
   NSMutableArray* formattedMessageArray = [[NSMutableArray alloc]init];
   [formattedMessageArray addObject:@"/system/page"];
-  [formattedMessageArray  addObject:[[NSMutableString alloc]initWithString:@"i"]];//tags
+  [formattedMessageArray  addObject:@"i"];//tags
   [formattedMessageArray addObject:[NSNumber numberWithInt:currentPageIndex]];
   
     [self sendFormattedMessageArray:formattedMessageArray];

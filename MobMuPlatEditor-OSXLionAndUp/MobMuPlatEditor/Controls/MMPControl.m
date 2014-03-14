@@ -9,7 +9,8 @@
 
 #import "MMPControl.h"
 #define HANDLE_SIZE 20 //size of the EditHandle in the lower right corner
-#define PASTE_OFFSET 20 //when a MMPControl gets copeid and pasted, offset it it this much (to the right and down) 
+#define PASTE_OFFSET 20 //when a MMPControl gets copeid and pasted, offset it it this much (to the right and down)
+#define BORDER_WIDTH 5 //editing border
 #import "CanvasView.h"
 
 @implementation MMPControl
@@ -41,7 +42,7 @@
 
 -(void)hackRefresh{
     if(isSelected){
-        [self.layer setBorderWidth:5];
+        [self.layer setBorderWidth:BORDER_WIDTH];
     }
     [self setColor:[self color]];
     [self bringUpHandle];
@@ -50,7 +51,7 @@
 -(void)bringUpHandle{//bringSubviewToFront doesn't seem to work?
     [handle removeFromSuperview];
     [self addSubview:handle];
-    handle.layer.borderWidth=5;
+    handle.layer.borderWidth=BORDER_WIDTH;
 }
 
 -(void)mouseDown:(NSEvent *)event{
@@ -70,6 +71,8 @@
         //MOVEMENT
         lastDragLocation=[[self superview] convertPoint:[event locationInWindow]fromView:nil];
         clickOffsetInMe=[self convertPoint:[event locationInWindow] fromView:nil];
+      
+        [self.editingDelegate updateGuide:self];
     }
 }
 
@@ -105,6 +108,7 @@
         [self setFrameOriginObjectUndoable:[NSValue valueWithPoint:newOrigin]];
         [self autoscroll:event];
         [self.editingDelegate controlEditMoved:self deltaPoint:CGPointMake(newDragLocation.x-lastDragLocation.x, newDragLocation.y-lastDragLocation.y)];
+        [self.editingDelegate updateGuide:self];
         lastDragLocation=newDragLocation;
     }
 }
@@ -124,6 +128,7 @@
             if(([theEvent modifierFlags] & NSShiftKeyMask)!=0 && isSelected && !wasSelectedThisCycle) [self setIsSelected:NO];//allow shift toggle off
             [self.editingDelegate controlEditReleased:self withShift:([theEvent modifierFlags] & NSShiftKeyMask)!=0 hadDrag:NO];
         }
+        [self.editingDelegate updateGuide:nil];
     }
 }
 
@@ -133,7 +138,7 @@
     
     isSelected=newSelected;
     if(isSelected){
-        [self.layer setBorderWidth:5];
+        [self.layer setBorderWidth:BORDER_WIDTH];
         [handle setHidden:NO];
     }
     else{

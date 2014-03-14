@@ -19,7 +19,7 @@ OSCManager *_oscManager;
 
 class ExamplePacketListener : public osc::OscPacketListener {
 protected:
-
+  
     virtual void ProcessMessage( const osc::ReceivedMessage& m, const IpEndpointName& remoteEndpoint ) {
 	
         osc::ReceivedMessage::const_iterator arg = m.ArgumentsBegin();
@@ -85,7 +85,18 @@ protected:
 
 - (void)oscThread {
 	s = new UdpListeningReceiveSocket( IpEndpointName( IpEndpointName::ANY_ADDRESS, self.receivePort ),listener );
-	s->RunUntilSigInt();
+	if(!s->IsBound()){
+    dispatch_async(dispatch_get_main_queue(), ^{
+      NSAlert *alert = [[NSAlert alloc] init];
+      [alert addButtonWithTitle:@"OK"];
+      [alert setMessageText:@"Unable to create OSC receiver on port 54310. \nI won't be able to receive messages from PD. \nPerhaps another application, or instance of this editor, is on this port."];
+      [alert setAlertStyle:NSWarningAlertStyle];
+      [alert runModal];
+    });
+  }
+  else {
+    s->RunUntilSigInt();
+  }
 }
 
 - (void)setOSCReceivePort:(NSMutableArray*)arguments withDict:(NSMutableDictionary*)options {

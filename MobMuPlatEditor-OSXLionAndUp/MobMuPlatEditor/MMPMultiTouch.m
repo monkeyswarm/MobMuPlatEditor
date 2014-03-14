@@ -1,3 +1,4 @@
+
 //
 //  MMPMultiTouch.m
 //  MobMuPlatEditor
@@ -13,12 +14,11 @@
 
 
 @interface MMPMultiTouch () {
-  NSMutableArray* _cursorStack;
   NSMutableArray* _touchStack;
   NSMutableArray* _touchByVoxArray;//add, then hold NSNull values for empty voices
   
   NSView* borderView;
-  TouchView* _currTouchView;
+  TouchViewGroup* _currTouchViewGroup;
   BOOL _createdTouchOnMouseDown;
   MyTouch* _currMyTouch;
 }
@@ -42,7 +42,6 @@
     [self addSubview:borderView];
 
     
-    _cursorStack = [[NSMutableArray alloc] init];
     _touchStack = [[NSMutableArray alloc] init];
     _touchByVoxArray = [[NSMutableArray alloc] init];
     [self setFrame:frame];
@@ -95,40 +94,39 @@
     
     CGPoint hitTestPoint = [[self superview] convertPoint:[theEvent locationInWindow] fromView:nil];
     CGPoint localPoint = [self convertPoint:[theEvent locationInWindow] fromView:nil];
+    CGPoint clippedPoint = [self clipPoint:localPoint];
     
     NSView* topView = [self hitTest:hitTestPoint];
     if(topView==borderView || [topView isMemberOfClass:[NSView class]]){//topview or cursors
-      //cursor
-      Cursor* cursor = [[Cursor alloc]init];
-      
-      
-      cursor.cursorX = [[NSView alloc]initWithFrame:CGRectMake(5, 5, self.frame.size.width, CURSOR_WIDTH)];
-      cursor.cursorY = [[NSView alloc]initWithFrame:CGRectMake(5, 5, CURSOR_WIDTH, self.frame.size.height)];
-      [cursor.cursorX setWantsLayer:YES];
-      [cursor.cursorY setWantsLayer:YES];
-      cursor.cursorX.layer.backgroundColor = [self.highlightColor CGColor];
-      cursor.cursorY.layer.backgroundColor = [self.highlightColor CGColor];
-      //cursor.cursorX.userInteractionEnabled=NO;
-      //cursor.cursorY.userInteractionEnabled=NO;
-      [self addSubview:cursor.cursorX];
-      [self addSubview:cursor.cursorY];
-      
-      [_cursorStack addObject:cursor];
       
       
       //Touchview
-      TouchView* tv = [[TouchView alloc]initAtPoint:[self clipPoint:localPoint]];
-      [tv setWantsLayer:YES];
+      TouchViewGroup* tvg = [[TouchViewGroup alloc]init];
+      tvg.touchView = [[TouchView alloc] initWithFrame:CGRectMake(clippedPoint.x-TOUCH_VIEW_RADIUS, clippedPoint.y-TOUCH_VIEW_RADIUS, TOUCH_VIEW_RADIUS*2, TOUCH_VIEW_RADIUS*2)];
+      tvg.touchView.myGroup = tvg;
+      [tvg.touchView setWantsLayer:YES];
       //tv.layer.backgroundColor = [self.highlightColor CGColor];
-      tv.layer.borderColor = [[NSColor blackColor] CGColor];
-      tv.layer.borderWidth = CURSOR_WIDTH;
-      tv.layer.cornerRadius = TOUCH_VIEW_RADIUS;
+      tvg.touchView.layer.borderColor = [[NSColor blackColor] CGColor];
+      tvg.touchView.layer.borderWidth = CURSOR_WIDTH;
+      tvg.touchView.layer.cornerRadius = TOUCH_VIEW_RADIUS;
       
-      //tv.editingDelegate = self.editingDelegate;//necc?
-      //tv.parentView = self;//necc?
-      [self addSubview:tv];
+      tvg.cursorX = [[NSView alloc]init]; //]WithFrame:CGRectMake(5, 5, self.frame.size.width, CURSOR_WIDTH)];
+      tvg.cursorY = [[NSView alloc]init]; //WithFrame:CGRectMake(5, 5, CURSOR_WIDTH, self.frame.size.height)];
+      [tvg.cursorX setWantsLayer:YES];
+      [tvg.cursorY setWantsLayer:YES];
+      tvg.cursorX.layer.backgroundColor = [self.highlightColor CGColor];
+      tvg.cursorY.layer.backgroundColor = [self.highlightColor CGColor];
       
-      _currTouchView = tv;
+      CGRect horizFrame = CGRectMake(0, clippedPoint.y-CURSOR_WIDTH/2, self.frame.size.width, CURSOR_WIDTH);
+      [tvg.cursorX setFrame:horizFrame];
+      CGRect vertFrame = CGRectMake(clippedPoint.x-CURSOR_WIDTH/2, 0, CURSOR_WIDTH, self.frame.size.height);
+      [tvg.cursorY setFrame:vertFrame];
+      
+      [self addSubview:tvg.cursorX];
+      [self addSubview:tvg.cursorY];
+      [self addSubview:tvg.touchView];
+      
+      _currTouchViewGroup = tvg;
       _createdTouchOnMouseDown = YES;
       
       //stack
@@ -137,8 +135,8 @@
       //myTouch.origEvent = theEvent;
       //myTouch.state = 1;
       
-      myTouch.touchView = tv;
-      tv.myTouch = myTouch;
+      myTouch.touchViewGroup = tvg;
+      tvg.myTouch = myTouch;
       _currMyTouch = myTouch;
       
       [_touchStack addObject:myTouch];
@@ -179,16 +177,16 @@
       [self sendState];
       
       if([_touchStack count]>0) borderView.layer.borderColor=[MMPControl CGColorFromNSColor: self.highlightColor];
-      [self redrawCursors];
+      //[self redrawCursors];
   
     }
     else if ([topView isKindOfClass:[TouchView class]]){
-      _currTouchView = (TouchView*)topView;
-      _currMyTouch = _currTouchView.myTouch;
+      _currTouchViewGroup = ((TouchView*)topView).myGroup;
+      _currMyTouch = _currTouchViewGroup.myTouch;
       _createdTouchOnMouseDown=NO;
     }
     else {
-      _currTouchView = nil;
+      _currTouchViewGroup = nil;
       _createdTouchOnMouseDown=NO;
     }
   }
@@ -202,9 +200,14 @@
     
     //touchview
     CGPoint point = [self convertPoint:[theEvent locationInWindow] fromView:nil];
-    CGPoint clipPoint = [self clipPoint:point];
-    [_currTouchView setFrame:CGRectMake(clipPoint.x-TOUCH_VIEW_RADIUS, clipPoint.y-TOUCH_VIEW_RADIUS, TOUCH_VIEW_RADIUS*2, TOUCH_VIEW_RADIUS*2)];
+    CGPoint clippedPoint = [self clipPoint:point];
     
+    [_currTouchViewGroup.touchView setFrame:CGRectMake(clippedPoint.x-TOUCH_VIEW_RADIUS, clippedPoint.y-TOUCH_VIEW_RADIUS, TOUCH_VIEW_RADIUS*2, TOUCH_VIEW_RADIUS*2)];
+    
+    CGRect horizFrame = CGRectMake(0, clippedPoint.y-CURSOR_WIDTH/2, self.frame.size.width, CURSOR_WIDTH);
+    [_currTouchViewGroup.cursorX setFrame:horizFrame];
+    CGRect vertFrame = CGRectMake(clippedPoint.x-CURSOR_WIDTH/2, 0, CURSOR_WIDTH, self.frame.size.height);
+    [_currTouchViewGroup.cursorY setFrame:vertFrame];
     
     //for(MyTouch* myTouch in _touchStack){//TODO optimze! just get object by reference somehow? or use "indexOfObject"
       //if(myTouch.origEvent==theEvent){
@@ -226,7 +229,7 @@
     //}
   
   [self sendState];
-  [self redrawCursors];
+  //[self redrawCursors];
   }
 }
 
@@ -256,17 +259,11 @@
 
 -(void)removeTouches:(NSArray*)touchesToRemoveArray{
   [_touchStack removeObjectsInArray:touchesToRemoveArray];
-  //curosrs
-  for(Cursor* cursor in [_cursorStack subarrayWithRange:NSMakeRange([_touchStack count], [_cursorStack count]-[_touchStack count])] ){
-    [cursor.cursorX removeFromSuperview];
-    [cursor.cursorY removeFromSuperview];
-  }
-  [_cursorStack removeObjectsInRange:NSMakeRange([_touchStack count], [_cursorStack count]-[_touchStack count])];
   
-  //
   for(MyTouch* myTouch in touchesToRemoveArray){
-    [myTouch.touchView removeFromSuperview];
-    
+    [myTouch.touchViewGroup.touchView removeFromSuperview];
+    [myTouch.touchViewGroup.cursorX removeFromSuperview];
+    [myTouch.touchViewGroup.cursorY removeFromSuperview];
     
     NSMutableArray* formattedMessageArray = [[NSMutableArray alloc]init];
     [formattedMessageArray addObject:self.address];
@@ -284,13 +281,11 @@
   
   [self sendState];
   if([_touchStack count]==0) borderView.layer.borderColor=[MMPControl CGColorFromNSColor:self.color ];
-  [self redrawCursors];
+  //[self redrawCursors];
 
 }
 
-/*-(void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event{
-	[self touchesEnded:touches withEvent:event];
-}*/
+
 
 -(void)sendState{
   //all are triplets
@@ -318,7 +313,6 @@
     [msgArray addObject:[NSNumber numberWithFloat:myTouch.point.x]];
     [msgArray addObject:[NSNumber numberWithFloat:myTouch.point.y]];
   }
-  //[self.controlDelegate sendGUIMessageArray:msgArray];
   [self.editingDelegate sendFormattedMessageArray:msgArray];
   
   //sort via vox
@@ -390,44 +384,18 @@
   
 }
 
--(void)redrawCursors{
-	for(MyTouch* myTouch in _touchStack){
-    Cursor* currCursor = [_cursorStack objectAtIndex:[_touchStack indexOfObject:myTouch]] ;
-    
-    /*ios CGPoint HorizCenter=CGPointMake(self.frame.size.width/2, (1.0-myTouch.point.y)*self.frame.size.height);
-    CGPoint VertCenter=CGPointMake(myTouch.point.x*self.frame.size.width, self.frame.size.height/2);
-		currCursor.cursorX center=HorizCenter;
-		currCursor.cursorY.center=VertCenter;
-    */
-    
-    CGRect horizFrame = CGRectMake(0, (1.0-myTouch.point.y)*self.frame.size.height-CURSOR_WIDTH/2, self.frame.size.width, CURSOR_WIDTH);
-    [currCursor.cursorX setFrame:horizFrame];
-    CGRect vertFrame = CGRectMake(myTouch.point.x*self.frame.size.width-CURSOR_WIDTH/2, 0, CURSOR_WIDTH, self.frame.size.height);
-    [currCursor.cursorY setFrame:vertFrame];
-    
-    
-  }
-  
-}
-
 
 @end
 
-
-@implementation Cursor //handle add/remove from view, and color, touch property in main class
-
-@end
 
 @implementation MyTouch
 
 @end
 
+@implementation TouchViewGroup
+
+@end
 
 @implementation TouchView
-
--(id)initAtPoint:(CGPoint)point{
-  self = [super initWithFrame:CGRectMake(point.x-TOUCH_VIEW_RADIUS, point.y-TOUCH_VIEW_RADIUS, TOUCH_VIEW_RADIUS*2, TOUCH_VIEW_RADIUS*2)];
-  return self;
-}
 
 @end

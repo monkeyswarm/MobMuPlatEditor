@@ -30,13 +30,11 @@
         self.address=@"/myLCD";
         self.layer.backgroundColor=[MMPControl CGColorFromNSColor:self.color];
         
-        //from MMP object
-        [self setFrame:frame];
-        //NSTimer* timer = [NSTimer scheduledTimerWithTimeInterval:1. target:self selector:@selector(drawSquare) userInfo:nil repeats:YES];
         penPoint = CGPointMake(0, 0);
-        penWidth = 1;
-        
-        
+      [self setPenWidth:1];
+      
+        [self setFrame:frame];//create context
+ 
         //
         [self addHandles];
         
