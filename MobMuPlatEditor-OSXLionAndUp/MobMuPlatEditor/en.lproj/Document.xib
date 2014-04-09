@@ -116,12 +116,12 @@
                                                             <popUpButton verticalHuggingPriority="750" id="100152">
                                                                 <rect key="frame" x="97" y="297" width="122" height="26"/>
                                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                                                <popUpButtonCell key="cell" type="push" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" id="100153">
+                                                                <popUpButtonCell key="cell" type="push" title="iPhone - 3.5&quot;" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" selectedItem="100155" id="100153">
                                                                     <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
                                                                     <font key="font" metaFont="menu"/>
                                                                     <menu key="menu" title="OtherViews" id="100154">
                                                                         <items>
-                                                                            <menuItem title="iPhone - 3.5&quot;" id="100155"/>
+                                                                            <menuItem title="iPhone - 3.5&quot;" state="on" id="100155"/>
                                                                             <menuItem title="iPhone - 4&quot;" id="101119">
                                                                                 <modifierMask key="keyEquivalentModifierMask"/>
                                                                             </menuItem>

@@ -31,10 +31,10 @@
         self.layer.backgroundColor=[MMPControl CGColorFromNSColor:self.color];
         
         penPoint = CGPointMake(0, 0);
-      [self setPenWidth:1];
+      
       
         [self setFrame:frame];//create context
- 
+        [self setPenWidth:1];
         //
         [self addHandles];
         
