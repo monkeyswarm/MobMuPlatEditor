@@ -79,6 +79,12 @@
     imageView.layer.backgroundColor=[MMPControl CGColorFromNSColor:color];
 }
 
+
+-(void)setShouldPassTouchesUndoable:(NSNumber*)inVal{
+  [[self undoManager] registerUndoWithTarget:self selector:@selector(setShouldPassTouchesUndoable:) object:[NSNumber numberWithBool:self.shouldPassTouches]];
+  [self setShouldPassTouches:[inVal boolValue]];
+}
+
 //receive messages from PureData (via [send toGUI], routed through the PdWrapper.pd patch), routed from Document via the address to this object
 //it does not respond to "set" anything
 -(void)receiveList:(NSArray *)inArray{
@@ -99,7 +105,7 @@
 - (void)encodeWithCoder:(NSCoder *)coder {
     [super encodeWithCoder:coder];
     if(self.imagePath)[coder encodeObject:self.imagePath forKey:@"imagePath"];
-	
+  [coder encodeObject:[NSNumber numberWithBool:self.shouldPassTouches] forKey:@"passTouches"];
 }
 
 - (id)initWithCoder:(NSCoder *)coder {
@@ -109,7 +115,8 @@
             [self setImagePath:[coder decodeObjectForKey:@"imagePath"]];
             [self loadImage];
         }
-       
+      self.shouldPassTouches = [[coder decodeObjectForKey:@"passTouches"] boolValue];
+      
     }
     return self;
 }

@@ -21,6 +21,8 @@
 -(void)canvasClicked;
 -(NSURL*)fileURL;//return the fileURL of the document (in order to get relative paths to MMPPanel images)
 -(void)updateGuide:(MMPControl*)control;
+-(NSColor*)patchBackgroundColor;
+-(NSView*)canvasOuterView;
 @end
 
 @interface MMPControl : NSControl <NSCoding, NSPasteboardReading, NSPasteboardWriting>{

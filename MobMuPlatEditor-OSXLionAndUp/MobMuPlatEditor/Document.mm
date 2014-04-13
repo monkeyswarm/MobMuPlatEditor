@@ -429,6 +429,11 @@
   [self addControlHelper:newControl];
 }
 
+- (IBAction)addMenu:(NSButton *)sender {
+  MMPMenu* newControl = [[MMPMenu alloc]initWithFrame:CGRectMake(-canvasView.frame.origin.x,0,200,40)];
+  [self addControlHelper:newControl];
+}
+
 - (IBAction)addLCD:(NSButton *)sender {
     MMPLCD* newControl = [[MMPLCD alloc]initWithFrame:CGRectMake(-canvasView.frame.origin.x,0,100,100)];
     [self addControlHelper:newControl];
@@ -581,6 +586,9 @@
             [self.propVarView addSubview:self.propPanelView];
             if([(MMPPanel*)control imagePath])
                 [self.propPanelImagePathTextField setStringValue:[(MMPPanel*)control imagePath]];
+            else
+              [self.propPanelImagePathTextField setStringValue:@""];
+            [self.propPanelPassTouchesButton setState:((MMPPanel*)control).shouldPassTouches];
         }
         else if([control isKindOfClass:[MMPMultiSlider class]]){
             [self.propVarView addSubview:self.propMultiSliderView];
@@ -590,7 +598,11 @@
             [self.propVarView addSubview:self.propToggleView];
             [self.propToggleThicknessTextField setIntegerValue:[(MMPToggle*)control borderThickness]];
         }
-        
+        else if([control isKindOfClass:[MMPMenu class]]){
+          [self.propVarView addSubview:self.propMenuView];
+          [self.propMenuTitleTextField setStringValue:[(MMPMenu*)control titleString]];
+        }
+      
         currentSingleSelection=control;
     }
     
@@ -682,6 +694,7 @@
 }
 
 - (IBAction)propAddressChanged:(NSTextField*)sender {
+  if(currentSingleSelection==nil)return;//fix bug on startup that, on canvas click, calls this with no selection.
     [[self undoManager] registerUndoWithTarget:self selector:@selector(setPropAddressText:) object:[currentSingleSelection address]];
     [[self undoManager] registerUndoWithTarget:currentSingleSelection selector:@selector(setAddressUndoable:) object:[currentSingleSelection address]];
     if(currentSingleSelection)[currentSingleSelection setAddress:[sender stringValue]];
@@ -768,6 +781,20 @@
     [[self undoManager] registerUndoWithTarget:self selector:@selector(setPropLabelText:) object:[currLabel stringValue]];
     
     [currLabel setStringValue:[sender stringValue]];
+}
+
+//just for proper undo/redo
+-(void)setPropMenuTitleText:(NSString*)inString{
+  [[self undoManager] registerUndoWithTarget:self selector:@selector(setPropMenuTitleText:) object:[self.propMenuTitleTextField stringValue]];
+  [self.propMenuTitleTextField setStringValue:inString];
+}
+
+- (IBAction)propMenuTitleTextChanged:(NSTextField *)sender {
+  MMPMenu* currMenu = (MMPMenu*)currentSingleSelection;
+  [[self undoManager] registerUndoWithTarget:currMenu selector:@selector(setTitleStringUndoable:) object:[currMenu titleString ]];
+  [[self undoManager] registerUndoWithTarget:self selector:@selector(setPropMenuTitleText:) object:[currMenu titleString]];
+  
+  [currMenu setTitleString:[sender stringValue]];
 }
 
 //just for proper undo/redo
@@ -941,6 +968,24 @@
     [(MMPPanel*)currentSingleSelection loadImage];
 }
 
+//just for undo/red0
+-(void)setPropPanelPassTouchesChanged:(NSNumber*)inNum{
+  [[self undoManager] registerUndoWithTarget:self selector:@selector(setPropPanelPassTouchesChanged:) object:[NSNumber numberWithBool:(self.propPanelPassTouchesButton.state>0)]];
+  self.propPanelPassTouchesButton.state = [inNum boolValue] ? 1 : 0;
+  
+}
+
+- (IBAction)propPanelPassTouchesChanged:(id)sender{//send can be number.bool or nsbutton
+  MMPPanel* currPanel = (MMPPanel*)currentSingleSelection;
+  
+  [[self undoManager] registerUndoWithTarget:currPanel selector:@selector(setShouldPassTouchesUndoable:) object:[NSNumber numberWithBool:[currPanel shouldPassTouches]]];
+  [[self undoManager] registerUndoWithTarget:self selector:@selector(setPropPanelPassTouchesChanged:) object:[NSNumber numberWithBool:[currPanel shouldPassTouches]]];
+  BOOL toSet;
+  if([sender isKindOfClass:[NSButton class]]) toSet = [(NSButton*)sender state];
+  else toSet = [(NSNumber*)sender boolValue];//nsnumber from redo
+  currPanel.shouldPassTouches = toSet;
+}
+
 //just for proper undo/redo
 -(void)setPropMultiSliderRange:(NSNumber*)inNum{
     [[self undoManager] registerUndoWithTarget:self selector:@selector(setPropMultiSliderRange:) object:[NSNumber numberWithInt:[self.propMultiSliderRangeField intValue]]];
@@ -1016,6 +1061,13 @@
         [scrollView.contentView scrollToPoint:NSMakePoint(0, intrinsicHeight - scrollView.contentSize.height)];
 }
 
+-(NSColor*)patchBackgroundColor {
+  return canvasView.bgColor;
+}
+-(NSView*)canvasOuterView{
+  return canvasOuterView;
+}
+
 //send out OSC message, formatted from array of messages
 -(void)sendFormattedMessageArray:(NSMutableArray*)formattedMessageArray{
     
@@ -1028,13 +1080,14 @@
         unichar c = [tagsString characterAtIndex:i];
         switch(c){
             case 'i':
-                [theString appendString:[NSString stringWithFormat:@" %d", [[formattedMessageArray objectAtIndex:i+2] intValue]]];
+                [theString appendString:[NSString stringWithFormat:@"%d ", [[formattedMessageArray objectAtIndex:i+2] intValue]]];
                  break;
             case 'f':
-                [theString appendString:[NSString stringWithFormat:@" %.3f", [[formattedMessageArray objectAtIndex:i+2] floatValue]]];
+                [theString appendString:[NSString stringWithFormat:@"%.3f ", [[formattedMessageArray objectAtIndex:i+2] floatValue]]];
                 break;
             case 's':
                 [theString appendString:[formattedMessageArray objectAtIndex:i+2]];
+                [theString appendString:@" "];
                  break;
 
         }

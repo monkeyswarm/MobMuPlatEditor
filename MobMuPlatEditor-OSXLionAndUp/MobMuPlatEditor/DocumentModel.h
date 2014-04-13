@@ -22,6 +22,7 @@
 #import "MMPLCD.h"
 #import "MMPMultiTouch.h"
 #import "MMPUnknown.h"
+#import "MMPMenu.h"
 
 typedef enum{
     canvasTypeIPhone3p5Inch = 0,

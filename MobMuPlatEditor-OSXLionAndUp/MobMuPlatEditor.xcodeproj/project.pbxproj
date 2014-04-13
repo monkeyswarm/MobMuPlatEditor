@@ -42,6 +42,7 @@
 		DCE2F0331732BB39002B897C /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = DCE2F02D1732BB39002B897C /* main.m */; };
 		DCE2F0341732BB39002B897C /* MMPIcons.iconset in Resources */ = {isa = PBXBuildFile; fileRef = DCE2F02E1732BB39002B897C /* MMPIcons.iconset */; };
 		DCE2F0361732BB39002B897C /* uifontlist.txt in Resources */ = {isa = PBXBuildFile; fileRef = DCE2F0311732BB39002B897C /* uifontlist.txt */; };
+		F94FB53C18F5A045003BFB18 /* MMPMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = F94FB53B18F5A045003BFB18 /* MMPMenu.m */; };
 		F9F44F3918BC2A3200101132 /* MMPMultiTouch.m in Sources */ = {isa = PBXBuildFile; fileRef = F9F44F3818BC2A3200101132 /* MMPMultiTouch.m */; };
 /* End PBXBuildFile section */
 
@@ -120,6 +121,8 @@
 		DCE2F0301732BB39002B897C /* MobMuPlatEditor-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "MobMuPlatEditor-Prefix.pch"; path = "MobMuPlatEditor/MobMuPlatEditor-Prefix.pch"; sourceTree = SOURCE_ROOT; };
 		DCE2F0311732BB39002B897C /* uifontlist.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = uifontlist.txt; path = MobMuPlatEditor/uifontlist.txt; sourceTree = SOURCE_ROOT; };
 		DCE2F0371732BD86002B897C /* infoicon_100x100.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = infoicon_100x100.png; path = MobMuPlatEditor/infoicon_100x100.png; sourceTree = SOURCE_ROOT; };
+		F94FB53A18F5A045003BFB18 /* MMPMenu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MMPMenu.h; path = MobMuPlatEditor/Controls/MMPMenu.h; sourceTree = SOURCE_ROOT; };
+		F94FB53B18F5A045003BFB18 /* MMPMenu.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MMPMenu.m; path = MobMuPlatEditor/Controls/MMPMenu.m; sourceTree = SOURCE_ROOT; };
 		F9F44F3718BC2A3200101132 /* MMPMultiTouch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MMPMultiTouch.h; path = MobMuPlatEditor/MMPMultiTouch.h; sourceTree = SOURCE_ROOT; };
 		F9F44F3818BC2A3200101132 /* MMPMultiTouch.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MMPMultiTouch.m; path = MobMuPlatEditor/MMPMultiTouch.m; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
@@ -296,6 +299,8 @@
 				DC5A5ADD18825DFB00FC97D5 /* MMPUnknown.m */,
 				F9F44F3718BC2A3200101132 /* MMPMultiTouch.h */,
 				F9F44F3818BC2A3200101132 /* MMPMultiTouch.m */,
+				F94FB53A18F5A045003BFB18 /* MMPMenu.h */,
+				F94FB53B18F5A045003BFB18 /* MMPMenu.m */,
 			);
 			name = Controls;
 			sourceTree = "<group>";
@@ -374,6 +379,7 @@
 				DCE2EFF71732BA83002B897C /* OscReceivedElements.cpp in Sources */,
 				DCE2EFF81732BA83002B897C /* OscTypes.cpp in Sources */,
 				DCE2F00D1732BAA6002B897C /* MMPButton.m in Sources */,
+				F94FB53C18F5A045003BFB18 /* MMPMenu.m in Sources */,
 				DCE2F00E1732BAA6002B897C /* MMPControl.m in Sources */,
 				DCE2F00F1732BAA6002B897C /* MMPGrid.m in Sources */,
 				DC5A5AE118825E3200FC97D5 /* MMPLCD.m in Sources */,

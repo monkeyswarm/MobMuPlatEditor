@@ -111,6 +111,7 @@
         else if([control isKindOfClass:[MMPPanel class]]){
             if([(MMPPanel*)control imagePath])
                 [GUIDict setObject:[(MMPPanel*)control imagePath] forKey:@"imagePath"];
+          [GUIDict setObject:[NSNumber numberWithBool:((MMPPanel*)control).shouldPassTouches] forKey:@"passTouches"];
         }
         //multislider
         else if([control isKindOfClass:[MMPMultiSlider class]]){
@@ -119,6 +120,9 @@
         //Toggle
         else if([control isKindOfClass:[MMPToggle class]]){
             [GUIDict setObject:[NSNumber numberWithInt:[(MMPToggle*)control borderThickness]] forKey:@"borderThickness"] ;
+        }
+        else if([control isKindOfClass:[MMPMenu class]]){
+            [GUIDict setObject:[(MMPMenu*)control titleString] forKey:@"title"] ;
         }
         //LCD and Button have no properties
         //pass along original bad class
@@ -262,6 +266,7 @@
             else if([classString isEqualToString:@"MMPPanel"]){
                 control = [[MMPPanel alloc] initWithFrame:newFrame];
                 if([guiDict objectForKey:@"imagePath"])[(MMPPanel*)control setImagePath:[guiDict objectForKey:@"imagePath"]];
+                if([guiDict objectForKey:@"passTouches"])[(MMPPanel*)control setShouldPassTouches:[guiDict objectForKey:@"passTouches"]];
                     
             }
             else if([classString isEqualToString:@"MMPMultiSlider"]){
@@ -274,6 +279,11 @@
             }
             else if([classString isEqualToString:@"MMPMultiTouch"]){
               control = [[MMPMultiTouch alloc] initWithFrame:newFrame];
+            }
+            else if([classString isEqualToString:@"MMPMenu"]) {
+              control = [[MMPMenu alloc] initWithFrame:newFrame];
+              if([guiDict objectForKey:@"title"])
+                [(MMPMenu*)control setTitleString:[guiDict objectForKey:@"title"] ];
             }
             else{//unkown
                 control = [[MMPUnknown alloc] initWithFrame:newFrame];

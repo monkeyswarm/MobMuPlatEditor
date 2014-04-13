@@ -8,6 +8,7 @@
 
 #import "MMPLabel.h"
 #define DEFAULT_FONT @"HelveticaNeue"
+#define DEFAULT_FONTSIZE 16
 @implementation MMPLabel
 
 
@@ -32,7 +33,7 @@
         [textView setTextColor:self.color];
       
         [self setStringValue:@"my text goes here"];
-        [self setTextSize:16];
+        [self setTextSize:DEFAULT_FONTSIZE];
         [self addSubview:textView];
         
         [self addHandles];

@@ -158,7 +158,7 @@
       }
       if(!added){
         [_touchByVoxArray addObject:myTouch];//add to end
-        int index = [_touchByVoxArray indexOfObject:myTouch];//or just array size
+        int index = (int)[_touchByVoxArray indexOfObject:myTouch];//or just array size//todo make polyvox nsuinteger
         myTouch.polyVox = index+1;
       }
       

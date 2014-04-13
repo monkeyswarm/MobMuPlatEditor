@@ -20,6 +20,7 @@
 #import "MMPPanel.h"
 #import "MMPMultiSlider.h"
 #import "MMPMultiTouch.h"
+#import "MMPMenu.h"
 #import "OSCManager.h"
 #import "MMPDocumentController.h"
 #define LOGLINES 12
@@ -106,10 +107,14 @@
     NSView *_propPanelView;
     NSButton *_propPanelChooseImageButton;
     NSTextField *_propPanelImagePathTextField;
-    
+    NSButton *_propPanelPassTouchesButton;
+  
     NSView *_propMultiSliderView;
     NSTextField *_propMultiSliderRangeField;
-    
+  
+    NSView *_propMenuView;
+    NSTextField *_propMenuTitleTextField;
+  
     //lock
     NSTextView *_lockTextView;
     NSButton *_lockClearButton;
@@ -149,6 +154,7 @@
 - (IBAction)addMultiSlider:(NSButton *)sender;
 - (IBAction)addLCD:(NSButton *)sender;
 - (IBAction)addMultiTouch:(NSButton *)sender;
+- (IBAction)addMenu:(NSButton *)sender;
 
 - (IBAction)propDelete:(NSButton *)sender;
 - (IBAction)bringForward:(NSButton *)sender;
@@ -175,7 +181,9 @@
 - (IBAction)propGridCellPaddingChanged:(NSTextField *)sender;
 - (IBAction)propPanelChooseImage:(NSButton *)sender;
 - (IBAction)propPanelImagePathTextChanged:(NSTextField *)sender;
+- (IBAction)propPanelPassTouchesChanged:(NSButton *)sender;
 - (IBAction)propMultiSliderRangeChanged:(NSTextField *)sender;
+- (IBAction)propMenuTitleTextChanged:(NSTextField *)sender;
 
 //lock
 - (IBAction)lockClearButtonHit:(NSButton *)sender;
@@ -242,6 +250,7 @@
 @property (strong) IBOutlet NSButton *propDeleteButton;
 @property (strong) IBOutlet NSButton *propPanelChooseImageButton;
 @property (strong) IBOutlet NSTextField *propPanelImagePathTextField;
+@property (strong) IBOutlet NSButton *propPanelPassTouchesButton;
 @property (strong) IBOutlet NSTextField *docPortField;
 @property (strong) IBOutlet NSPopUpButtonCell *propLabelFontType;
 @property (strong) IBOutlet NSPopUpButton *propLabelFontTypeButton;
@@ -249,8 +258,11 @@
 @property (strong) IBOutlet NSButton *addMultiSliderButton;
 @property (strong) IBOutlet NSButton *addLCDButton;
 @property (strong) IBOutlet NSButton *addMultiTouchButton;
+@property (strong) IBOutlet NSButton *addMenuButton;
 @property (strong) IBOutlet NSView *propMultiSliderView;
 @property (strong) IBOutlet NSTextField *propMultiSliderRangeField;
 @property (strong) IBOutlet NSView *propToggleView;
 @property (strong) IBOutlet NSTextField *propToggleThicknessTextField;
+@property (strong) IBOutlet NSView *propMenuView;
+@property (strong) IBOutlet NSTextField *propMenuTitleTextField;
 @end

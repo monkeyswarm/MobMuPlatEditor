@@ -18,5 +18,5 @@
 @property(nonatomic, readonly)NSString* fontFamily;
 
 -(void)setFontFamily:(NSString *)fontFamily fontName:(NSString*)fontName;
-
++ (BOOL)numberIsFloat:(NSNumber*)num;
 @end

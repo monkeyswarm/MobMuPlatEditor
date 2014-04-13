@@ -12,6 +12,7 @@
                 <outlet property="addKnobButton" destination="100324" id="100342"/>
                 <outlet property="addLCDButton" destination="esw-II-ISr" id="bRM-Ft-L6Q"/>
                 <outlet property="addLabelButton" destination="100330" id="100344"/>
+                <outlet property="addMenuButton" destination="ryd-he-cQk" id="UFZ-ck-O9q"/>
                 <outlet property="addMultiSliderButton" destination="101183" id="101185"/>
                 <outlet property="addMultiTouchButton" destination="UxV-1v-LtB" id="3zG-0X-KV1"/>
                 <outlet property="addPanelButton" destination="101062" id="101064"/>
@@ -64,10 +65,13 @@
                 <outlet property="propLabelSizeTextField" destination="100286" id="100375"/>
                 <outlet property="propLabelTextField" destination="100371" id="100373"/>
                 <outlet property="propLabelView" destination="100272" id="100370"/>
+                <outlet property="propMenuTitleTextField" destination="eb6-rh-nea" id="Zmg-Ty-iSA"/>
+                <outlet property="propMenuView" destination="2Og-FL-jiB" id="0Lg-4b-J0Z"/>
                 <outlet property="propMultiSliderRangeField" destination="101190" id="101194"/>
                 <outlet property="propMultiSliderView" destination="101187" id="101193"/>
                 <outlet property="propPanelChooseImageButton" destination="101068" id="101080"/>
                 <outlet property="propPanelImagePathTextField" destination="101070" id="101081"/>
+                <outlet property="propPanelPassTouchesButton" destination="tkl-In-KsN" id="cO3-Xu-BCh"/>
                 <outlet property="propPanelView" destination="101066" id="101067"/>
                 <outlet property="propSliderOrientationPopButton" destination="100229" id="101037"/>
                 <outlet property="propSliderRangeTextField" destination="100237" id="101038"/>
@@ -116,12 +120,12 @@
                                                             <popUpButton verticalHuggingPriority="750" id="100152">
                                                                 <rect key="frame" x="97" y="297" width="122" height="26"/>
                                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                                                <popUpButtonCell key="cell" type="push" title="iPhone - 3.5&quot;" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" selectedItem="100155" id="100153">
+                                                                <popUpButtonCell key="cell" type="push" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" id="100153">
                                                                     <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
                                                                     <font key="font" metaFont="menu"/>
                                                                     <menu key="menu" title="OtherViews" id="100154">
                                                                         <items>
-                                                                            <menuItem title="iPhone - 3.5&quot;" state="on" id="100155"/>
+                                                                            <menuItem title="iPhone - 3.5&quot;" id="100155"/>
                                                                             <menuItem title="iPhone - 4&quot;" id="101119">
                                                                                 <modifierMask key="keyEquivalentModifierMask"/>
                                                                             </menuItem>
@@ -437,6 +441,17 @@ slider</string>
                                                                 </buttonCell>
                                                                 <connections>
                                                                     <action selector="addLCD:" target="-2" id="mQx-ZU-cc7"/>
+                                                                </connections>
+                                                            </button>
+                                                            <button id="ryd-he-cQk">
+                                                                <rect key="frame" x="131" y="78" width="58" height="55"/>
+                                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                                                <buttonCell key="cell" type="square" title="menu" bezelStyle="shadowlessSquare" imagePosition="overlaps" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="4eW-Ea-N67">
+                                                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                                                    <font key="font" metaFont="system"/>
+                                                                </buttonCell>
+                                                                <connections>
+                                                                    <action selector="addMenu:" target="-2" id="t2t-nI-5X3"/>
                                                                 </connections>
                                                             </button>
                                                             <button id="UxV-1v-LtB">
@@ -1107,7 +1122,7 @@ A range of &gt;2 sends integers.</string>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
             <subviews>
                 <button verticalHuggingPriority="750" id="101068">
-                    <rect key="frame" x="115" y="95" width="100" height="32"/>
+                    <rect key="frame" x="115" y="103" width="100" height="32"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <buttonCell key="cell" type="push" title="Choose..." bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="101073">
                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -1118,7 +1133,7 @@ A range of &gt;2 sends integers.</string>
                     </connections>
                 </button>
                 <textField verticalHuggingPriority="750" id="101069">
-                    <rect key="frame" x="13" y="103" width="43" height="17"/>
+                    <rect key="frame" x="13" y="111" width="43" height="17"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Image" id="101072">
                         <font key="font" metaFont="system"/>
@@ -1127,7 +1142,7 @@ A range of &gt;2 sends integers.</string>
                     </textFieldCell>
                 </textField>
                 <textField verticalHuggingPriority="750" id="101070">
-                    <rect key="frame" x="13" y="73" width="198" height="22"/>
+                    <rect key="frame" x="13" y="81" width="198" height="22"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" drawsBackground="YES" id="101071">
                         <font key="font" metaFont="system"/>
@@ -1139,18 +1154,28 @@ A range of &gt;2 sends integers.</string>
                     </connections>
                 </textField>
                 <textField verticalHuggingPriority="750" id="101147">
-                    <rect key="frame" x="13" y="14" width="330" height="56"/>
+                    <rect key="frame" x="7" y="20" width="212" height="56"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" id="101148">
-                        <font key="font" metaFont="smallSystem"/>
-                        <string key="title">Type in just the file name for a 
-relative path (same folder as saved 
-document), or hit choose to specify 
-an absolute path.</string>
+                        <font key="font" size="10" name="LucidaGrande"/>
+                        <string key="title">Type in just the file name for a relative 
+path (same folder as saved document), 
+or hit choose to specify an absolute path.</string>
                         <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                     </textFieldCell>
                 </textField>
+                <button id="tkl-In-KsN">
+                    <rect key="frame" x="7" y="10" width="204" height="18"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <buttonCell key="cell" type="check" title="Allow touches to scroll patch" bezelStyle="regularSquare" imagePosition="left" inset="2" id="moG-Oy-D7H">
+                        <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                        <font key="font" metaFont="system"/>
+                    </buttonCell>
+                    <connections>
+                        <action selector="propPanelPassTouchesChanged:" target="-2" id="GEJ-RC-9T4"/>
+                    </connections>
+                </button>
             </subviews>
         </customView>
         <customView id="101187">
@@ -1216,6 +1241,42 @@ an absolute path.</string>
                     <connections>
                         <action selector="propToggleThicknessChanged:" target="-2" id="101207"/>
                     </connections>
+                </textField>
+            </subviews>
+        </customView>
+        <customView id="2Og-FL-jiB">
+            <rect key="frame" x="0.0" y="0.0" width="224" height="137"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+            <subviews>
+                <textField verticalHuggingPriority="750" id="c4Q-xa-blN">
+                    <rect key="frame" x="9" y="100" width="104" height="17"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Menu Title" id="wud-89-v8F">
+                        <font key="font" metaFont="system"/>
+                        <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
+                </textField>
+                <textField verticalHuggingPriority="750" id="eb6-rh-nea">
+                    <rect key="frame" x="11" y="61" width="202" height="31"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" drawsBackground="YES" id="5Py-pe-DYS">
+                        <font key="font" metaFont="system"/>
+                        <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
+                        <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
+                    <connections>
+                        <action selector="propMenuTitleTextChanged:" target="-2" id="3Om-4G-zV3"/>
+                    </connections>
+                </textField>
+                <textField verticalHuggingPriority="750" id="kyD-qj-ktj">
+                    <rect key="frame" x="9" y="0.0" width="204" height="34"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="(set item list from the PD patch)" id="Y16-mP-Jc1">
+                        <font key="font" metaFont="system"/>
+                        <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
                 </textField>
             </subviews>
         </customView>
