@@ -44,4 +44,21 @@
     [warningLabel setFrame:self.bounds];
 }
 
+//copy/paste
+- (void)encodeWithCoder:(NSCoder *)coder {
+  [super encodeWithCoder:coder];
+  [coder encodeObject:self.badName forKey:@"badName"];
+	[coder encodeObject:self.badGUIDict forKey:@"badGUIDict"];
+  
+}
+
+- (id)initWithCoder:(NSCoder *)coder {
+  if(self=[super initWithCoder:coder]){
+    [self setBadName:[coder decodeObjectForKey:@"badName"]];
+    [self setBadGUIDict:[coder decodeObjectForKey:@"badGUIDict"]];
+  }
+  return self;
+}
+
+
 @end

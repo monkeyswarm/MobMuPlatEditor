@@ -1166,9 +1166,9 @@ or hit choose to specify an absolute path.</string>
                     </textFieldCell>
                 </textField>
                 <button id="tkl-In-KsN">
-                    <rect key="frame" x="7" y="10" width="204" height="18"/>
+                    <rect key="frame" x="25" y="10" width="165" height="18"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                    <buttonCell key="cell" type="check" title="Allow touches to scroll patch" bezelStyle="regularSquare" imagePosition="left" inset="2" id="moG-Oy-D7H">
+                    <buttonCell key="cell" type="check" title="Allow touches to scroll" bezelStyle="regularSquare" imagePosition="left" inset="2" id="moG-Oy-D7H">
                         <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                         <font key="font" metaFont="system"/>
                     </buttonCell>

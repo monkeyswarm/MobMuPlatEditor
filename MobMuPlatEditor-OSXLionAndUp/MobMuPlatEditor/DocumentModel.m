@@ -285,7 +285,7 @@
               if([guiDict objectForKey:@"title"])
                 [(MMPMenu*)control setTitleString:[guiDict objectForKey:@"title"] ];
             }
-            else{//unkown
+            else{//unknown
                 control = [[MMPUnknown alloc] initWithFrame:newFrame];
                 [(MMPUnknown*)control setBadName:classString];
                 [(MMPUnknown*)control setBadGUIDict:guiDict];
