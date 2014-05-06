@@ -17,7 +17,6 @@
 		DC8146B51732C43E0041F394 /* infoicon_100x100.png in Resources */ = {isa = PBXBuildFile; fileRef = DCE2F0371732BD86002B897C /* infoicon_100x100.png */; };
 		DC8146BC1732C4E10041F394 /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = DC8146B81732C4E10041F394 /* Credits.rtf */; };
 		DC8146BD1732C4E10041F394 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = DC8146BA1732C4E10041F394 /* InfoPlist.strings */; };
-		DCE2EFE81732B9EF002B897C /* JSONKit.m in Sources */ = {isa = PBXBuildFile; fileRef = DCE2EFE71732B9EF002B897C /* JSONKit.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		DCE2EFF51732BA83002B897C /* OscOutboundPacketStream.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DCE2EFEC1732BA83002B897C /* OscOutboundPacketStream.cpp */; };
 		DCE2EFF61732BA83002B897C /* OscPrintReceivedElements.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DCE2EFEF1732BA83002B897C /* OscPrintReceivedElements.cpp */; };
 		DCE2EFF71732BA83002B897C /* OscReceivedElements.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DCE2EFF11732BA83002B897C /* OscReceivedElements.cpp */; };
@@ -42,6 +41,7 @@
 		DCE2F0331732BB39002B897C /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = DCE2F02D1732BB39002B897C /* main.m */; };
 		DCE2F0341732BB39002B897C /* MMPIcons.iconset in Resources */ = {isa = PBXBuildFile; fileRef = DCE2F02E1732BB39002B897C /* MMPIcons.iconset */; };
 		DCE2F0361732BB39002B897C /* uifontlist.txt in Resources */ = {isa = PBXBuildFile; fileRef = DCE2F0311732BB39002B897C /* uifontlist.txt */; };
+		F9109646190DFBC8008707EE /* MMPTable.m in Sources */ = {isa = PBXBuildFile; fileRef = F9109645190DFBC8008707EE /* MMPTable.m */; };
 		F94FB53C18F5A045003BFB18 /* MMPMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = F94FB53B18F5A045003BFB18 /* MMPMenu.m */; };
 		F9F44F3918BC2A3200101132 /* MMPMultiTouch.m in Sources */ = {isa = PBXBuildFile; fileRef = F9F44F3818BC2A3200101132 /* MMPMultiTouch.m */; };
 /* End PBXBuildFile section */
@@ -69,8 +69,6 @@
 		DCE0BC87168E782A001B6DF3 /* TimerListener.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TimerListener.h; path = oscpack/ip/TimerListener.h; sourceTree = "<group>"; };
 		DCE0BC88168E782A001B6DF3 /* UdpSocket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UdpSocket.h; path = oscpack/ip/UdpSocket.h; sourceTree = "<group>"; };
 		DCE0BC8F168E783F001B6DF3 /* OSCManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OSCManager.h; path = oscpack/OSCManager.h; sourceTree = "<group>"; };
-		DCE2EFE61732B9EF002B897C /* JSONKit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JSONKit.h; path = JSONKit/JSONKit.h; sourceTree = "<group>"; };
-		DCE2EFE71732B9EF002B897C /* JSONKit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = JSONKit.m; path = JSONKit/JSONKit.m; sourceTree = "<group>"; };
 		DCE2EFE91732BA83002B897C /* MessageMappingOscPacketListener.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MessageMappingOscPacketListener.h; path = oscpack/osc/MessageMappingOscPacketListener.h; sourceTree = SOURCE_ROOT; };
 		DCE2EFEA1732BA83002B897C /* OscException.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OscException.h; path = oscpack/osc/OscException.h; sourceTree = SOURCE_ROOT; };
 		DCE2EFEB1732BA83002B897C /* OscHostEndianness.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OscHostEndianness.h; path = oscpack/osc/OscHostEndianness.h; sourceTree = SOURCE_ROOT; };
@@ -121,6 +119,8 @@
 		DCE2F0301732BB39002B897C /* MobMuPlatEditor-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "MobMuPlatEditor-Prefix.pch"; path = "MobMuPlatEditor/MobMuPlatEditor-Prefix.pch"; sourceTree = SOURCE_ROOT; };
 		DCE2F0311732BB39002B897C /* uifontlist.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = uifontlist.txt; path = MobMuPlatEditor/uifontlist.txt; sourceTree = SOURCE_ROOT; };
 		DCE2F0371732BD86002B897C /* infoicon_100x100.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = infoicon_100x100.png; path = MobMuPlatEditor/infoicon_100x100.png; sourceTree = SOURCE_ROOT; };
+		F9109644190DFBC8008707EE /* MMPTable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MMPTable.h; path = MobMuPlatEditor/Controls/MMPTable.h; sourceTree = SOURCE_ROOT; };
+		F9109645190DFBC8008707EE /* MMPTable.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MMPTable.m; path = MobMuPlatEditor/Controls/MMPTable.m; sourceTree = SOURCE_ROOT; };
 		F94FB53A18F5A045003BFB18 /* MMPMenu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MMPMenu.h; path = MobMuPlatEditor/Controls/MMPMenu.h; sourceTree = SOURCE_ROOT; };
 		F94FB53B18F5A045003BFB18 /* MMPMenu.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MMPMenu.m; path = MobMuPlatEditor/Controls/MMPMenu.m; sourceTree = SOURCE_ROOT; };
 		F9F44F3718BC2A3200101132 /* MMPMultiTouch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MMPMultiTouch.h; path = MobMuPlatEditor/MMPMultiTouch.h; sourceTree = SOURCE_ROOT; };
@@ -143,7 +143,6 @@
 			isa = PBXGroup;
 			children = (
 				DCE0BC6F168E77C6001B6DF3 /* oscpack */,
-				DCE2EFE51732B83F002B897C /* JSONKit */,
 				DC34E24D168BB79800648C2F /* MobMuPlatEd */,
 				DC34E246168BB79800648C2F /* Frameworks */,
 				DC34E244168BB79800648C2F /* Products */,
@@ -261,15 +260,6 @@
 			name = ip;
 			sourceTree = "<group>";
 		};
-		DCE2EFE51732B83F002B897C /* JSONKit */ = {
-			isa = PBXGroup;
-			children = (
-				DCE2EFE61732B9EF002B897C /* JSONKit.h */,
-				DCE2EFE71732B9EF002B897C /* JSONKit.m */,
-			);
-			name = JSONKit;
-			sourceTree = "<group>";
-		};
 		DCFBBF39168D1ACB00746B04 /* Controls */ = {
 			isa = PBXGroup;
 			children = (
@@ -301,6 +291,8 @@
 				F9F44F3818BC2A3200101132 /* MMPMultiTouch.m */,
 				F94FB53A18F5A045003BFB18 /* MMPMenu.h */,
 				F94FB53B18F5A045003BFB18 /* MMPMenu.m */,
+				F9109644190DFBC8008707EE /* MMPTable.h */,
+				F9109645190DFBC8008707EE /* MMPTable.m */,
 			);
 			name = Controls;
 			sourceTree = "<group>";
@@ -373,7 +365,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DCE2EFE81732B9EF002B897C /* JSONKit.m in Sources */,
 				DCE2EFF51732BA83002B897C /* OscOutboundPacketStream.cpp in Sources */,
 				DCE2EFF61732BA83002B897C /* OscPrintReceivedElements.cpp in Sources */,
 				DCE2EFF71732BA83002B897C /* OscReceivedElements.cpp in Sources */,
@@ -402,6 +393,7 @@
 				DC8146AF1732BF980041F394 /* OSCManager.mm in Sources */,
 				DC8146B21732C0090041F394 /* NetworkingUtils.cpp in Sources */,
 				DC8146B31732C0090041F394 /* UdpSocket.cpp in Sources */,
+				F9109646190DFBC8008707EE /* MMPTable.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

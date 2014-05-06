@@ -36,7 +36,14 @@
 - (void)windowControllerDidLoadNib:(NSWindowController *)aController
 {
     [super windowControllerDidLoadNib:aController];
-    
+  
+  //kick the pd patch to get it to reconnect
+  NSMutableArray* formattedMessageArray = [[NSMutableArray alloc]init];
+  [formattedMessageArray addObject:@"/system/opened"];
+  [formattedMessageArray  addObject:[[NSMutableString alloc]initWithString:@"i"]];//tags
+  [formattedMessageArray addObject:[NSNumber numberWithInt:1]];
+  [self sendFormattedMessageArray:formattedMessageArray];
+  
     [canvasOuterView setWantsLayer:YES];
     canvasOuterView.layer.backgroundColor=CGColorCreateGenericGray(.1, 1);
     
@@ -57,13 +64,7 @@
     [self.tabView selectFirstTabViewItem:nil];
     [self setIsEditing:YES];
     
-    //kick the pd patch to get it to reconnect 
-    NSMutableArray* formattedMessageArray = [[NSMutableArray alloc]init];
-    [formattedMessageArray addObject:@"/system/opened"];
-    [formattedMessageArray  addObject:[[NSMutableString alloc]initWithString:@"i"]];//tags
-    [formattedMessageArray addObject:[NSNumber numberWithInt:1]];
-    [self sendFormattedMessageArray:formattedMessageArray];
-   
+  
     
 }
 
@@ -101,6 +102,12 @@
                 [(MMPPanel*)control loadImage];
             }
         }
+      
+        //table stuff
+      if([control isKindOfClass:[MMPTable class]]){
+        [(MMPTable*)control loadTable];
+        
+      }
     }
     
     //UPDATE APPLICATION FIELDS
@@ -439,6 +446,13 @@
     [self addControlHelper:newControl];
 }
 
+- (IBAction)addTable:(NSButton *)sender {
+  MMPTable* newControl = [[MMPTable alloc]initWithFrame:CGRectMake(-canvasView.frame.origin.x,0,100,100)];
+  [self addControlHelper:newControl];
+}
+
+
+
 //undoable
 -(void)deleteControl:(MMPControl*)control{
     [[self undoManager] registerUndoWithTarget:self selector:@selector(addControlHelper:) object:control ];
@@ -601,6 +615,11 @@
         else if([control isKindOfClass:[MMPMenu class]]){
           [self.propVarView addSubview:self.propMenuView];
           [self.propMenuTitleTextField setStringValue:[(MMPMenu*)control titleString]];
+        }
+        else if([control isKindOfClass:[MMPTable class]]){
+          [self.propVarView addSubview:self.propTableView];
+          [self.propTableNameTextField setStringValue:[(MMPTable*)control tableName]];
+          [self.propTableModePopButton selectItemAtIndex:[(MMPTable*)control mode]];
         }
       
         currentSingleSelection=control;
@@ -796,6 +815,35 @@
   
   [currMenu setTitleString:[sender stringValue]];
 }
+
+//just for proper undo/redo
+-(void)setPropTableName:(NSString*)inString{
+  [[self undoManager] registerUndoWithTarget:self selector:@selector(setPropTableName:) object:[self.propTableNameTextField stringValue]];
+  [self.propTableNameTextField setStringValue:inString];
+}
+
+- (IBAction)propTableNameChanged:(NSTextField *)sender {
+  MMPTable* currTable = (MMPTable*)currentSingleSelection;
+  [[self undoManager] registerUndoWithTarget:currTable selector:@selector(setTableNameUndoable:) object:[currTable tableName]];
+  [[self undoManager] registerUndoWithTarget:self selector:@selector(setPropTableName:) object:[currTable tableName]];
+  
+  [currTable setTableName:[sender stringValue]];
+}
+
+//just for proper undo/redo
+-(void)setPropTableModePopButtonNumber:(NSNumber*)inNumber{
+  [[self undoManager] registerUndoWithTarget:self selector:@selector(setPropTableModePopButtonNumber:) object:[NSNumber numberWithInt:(int)[self.propTableModePopButton indexOfSelectedItem] ]];
+  [self.propTableModePopButton selectItemAtIndex:[inNumber intValue]];
+}
+
+- (IBAction)propTableModeChanged:(NSPopUpButton *)sender {
+  MMPTable *currTable = (MMPTable*)currentSingleSelection;
+  [[self undoManager] registerUndoWithTarget:self selector:@selector(setPropTableModePopButtonNumber:) object:[NSNumber numberWithInt:[currTable mode]]];
+  [[self undoManager] registerUndoWithTarget:currTable selector:@selector(setModeObjectUndoable:) object:[NSNumber numberWithInt:[currTable mode]]];
+  
+  [currTable setMode:(int)[self.propTableModePopButton indexOfSelectedItem] ];
+}
+
 
 //just for proper undo/redo
 -(void)setPropLabelTextSize:(NSNumber*)inNum{
@@ -1111,19 +1159,35 @@
         [self sendFormattedMessageArray:formattedMessageArray];
         
     }
-    
-    //otherwise SEND TO OBJECT!!!
-    for(MMPControl* currControl in [documentModel controlArray]){
-        if([currControl.address isEqualToString:[msgArray objectAtIndex:0]])
-            [currControl receiveList: [msgArray subarrayWithRange:NSMakeRange(1, [msgArray count]-1)]];
+  
+    else if([msgArray count]>2 && [[msgArray objectAtIndex:0] isEqualToString:@"/system/tableResponse"] && [[msgArray objectAtIndex:1] isKindOfClass:[NSString class]]){
+        // /controlAddress fillTable <size>, /controlAddress [list], /controlAddress done
+        
+        NSString *address =[msgArray objectAtIndex:1];
+      for(MMPControl* currControl in [documentModel controlArray]){//TODO HASH TABLE!!! and/or table of MMPTables!
+        if([currControl isKindOfClass:[MMPTable class]] && [currControl.address isEqualToString:address]){
+          [currControl receiveList: [msgArray subarrayWithRange:NSMakeRange(2, [msgArray count]-2)]];
+        }
+      }
+      
     }
-    
+  
+    else {
+      //otherwise SEND TO OBJECT!!!
+      for(MMPControl* currControl in [documentModel controlArray]){//TODO HASH TABLE!!!
+          if([currControl.address isEqualToString:[msgArray objectAtIndex:0]])
+              [currControl receiveList: [msgArray subarrayWithRange:NSMakeRange(1, [msgArray count]-1)]];
+      }
+    }
+  
 }
 
 -(void)receiveOSCArray:(NSMutableArray*)msgArray asString:(NSString *)string{//from OSC thread!
    
-    [self performSelectorOnMainThread:@selector(log:) withObject:string waitUntilDone:NO];
+  
     [self performSelectorOnMainThread:@selector(receiveOSCHelper:) withObject:msgArray waitUntilDone:NO];
+  if([[msgArray objectAtIndex:0] isEqualToString:@"/system/tableResponse"])return;//TODO print <suppressed>
+    [self performSelectorOnMainThread:@selector(log:) withObject:string waitUntilDone:NO];
 }
 
 -(void)sendTilts{

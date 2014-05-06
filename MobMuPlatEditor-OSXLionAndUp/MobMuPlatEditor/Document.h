@@ -21,6 +21,8 @@
 #import "MMPMultiSlider.h"
 #import "MMPMultiTouch.h"
 #import "MMPMenu.h"
+#import "MMPTable.h"
+
 #import "OSCManager.h"
 #import "MMPDocumentController.h"
 #define LOGLINES 12
@@ -155,6 +157,7 @@
 - (IBAction)addLCD:(NSButton *)sender;
 - (IBAction)addMultiTouch:(NSButton *)sender;
 - (IBAction)addMenu:(NSButton *)sender;
+- (IBAction)addTable:(NSButton *)sender;
 
 - (IBAction)propDelete:(NSButton *)sender;
 - (IBAction)bringForward:(NSButton *)sender;
@@ -184,6 +187,8 @@
 - (IBAction)propPanelPassTouchesChanged:(NSButton *)sender;
 - (IBAction)propMultiSliderRangeChanged:(NSTextField *)sender;
 - (IBAction)propMenuTitleTextChanged:(NSTextField *)sender;
+- (IBAction)propTableNameChanged:(NSTextField *)sender;
+- (IBAction)propTableModeChanged:(NSPopUpButton *)sender;
 
 //lock
 - (IBAction)lockClearButtonHit:(NSButton *)sender;
@@ -265,4 +270,9 @@
 @property (strong) IBOutlet NSTextField *propToggleThicknessTextField;
 @property (strong) IBOutlet NSView *propMenuView;
 @property (strong) IBOutlet NSTextField *propMenuTitleTextField;
+
+@property (strong) IBOutlet NSButton *addTableButton;
+@property (strong) IBOutlet NSView *propTableView;
+@property (strong) IBOutlet NSTextField *propTableNameTextField;
+@property (strong) IBOutlet NSPopUpButton *propTableModePopButton;
 @end

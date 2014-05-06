@@ -47,14 +47,12 @@
     if(_cacheContext!=nil){//free stuff
         CGContextRelease(_cacheContext);
     }
-    _cacheContext = createBitmapContext((int)self.frame.size.width, (int)self.frame.size.height);
+  _cacheContext = [self createBitmapContextW:(int)self.frame.size.width H:(int)self.frame.size.height];//createBitmapContext((int)self.frame.size.width, (int)self.frame.size.height);
     CGContextSetLineWidth(_cacheContext, penWidth);
 }
 
 
-CGContextRef createBitmapContext (int pixelsWide,
-                                    int pixelsHigh)
-{
+-(CGContextRef) createBitmapContextW:(int) pixelsWide H:(int) pixelsHigh {
     CGContextRef    context = NULL;
     CGColorSpaceRef colorSpace;
     //void *          bitmapData;

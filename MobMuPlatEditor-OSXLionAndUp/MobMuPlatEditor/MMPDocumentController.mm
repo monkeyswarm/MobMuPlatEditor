@@ -23,16 +23,73 @@
     _manager.delegate=self;
     
     NSString* fontnamesjson = [NSString stringWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"uifontlist" ofType:@"txt"]];
-    _fontArray = [[fontnamesjson objectFromJSONString] mutableCopy];//array of dictionaries
-    //printf("\ncontroller font array %d", [_fontArray count]);
+    //_fontArray = [[fontnamesjson objectFromJSONString] mutableCopy];//array of dictionaries
+    NSData *data = [fontnamesjson dataUsingEncoding:NSUTF8StringEncoding];
+    _fontArray = [[NSJSONSerialization JSONObjectWithData:data options:nil error:nil] mutableCopy];
+  
+
+  
+  //printf("\ncontroller font array %d", [_fontArray count]);
     [_fontArray sortUsingDescriptors:[NSArray arrayWithObjects:[NSSortDescriptor sortDescriptorWithKey:@"family" ascending:YES], nil]];
     //create an extra font list element called "default"
     NSMutableDictionary* defaultDict = [[NSMutableDictionary alloc]init];
     [defaultDict setObject:@"Default" forKey:@"family"];
     [defaultDict setObject:[NSArray array] forKey:@"types"];
     [_fontArray addObject:defaultDict];
-    
-    return self;
+  
+    //create temp directory for interacting with PD tables.
+  /*NSString *path = nil;
+  NSArray *paths = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES);
+  if ([paths count])
+  {
+    NSString *bundleName = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleIdentifier"];
+    path = [[paths objectAtIndex:0] stringByAppendingPathComponent:bundleName];
+  }*/
+  
+  /*NSError *error;
+  NSURL* url = [[NSFileManager defaultManager] URLForDirectory:NSCachesDirectory inDomain:NSUserDomainMask appropriateForURL:nil create:YES error:&error];
+  NSLog(@"url: %@", [url absoluteString]);
+  */
+  
+  /*NSURL *cache = [[NSFileManager defaultManager] URLForDirectory:NSCachesDirectory
+                                                        inDomain:NSUserDomainMask
+                                               appropriateForURL:nil
+                                                          create:YES
+                                                           error:nil];
+  NSString *bundleName = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleIdentifier"];
+  NSURL *scratchFolder = [cache URLByAppendingPathComponent:bundleName];
+  if(![[NSFileManager defaultManager] fileExistsAtPath:[scratchFolder absoluteString]]) {
+    [[NSFileManager defaultManager] createDirectoryAtURL:scratchFolder
+                           withIntermediateDirectories:YES
+                                            attributes:@{}
+                                                 error:nil];
+  }*/
+  
+  //make file
+  /*NSString *tempFileTemplate = [path stringByAppendingPathComponent:@"myapptempfile.XXXXXX"];
+  const char *tempFileTemplateCString = [tempFileTemplate fileSystemRepresentation];
+  char *tempFileNameCString = (char *)malloc(strlen(tempFileTemplateCString) + 1);
+  strcpy(tempFileNameCString, tempFileTemplateCString);
+  int fileDescriptor = mkstemp(tempFileNameCString);
+  
+  if (fileDescriptor == -1)
+  {
+    // handle file creation failure
+  }
+  
+  // This is the file name if you need to access the file by name, otherwise you can remove
+  // this line.
+  
+  NSString* tempFileName = [[NSFileManager defaultManager] stringWithFileSystemRepresentation:tempFileNameCString length:strlen(tempFileNameCString)];
+  
+  free(tempFileNameCString);
+  NSFileHandle* tempFileHandle =
+  [[NSFileHandle alloc]
+   initWithFileDescriptor:fileDescriptor
+   closeOnDealloc:NO];*/
+  
+  
+  return self;
 }
 
 //OSC manager delegate method: get OSC message, sent it to ALL open documents

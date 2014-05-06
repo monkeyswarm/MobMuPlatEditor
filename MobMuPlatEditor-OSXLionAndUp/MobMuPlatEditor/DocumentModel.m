@@ -124,6 +124,10 @@
         else if([control isKindOfClass:[MMPMenu class]]){
             [GUIDict setObject:[(MMPMenu*)control titleString] forKey:@"title"] ;
         }
+        else if([control isKindOfClass:[MMPTable class]]){
+          [GUIDict setObject:[(MMPTable*)control tableName] forKey:@"tableName"] ;
+          [GUIDict setObject:[NSNumber numberWithInt:[(MMPTable*)control mode]] forKey:@"mode"] ;
+        }
         //LCD and Button have no properties
         //pass along original bad class
         else if([control isKindOfClass:[MMPUnknown class]]){
@@ -139,15 +143,22 @@
     
     [topDict setObject:jsonControlDictArray forKey:@"gui"];//add this array of dictionaries to the top level dictionary
     
-    return [topDict JSONString];//convert to string
+    //return [topDict JSONString];//convert to string
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:topDict
+                                                     options:0
+                                                       error:nil];
+    NSString *jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+  return jsonString;
 }
 
 //load DocumentModel from JSON string
 +(DocumentModel*)modelFromString:(NSString*)inString{
     DocumentModel* model = [[DocumentModel alloc]init];
     
-    NSDictionary* topDict = [inString objectFromJSONString];
-    
+    //NSDictionary* topDict = [inString objectFromJSONString];
+    NSData *data = [inString dataUsingEncoding:NSUTF8StringEncoding];
+    NSDictionary* topDict = [NSJSONSerialization JSONObjectWithData:data options:nil error:nil];
+  
     if([topDict objectForKey:@"backgroundColor"]){
         NSArray* colorArray = [topDict objectForKey:@"backgroundColor"];
         if([colorArray count]==4)
@@ -284,6 +295,13 @@
               control = [[MMPMenu alloc] initWithFrame:newFrame];
               if([guiDict objectForKey:@"title"])
                 [(MMPMenu*)control setTitleString:[guiDict objectForKey:@"title"] ];
+            }
+            else if([classString isEqualToString:@"MMPTable"]) {
+              control = [[MMPTable alloc] initWithFrame:newFrame];
+              if([guiDict objectForKey:@"tableName"])
+                [(MMPTable*)control setTableName:[guiDict objectForKey:@"tableName"] ];
+              if([guiDict objectForKey:@"mode"])
+                [(MMPTable*)control setMode:[[guiDict objectForKey:@"mode"] intValue]];
             }
             else{//unknown
                 control = [[MMPUnknown alloc] initWithFrame:newFrame];

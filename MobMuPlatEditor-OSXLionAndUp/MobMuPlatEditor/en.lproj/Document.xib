@@ -18,6 +18,7 @@
                 <outlet property="addPanelButton" destination="101062" id="101064"/>
                 <outlet property="addSlider" destination="100187" id="100192"/>
                 <outlet property="addSliderButton" destination="100187" id="100190"/>
+                <outlet property="addTableButton" destination="PvD-vt-kd7" id="ueb-IK-GDx"/>
                 <outlet property="addToggleButton" destination="100336" id="100346"/>
                 <outlet property="addXYSliderButton" destination="100327" id="100343"/>
                 <outlet property="bringBackwardButton" destination="100200" id="100203"/>
@@ -76,8 +77,9 @@
                 <outlet property="propSliderOrientationPopButton" destination="100229" id="101037"/>
                 <outlet property="propSliderRangeTextField" destination="100237" id="101038"/>
                 <outlet property="propSliderView" destination="100206" id="101036"/>
-                <outlet property="propToggleBorderThicknessChanged" destination="101197" id="101205"/>
-                <outlet property="propToggleTextField" destination="101197" id="101204"/>
+                <outlet property="propTableModePopButton" destination="iDt-04-xkp" id="QIi-sr-VnD"/>
+                <outlet property="propTableNameTextField" destination="7h4-Bg-7vQ" id="hM6-ye-hzn"/>
+                <outlet property="propTableView" destination="be4-Tf-C5w" id="fuG-gl-DgT"/>
                 <outlet property="propToggleThicknessTextField" destination="101197" id="101206"/>
                 <outlet property="propToggleView" destination="101196" id="101203"/>
                 <outlet property="propVarView" destination="100211" id="100212"/>
@@ -120,12 +122,12 @@
                                                             <popUpButton verticalHuggingPriority="750" id="100152">
                                                                 <rect key="frame" x="97" y="297" width="122" height="26"/>
                                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                                                <popUpButtonCell key="cell" type="push" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" id="100153">
+                                                                <popUpButtonCell key="cell" type="push" title="iPhone - 3.5&quot;" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" selectedItem="100155" id="100153">
                                                                     <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
                                                                     <font key="font" metaFont="menu"/>
                                                                     <menu key="menu" title="OtherViews" id="100154">
                                                                         <items>
-                                                                            <menuItem title="iPhone - 3.5&quot;" id="100155"/>
+                                                                            <menuItem title="iPhone - 3.5&quot;" state="on" id="100155"/>
                                                                             <menuItem title="iPhone - 4&quot;" id="101119">
                                                                                 <modifierMask key="keyEquivalentModifierMask"/>
                                                                             </menuItem>
@@ -452,6 +454,17 @@ slider</string>
                                                                 </buttonCell>
                                                                 <connections>
                                                                     <action selector="addMenu:" target="-2" id="t2t-nI-5X3"/>
+                                                                </connections>
+                                                            </button>
+                                                            <button id="PvD-vt-kd7">
+                                                                <rect key="frame" x="17" y="24" width="58" height="55"/>
+                                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                                                <buttonCell key="cell" type="square" title="table" bezelStyle="shadowlessSquare" imagePosition="overlaps" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="cTy-yP-de7">
+                                                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                                                    <font key="font" metaFont="system"/>
+                                                                </buttonCell>
+                                                                <connections>
+                                                                    <action selector="addTable:" target="-2" id="KO2-AB-Vg6"/>
                                                                 </connections>
                                                             </button>
                                                             <button id="UxV-1v-LtB">
@@ -1278,6 +1291,63 @@ or hit choose to specify an absolute path.</string>
                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                     </textFieldCell>
                 </textField>
+            </subviews>
+        </customView>
+        <customView id="be4-Tf-C5w">
+            <rect key="frame" x="0.0" y="0.0" width="224" height="137"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+            <subviews>
+                <textField verticalHuggingPriority="750" id="KDT-eM-7oZ">
+                    <rect key="frame" x="23" y="112" width="183" height="17"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Name of Table (in the patch)" id="qG8-Z8-tHk">
+                        <font key="font" metaFont="system"/>
+                        <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
+                </textField>
+                <textField verticalHuggingPriority="750" id="7h4-Bg-7vQ">
+                    <rect key="frame" x="11" y="77" width="202" height="27"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" drawsBackground="YES" id="JZF-cB-0di">
+                        <font key="font" metaFont="system"/>
+                        <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
+                        <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
+                    <connections>
+                        <action selector="propTableNameChanged:" target="-2" id="MjO-Hp-rMZ"/>
+                    </connections>
+                </textField>
+                <textField verticalHuggingPriority="750" id="72z-WC-Uxf">
+                    <rect key="frame" x="8" y="42" width="85" height="17"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Touch Mode:" id="10K-W4-dnG">
+                        <font key="font" metaFont="system"/>
+                        <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
+                </textField>
+                <popUpButton verticalHuggingPriority="750" id="iDt-04-xkp">
+                    <rect key="frame" x="97" y="36" width="119" height="26"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <popUpButtonCell key="cell" type="push" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" id="7R3-oY-3kV">
+                        <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
+                        <font key="font" metaFont="menu"/>
+                        <menu key="menu" title="OtherViews" id="nc2-Y4-Mrh">
+                            <items>
+                                <menuItem title="Select" id="JWe-dk-QFD">
+                                    <modifierMask key="keyEquivalentModifierMask"/>
+                                </menuItem>
+                                <menuItem title="Draw" id="WaK-bZ-cSk">
+                                    <modifierMask key="keyEquivalentModifierMask"/>
+                                </menuItem>
+                            </items>
+                        </menu>
+                    </popUpButtonCell>
+                    <connections>
+                        <action selector="propTableModeChanged:" target="-2" id="A8U-dz-TSS"/>
+                    </connections>
+                </popUpButton>
             </subviews>
         </customView>
     </objects>

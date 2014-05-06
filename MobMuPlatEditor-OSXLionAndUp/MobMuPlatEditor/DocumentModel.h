@@ -8,7 +8,6 @@
 
 #import <Foundation/Foundation.h>
 #import "MMPControl.h"
-#import "JSONKit.h"
 
 #import "MMPSlider.h"
 #import "MMPKnob.h"
@@ -23,6 +22,7 @@
 #import "MMPMultiTouch.h"
 #import "MMPUnknown.h"
 #import "MMPMenu.h"
+#import "MMPTable.h"
 
 typedef enum{
     canvasTypeIPhone3p5Inch = 0,

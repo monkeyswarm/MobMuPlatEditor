@@ -9,7 +9,6 @@
 #import <Cocoa/Cocoa.h>
 #import "OSCManager.h"
 #import "Document.h"
-#import "JSONKit.h"
 
 @interface MMPDocumentController : NSDocumentController<OSCManagerDelegate>{}
 
