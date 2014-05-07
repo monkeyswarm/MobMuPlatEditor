@@ -45,9 +45,9 @@
 -(void)setHighlightColorUndoable:(NSColor *)color;
 
 @property (nonatomic) EditHandle* handle;
-@property (assign, nonatomic) id<MMPControlEditingDelegate> editingDelegate;
+@property (weak, nonatomic) id<MMPControlEditingDelegate> editingDelegate;
 @property (nonatomic) BOOL isSelected;
-@property (nonatomic) NSString* address;
+@property (nonatomic,copy) NSString* address;
 @property (nonatomic) NSColor* color;
 @property (nonatomic) NSColor* highlightColor;
 

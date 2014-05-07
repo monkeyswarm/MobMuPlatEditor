@@ -94,7 +94,8 @@
         control.editingDelegate=self;
         [canvasView addSubview:control];
     }
-    
+  
+  NSMutableSet* addedTableNamesSet = [[NSMutableSet alloc] init];
     //LOAD EXTERNAL FILES within docmodel ( panels) that may require a local path name
     for(MMPControl* control in [documentModel controlArray]){
         if([control isKindOfClass:[MMPPanel class]]){
@@ -105,7 +106,11 @@
       
         //table stuff
       if([control isKindOfClass:[MMPTable class]]){
-        [(MMPTable*)control loadTable];
+        // use set to quash multiple loads of same table/address
+        if (![addedTableNamesSet containsObject:control.address]) {
+          [(MMPTable*)control loadTable];
+          [addedTableNamesSet addObject:control.address];
+        }
         
       }
     }
@@ -449,6 +454,7 @@
 - (IBAction)addTable:(NSButton *)sender {
   MMPTable* newControl = [[MMPTable alloc]initWithFrame:CGRectMake(-canvasView.frame.origin.x,0,100,100)];
   [self addControlHelper:newControl];
+  [newControl loadTable];//in case there is a pd table named "/myTable"
 }
 
 
@@ -618,7 +624,7 @@
         }
         else if([control isKindOfClass:[MMPTable class]]){
           [self.propVarView addSubview:self.propTableView];
-          [self.propTableNameTextField setStringValue:[(MMPTable*)control tableName]];
+          [self.propTableSelectionColorWell setColor:[(MMPTable*)control selectionColor]];
           [self.propTableModePopButton selectItemAtIndex:[(MMPTable*)control mode]];
         }
       
@@ -817,17 +823,20 @@
 }
 
 //just for proper undo/redo
--(void)setPropTableName:(NSString*)inString{
-  [[self undoManager] registerUndoWithTarget:self selector:@selector(setPropTableName:) object:[self.propTableNameTextField stringValue]];
-  [self.propTableNameTextField setStringValue:inString];
+-(void)setPropTableSelectionColorWellColor:(NSColor*)inColor{
+  [[self undoManager] registerUndoWithTarget:self selector:@selector(setPropTableSelectionColorWellColor:) object:[self.propTableSelectionColorWell color]];
+  [self.propTableSelectionColorWell setColor:inColor];
 }
 
-- (IBAction)propTableNameChanged:(NSTextField *)sender {
-  MMPTable* currTable = (MMPTable*)currentSingleSelection;
-  [[self undoManager] registerUndoWithTarget:currTable selector:@selector(setTableNameUndoable:) object:[currTable tableName]];
-  [[self undoManager] registerUndoWithTarget:self selector:@selector(setPropTableName:) object:[currTable tableName]];
+- (IBAction)propTableSelectionColorWellChanged:(NSColorWell *)sender {
   
-  [currTable setTableName:[sender stringValue]];
+      MMPTable* currrTable=(MMPTable*)currentSingleSelection;
+      [[self undoManager] registerUndoWithTarget:currrTable selector:@selector(setSelectionColorUndoable:) object:[currrTable selectionColor]];
+      [[self undoManager] registerUndoWithTarget:self selector:@selector(setPropTableSelectionColorWellColor:) object:[currrTable selectionColor]];
+      
+      [currrTable setSelectionColor:[sender color]];
+  
+
 }
 
 //just for proper undo/redo
@@ -1148,7 +1157,7 @@
 }
 
 -(void)receiveOSCHelper:(NSMutableArray*)msgArray{
-    
+  
     //I respond to this message
     if([[msgArray objectAtIndex:0] isEqualToString:@"/system"] && [[msgArray objectAtIndex:1] isEqualToString:@"requestPort"]){
         printf("\nPD requested port number = %d", [documentModel port]);

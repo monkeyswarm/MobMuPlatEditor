@@ -125,7 +125,7 @@
             [GUIDict setObject:[(MMPMenu*)control titleString] forKey:@"title"] ;
         }
         else if([control isKindOfClass:[MMPTable class]]){
-          [GUIDict setObject:[(MMPTable*)control tableName] forKey:@"tableName"] ;
+          [GUIDict setObject:[DocumentModel RGBAArrayfromColor:[(MMPTable*)control selectionColor]] forKey:@"selectionColor"] ;
           [GUIDict setObject:[NSNumber numberWithInt:[(MMPTable*)control mode]] forKey:@"mode"] ;
         }
         //LCD and Button have no properties
@@ -221,7 +221,7 @@
                 if([highlightColorArray count]==4)
                    highlightColor=[DocumentModel colorFromRGBAArray:highlightColorArray];
                 else if ([highlightColorArray count]==3)
-                    highlightColor=[DocumentModel colorFromRGBArray:highlightColorArray];
+                    highlightColor=[DocumentModel colorFromRGBArray:highlightColorArray];//stop supporting?
                 
             }
             //check by MMPControl subclass, and alloc/init object
@@ -298,8 +298,8 @@
             }
             else if([classString isEqualToString:@"MMPTable"]) {
               control = [[MMPTable alloc] initWithFrame:newFrame];
-              if([guiDict objectForKey:@"tableName"])
-                [(MMPTable*)control setTableName:[guiDict objectForKey:@"tableName"] ];
+              if([guiDict objectForKey:@"selectionColor"])
+                [(MMPTable*)control setSelectionColor:[DocumentModel colorFromRGBAArray:[guiDict objectForKey:@"selectionColor"]]];
               if([guiDict objectForKey:@"mode"])
                 [(MMPTable*)control setMode:[[guiDict objectForKey:@"mode"] intValue]];
             }

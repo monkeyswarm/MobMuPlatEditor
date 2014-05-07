@@ -16,6 +16,7 @@
   CGContextRef _cacheContext;
   CGContextRef _cacheContextSelection;
   float fR,fG,fB,fA;//FRGBA
+  float sR,sG,sB,sA;
   
   CGPoint touchDownPoint;
   CGPoint lastPoint;//not normalized
@@ -23,6 +24,7 @@
   //int touchDownTableIndex;
   //BOOL _tableSeemsBad;
   BOOL loadedTable;
+  BOOL _created;
   //debug
   int chunkCount;
   
@@ -32,45 +34,40 @@
   self = [super initWithFrame:frame];
   if (self) {
     self.address=@"/myTable";
+    _created = YES;
     self.layer.backgroundColor=[MMPControl CGColorFromNSColor:self.color];
+    self.selectionColor = [NSColor colorWithCalibratedRed:1. green:1. blue:1. alpha:.5];
     
     //self.userInteractionEnabled = NO;//until table load TODO
     // Initialization code
     
 
-      _tableName = @"dummyName";//todo use init value to protect against nil storage?
+      //_tableName = @"dummyName";//todo use init value to protect against nil storage?
     
     
     [self setFrame:frame];//create context
     
-    //
     [self addHandles];
     
   }
   return self;
 }
 
--(void)setTableName:(NSString *)tableName{
-  _tableName = tableName;
-  [self loadTable];
+-(void)setAddress:(NSString *)address{
+  [super setAddress:address];
+  if(_created)[self loadTable];
 }
 
 -(void)loadTable {
-  if(!_tableName)return;
-  
     [self.editingDelegate sendFormattedMessageArray:[NSMutableArray arrayWithObjects:@"/system/requestTable",
-                                     [[NSMutableString alloc]initWithString:@"ss"],
-                                     self.address, _tableName, nil]];
-  
-  
-  
-  //[self copyFromPDAndDraw];
-  
+                                     [[NSMutableString alloc]initWithString:@"s"],
+                                     self.address, nil]];
 }
 
 
 -(void)setFrame:(NSRect)frame{
   [super setFrame:frame];
+  
   if(_cacheContext!=nil){//free stuff
     CGContextRelease(_cacheContext);
   }
@@ -79,10 +76,16 @@
   }
   //_cacheContext = [self createBitmapContextW:(int)self.frame.size.width H:(int)self.frame.size.height];
   _cacheContext = CGBitmapContextCreate (nil, (int)frame.size.width, (int)frame.size.height, 8, 0, CGColorSpaceCreateDeviceRGB(),  kCGImageAlphaPremultipliedLast  );
-  CGContextSetRGBFillColor(_cacheContext, 1., 0., 1., 1.);
+  //CGContextSetRGBFillColor(_cacheContext, 1., 0., 1., 1.);
+  
+  if(_cacheContext == nil) {//this happens on zero-size frame, during copy/paste initWithCoder:
+    return;
+  }
   CGContextSetLineWidth(_cacheContext, 2);
+  
   _cacheContextSelection = CGBitmapContextCreate (nil, (int)frame.size.width, (int)frame.size.height, 8, 0, CGColorSpaceCreateDeviceRGB(),  kCGImageAlphaPremultipliedLast  );
-  CGContextSetRGBFillColor(_cacheContextSelection, 1., 0., 1., .5);
+  //CGContextSetRGBFillColor(_cacheContextSelection, 1., 0., 1., .5);
+
 }
 
 -(CGContextRef) createBitmapContextW:(int) pixelsWide H:(int) pixelsHigh {
@@ -134,6 +137,19 @@
   fG  = [highlightColor greenComponent];
   fB  = [highlightColor blueComponent];
   fA  = [highlightColor alphaComponent];
+  
+ 
+}
+
+-(void)setSelectionColor:(NSColor *)selectionColor{
+  _selectionColor = selectionColor;
+  
+  sR  = [_selectionColor redComponent];
+  sG  = [_selectionColor greenComponent];
+  sB  = [_selectionColor blueComponent];
+  sA  = [_selectionColor alphaComponent];
+  
+  
 }
 
 -(void)draw{
@@ -183,11 +199,11 @@
 }
 
 -(void)drawHighlightBetween:(CGPoint)pointA and:(CGPoint)pointB{
-  //CGContextSetRGBFillColor(_cacheContext, r,g,b,a);
+  CGContextSetRGBFillColor(_cacheContextSelection, sR,sG,sB,sA);
 	CGRect newRect = CGRectMake( MIN(pointA.x,pointB.x), 0, MAX(fabsf(pointB.x-pointA.x),2), self.frame.size.height);
-  CGContextClearRect(_cacheContextSelection, newRect);
+  CGContextClearRect(_cacheContextSelection, self.bounds);
   CGContextFillRect(_cacheContextSelection, newRect);
-  [self setNeedsDisplayInRect:newRect];
+  [self setNeedsDisplay ];//InRect:newRect];
 }
 
 -(void)mouseDown:(NSEvent *)theEvent{
@@ -197,8 +213,6 @@
     lastPoint = [self convertPoint:[theEvent locationInWindow] fromView:nil];
     touchDownPoint = lastPoint;
     if(_mode==0) { //select
-      CGContextClearRect(_cacheContextSelection, self.bounds);
-      [self setNeedsDisplay];
       [self drawHighlightBetween:lastPoint and:lastPoint];
     
     } else if (_mode == 1) {//draw
@@ -226,14 +240,14 @@
 
 -(void)sendSetTableMessageFromIndex:(int)indexA val:(float)valA indexB:(int)indexB val:(float)valB {
   [self.editingDelegate sendFormattedMessageArray:[NSMutableArray arrayWithObjects:@"/system/setTable",
-                                                   [[NSMutableString alloc]initWithString:@"ssifif"],//startx/y endx/y
+                                                   [[NSMutableString alloc]initWithString:@"sifif"],//startx/y endx/y
                                                    self.address,
-                                                   _tableName,
                                                    [NSNumber numberWithInt:indexA],
                                                    [NSNumber numberWithFloat:valA],
                                                    [NSNumber numberWithInt:indexB],
                                                    [NSNumber numberWithFloat:valB],
                                                    nil]];
+  //look for all other tables with same address, and just refresh
 }
 
 -(void)sendRangeMessageFromIndex:(int)indexA toIndex:(int)indexB {
@@ -335,11 +349,15 @@
   CGImageRelease(cacheImageSelection);
   
   CGImageRef cacheImage = CGBitmapContextCreateImage(_cacheContext);
-  CGContextDrawImage(context, CGRectMake(0, 0, self.bounds.size.width, self.bounds.size.height), cacheImage);
+  CGContextDrawImage(context, self.bounds, cacheImage);
   CGImageRelease(cacheImage);
   
 }
 
+-(void)setSelectionColorUndoable:(NSColor*)inColor{
+  [[self undoManager] registerUndoWithTarget:self selector:@selector(setSelectionColorUndoable:) object:self.selectionColor];
+  [self setSelectionColor:inColor];
+}
 
 -(void)setModeObjectUndoable:(NSNumber*)number{
   [[self undoManager] registerUndoWithTarget:self selector:@selector(setModeObjectUndoable:) object:[NSNumber numberWithInt:self.mode] ];
@@ -354,35 +372,67 @@
 }
 
 -(void)receiveList:(NSArray *)inArray{
-  if ([inArray count]==1 && [[inArray objectAtIndex:0] isKindOfClass:[NSString class]] && [[inArray objectAtIndex:0] isEqualToString:@"refresh"] ){
+  if ([inArray count]==1 && [[inArray objectAtIndex:0] isKindOfClass:[NSString class]] && [[inArray objectAtIndex:0] isEqualToString:@"clearSelection"] ){
+    CGContextClearRect(_cacheContextSelection, self.bounds);
+    [self setNeedsDisplay ];
+  }
+  else if ([inArray count]==1 && [[inArray objectAtIndex:0] isKindOfClass:[NSString class]] && [[inArray objectAtIndex:0] isEqualToString:@"refresh"] ){
+    //NSLog(@"receive refresh on %@", self.address);
     [self loadTable];
   }
   else if([inArray count]==2 && [[inArray objectAtIndex:0] isEqualToString:@"fillTable"] && [[inArray objectAtIndex:1] isKindOfClass:[NSNumber class]]){
-    NSLog(@"filltable %d", [[inArray objectAtIndex:1]intValue]);
+    NSLog(@"%@ filltable %d", self.address, [[inArray objectAtIndex:1]intValue]);
     loadedTable = NO;
     _fillIndex = 0;
     _tableSize = [[inArray objectAtIndex:1]intValue];
-    if(_tableData)free(_tableData);
+    if(_tableData){
+      free(_tableData);
+    }
     _tableData = (float*)malloc(_tableSize*sizeof(float));
-    //chunkCount = 0;
+    NSLog(@" alloc table data %p size %d", _tableData, _tableSize);
+    chunkCount = 0;
   }
   else if([inArray count]==1 && [[inArray objectAtIndex:0] isEqualToString:@"done"]){
-    NSLog(@"filltable DONE chunkcount %d", chunkCount);
+    NSLog(@"%@ filltable DONE chunkcount %d", self.address, chunkCount);
     loadedTable = YES;
     [self draw];
   }
   else if([inArray count]>0 && [[inArray objectAtIndex:1] isKindOfClass:[NSNumber class]]){
-    NSLog(@"inarray count %lu", (unsigned long)[inArray count]);
+    //NSLog(@"%@ inarray count %lu fillIndex %lu", self.address, (unsigned long)[inArray count], (unsigned long)_fillIndex);
     //TODO catch array error?
     NSUInteger count = [inArray count];
     for (int i=0;i<count;i++){
+      if(_fillIndex+i > _tableSize){
+        NSLog(@"error, out of bounds");
+        break;
+      }
       _tableData[_fillIndex+i] = [[inArray objectAtIndex:i]floatValue];
       //NSLog(@"tableData[%d] = %.2f", _fillIndex+i, _tableData[_fillIndex+i]);
     }
     _fillIndex+=count;
-    //chunkCount++;
+    chunkCount++;
   }
 }
 
+//coder for copy/paste
 
+- (void)encodeWithCoder:(NSCoder *)coder {
+  [super encodeWithCoder:coder];
+  [coder encodeObject:self.selectionColor forKey:@"selectionColor"];
+	[coder encodeInt:self.mode forKey:@"mode"];
+  
+}
+
+- (id)initWithCoder:(NSCoder *)coder {
+  self = [super initWithCoder:coder];
+  if(self){
+    [self setSelectionColor:[coder decodeObjectForKey:@"selectionColor"]];
+    [self setMode:[coder decodeIntForKey:@"mode"]];
+  }
+  return self;
+}
+
+-(void)dealloc {
+  if(_tableData)free(_tableData);
+}
 @end

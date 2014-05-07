@@ -9,7 +9,8 @@
 #import "MMPControl.h"
 
 @interface MMPTable : MMPControl
-@property (nonatomic, copy) NSString *tableName;
+//@property (nonatomic, copy) NSString *tableName;
+@property (nonatomic, strong) NSColor *selectionColor;
 @property (nonatomic) int mode;
 
 -(void)loadTable;

@@ -187,7 +187,7 @@
 - (IBAction)propPanelPassTouchesChanged:(NSButton *)sender;
 - (IBAction)propMultiSliderRangeChanged:(NSTextField *)sender;
 - (IBAction)propMenuTitleTextChanged:(NSTextField *)sender;
-- (IBAction)propTableNameChanged:(NSTextField *)sender;
+- (IBAction)propTableSelectionColorWellChanged:(NSColorWell *)sender;
 - (IBAction)propTableModeChanged:(NSPopUpButton *)sender;
 
 //lock
@@ -273,6 +273,6 @@
 
 @property (strong) IBOutlet NSButton *addTableButton;
 @property (strong) IBOutlet NSView *propTableView;
-@property (strong) IBOutlet NSTextField *propTableNameTextField;
+@property (strong) IBOutlet NSColorWell *propTableSelectionColorWell;
 @property (strong) IBOutlet NSPopUpButton *propTableModePopButton;
 @end

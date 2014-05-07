@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="4514" systemVersion="13C64" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="4514" systemVersion="13C1021" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
     <dependencies>
         <deployment defaultVersion="1070" identifier="macosx"/>
         <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="4514"/>
@@ -78,7 +78,7 @@
                 <outlet property="propSliderRangeTextField" destination="100237" id="101038"/>
                 <outlet property="propSliderView" destination="100206" id="101036"/>
                 <outlet property="propTableModePopButton" destination="iDt-04-xkp" id="QIi-sr-VnD"/>
-                <outlet property="propTableNameTextField" destination="7h4-Bg-7vQ" id="hM6-ye-hzn"/>
+                <outlet property="propTableSelectionColorWell" destination="3Vq-4U-DCA" id="AQY-xk-YpC"/>
                 <outlet property="propTableView" destination="be4-Tf-C5w" id="fuG-gl-DgT"/>
                 <outlet property="propToggleThicknessTextField" destination="101197" id="101206"/>
                 <outlet property="propToggleView" destination="101196" id="101203"/>
@@ -891,9 +891,9 @@ A range of &gt;2 sends integers.</string>
                     </textFieldCell>
                 </textField>
                 <textField verticalHuggingPriority="750" id="101173">
-                    <rect key="frame" x="13" y="26" width="94" height="17"/>
+                    <rect key="frame" x="13" y="26" width="98" height="17"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="IndicatorColor" id="101174">
+                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Indicator Color" id="101174">
                         <font key="font" metaFont="system"/>
                         <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
@@ -1298,28 +1298,19 @@ or hit choose to specify an absolute path.</string>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
             <subviews>
                 <textField verticalHuggingPriority="750" id="KDT-eM-7oZ">
-                    <rect key="frame" x="23" y="112" width="183" height="17"/>
+                    <rect key="frame" x="8" y="81" width="218" height="51"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Name of Table (in the patch)" id="qG8-Z8-tHk">
-                        <font key="font" metaFont="system"/>
+                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" id="qG8-Z8-tHk">
+                        <font key="font" size="12" name="LucidaGrande"/>
+                        <string key="title">The address corresponds to 
+a PD table of the same name 
+(including slash).</string>
                         <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                     </textFieldCell>
                 </textField>
-                <textField verticalHuggingPriority="750" id="7h4-Bg-7vQ">
-                    <rect key="frame" x="11" y="77" width="202" height="27"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" drawsBackground="YES" id="JZF-cB-0di">
-                        <font key="font" metaFont="system"/>
-                        <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
-                        <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
-                    </textFieldCell>
-                    <connections>
-                        <action selector="propTableNameChanged:" target="-2" id="MjO-Hp-rMZ"/>
-                    </connections>
-                </textField>
                 <textField verticalHuggingPriority="750" id="72z-WC-Uxf">
-                    <rect key="frame" x="8" y="42" width="85" height="17"/>
+                    <rect key="frame" x="9" y="43" width="85" height="17"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Touch Mode:" id="10K-W4-dnG">
                         <font key="font" metaFont="system"/>
@@ -1328,7 +1319,7 @@ or hit choose to specify an absolute path.</string>
                     </textFieldCell>
                 </textField>
                 <popUpButton verticalHuggingPriority="750" id="iDt-04-xkp">
-                    <rect key="frame" x="97" y="36" width="119" height="26"/>
+                    <rect key="frame" x="98" y="37" width="119" height="26"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <popUpButtonCell key="cell" type="push" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" id="7R3-oY-3kV">
                         <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
@@ -1348,6 +1339,23 @@ or hit choose to specify an absolute path.</string>
                         <action selector="propTableModeChanged:" target="-2" id="A8U-dz-TSS"/>
                     </connections>
                 </popUpButton>
+                <textField verticalHuggingPriority="750" id="ExZ-Cc-J4v">
+                    <rect key="frame" x="8" y="18" width="99" height="17"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Selection Color" id="79e-1U-yOa">
+                        <font key="font" metaFont="system"/>
+                        <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
+                </textField>
+                <colorWell id="3Vq-4U-DCA">
+                    <rect key="frame" x="134" y="12" width="44" height="23"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <color key="color" red="0.05813049898" green="0.055541899059999997" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                    <connections>
+                        <action selector="propTableSelectionColorWellChanged:" target="-2" id="USP-SW-9bi"/>
+                    </connections>
+                </colorWell>
             </subviews>
         </customView>
     </objects>
