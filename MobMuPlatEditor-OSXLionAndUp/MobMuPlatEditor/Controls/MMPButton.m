@@ -15,7 +15,7 @@
     self = [super initWithFrame:frame];
     if (self) {
         self.address=@"/myButton";
-        self.layer.backgroundColor=[MMPControl CGColorFromNSColor:self.color];
+      self.layer.backgroundColor=self.color.CGColor;
         self.layer.cornerRadius=EDGE_RADIUS;
         [self addHandles];
     }
@@ -43,19 +43,19 @@
 
 -(void)setColor:(NSColor *)color{
     [super setColor:color];
-    self.layer.backgroundColor=[MMPControl CGColorFromNSColor:color];
+  self.layer.backgroundColor=color.CGColor;
 }
 
 -(void)setValue:(int)inVal{
 	_value=inVal;
     
-    if(self.value==1)self.layer.backgroundColor=[MMPControl CGColorFromNSColor:self.highlightColor];
-    else self.layer.backgroundColor=[MMPControl CGColorFromNSColor:self.color];
+  if(self.value==1)self.layer.backgroundColor=self.highlightColor.CGColor;
+  else self.layer.backgroundColor=self.color.CGColor;
 	 
 	//send out message
     NSMutableArray* formattedMessageArray = [[NSMutableArray alloc]init];
     [formattedMessageArray addObject:self.address];
-    [formattedMessageArray  addObject:[[NSMutableString alloc]initWithString:@"i"]];//tags
+    //[formattedMessageArray  addObject:[[NSMutableString alloc]initWithString:@"i"]];//tags
     [formattedMessageArray addObject:[NSNumber numberWithInt:self.value]];
     [self.editingDelegate sendFormattedMessageArray:formattedMessageArray];
 }

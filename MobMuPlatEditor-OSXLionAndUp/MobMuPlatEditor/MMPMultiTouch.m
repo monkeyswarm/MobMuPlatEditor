@@ -38,7 +38,7 @@
     borderView = [[NSView alloc]init];
     [borderView setWantsLayer:YES];
     borderView.layer.borderWidth = BORDER_WIDTH;
-    borderView.layer.borderColor = [MMPControl CGColorFromNSColor:self.color];
+    borderView.layer.borderColor = self.color.CGColor;
     [self addSubview:borderView];
 
     
@@ -66,7 +66,7 @@
 
 -(void)setColor:(NSColor *)inColor{
   [super setColor:inColor];
-  borderView.layer.borderColor=[MMPControl CGColorFromNSColor:inColor];
+  borderView.layer.borderColor=inColor.CGColor;
 
 }
 
@@ -165,7 +165,7 @@
       
       NSMutableArray* formattedMessageArray = [[NSMutableArray alloc]init];
       [formattedMessageArray addObject:self.address];
-      [formattedMessageArray  addObject:[[NSMutableString alloc]initWithString:@"siiff"]];//tags
+      //[formattedMessageArray  addObject:[[NSMutableString alloc]initWithString:@"siiff"]];//tags
       [formattedMessageArray addObject:@"touch"];
       [formattedMessageArray addObject:[NSNumber numberWithInt:myTouch.polyVox]];
       [formattedMessageArray addObject:[NSNumber numberWithInt:1]];
@@ -176,7 +176,7 @@
       
       [self sendState];
       
-      if([_touchStack count]>0) borderView.layer.borderColor=[MMPControl CGColorFromNSColor: self.highlightColor];
+      if([_touchStack count]>0) borderView.layer.borderColor= self.highlightColor.CGColor;
       //[self redrawCursors];
   
     }
@@ -218,7 +218,7 @@
      
         NSMutableArray* formattedMessageArray = [[NSMutableArray alloc]init];
         [formattedMessageArray addObject:self.address];
-        [formattedMessageArray  addObject:[[NSMutableString alloc]initWithString:@"siiff"]];//tags
+        //[formattedMessageArray  addObject:[[NSMutableString alloc]initWithString:@"siiff"]];//tags
         [formattedMessageArray addObject:@"touch"];
         [formattedMessageArray addObject:[NSNumber numberWithInt:_currMyTouch.polyVox]];
         [formattedMessageArray addObject:[NSNumber numberWithInt:2]];
@@ -267,7 +267,7 @@
     
     NSMutableArray* formattedMessageArray = [[NSMutableArray alloc]init];
     [formattedMessageArray addObject:self.address];
-    [formattedMessageArray  addObject:[[NSMutableString alloc]initWithString:@"siiff"]];//tags
+    //[formattedMessageArray  addObject:[[NSMutableString alloc]initWithString:@"siiff"]];//tags
     [formattedMessageArray addObject:@"touch"];
     [formattedMessageArray addObject:[NSNumber numberWithInt:myTouch.polyVox]];
     [formattedMessageArray addObject:[NSNumber numberWithInt:0]];
@@ -280,7 +280,7 @@
   }
   
   [self sendState];
-  if([_touchStack count]==0) borderView.layer.borderColor=[MMPControl CGColorFromNSColor:self.color ];
+  if([_touchStack count]==0) borderView.layer.borderColor=self.color.CGColor;
   //[self redrawCursors];
 
 }
@@ -304,11 +304,11 @@
   //send as is
   NSMutableArray* msgArray = [[NSMutableArray alloc]init];
   [msgArray addObject:self.address];
-  NSMutableString* tags = [[NSMutableString alloc]initWithString:@"s"];
-  [msgArray addObject:tags];
+  //NSMutableString* tags = [[NSMutableString alloc]initWithString:@"s"];
+  //[msgArray addObject:tags];
   [msgArray addObject:@"touchesByTime"];
   for(MyTouch* myTouch in valArray){
-    [tags appendString:@"iff"];
+    //[tags appendString:@"iff"];
     [msgArray addObject:[NSNumber numberWithInt:myTouch.polyVox]];//float or int?
     [msgArray addObject:[NSNumber numberWithFloat:myTouch.point.x]];
     [msgArray addObject:[NSNumber numberWithFloat:myTouch.point.y]];
@@ -324,11 +324,11 @@
   
   [msgArray removeAllObjects];
   [msgArray addObject:self.address];
-  [tags setString:@"s"];
-  [msgArray addObject:tags];
+  //[tags setString:@"s"];
+  //[msgArray addObject:tags];
   [msgArray addObject:@"touchesByVox"];
   for(MyTouch* myTouch in valArray){
-    [tags appendString:@"iff"];
+    //[tags appendString:@"iff"];
     [msgArray addObject:[NSNumber numberWithInt:myTouch.polyVox]];//float or int?
     [msgArray addObject:[NSNumber numberWithFloat:myTouch.point.x]];
     [msgArray addObject:[NSNumber numberWithFloat:myTouch.point.y]];
@@ -346,12 +346,12 @@
   
   [msgArray removeAllObjects];
   [msgArray addObject:self.address];
-  [msgArray addObject:tags];
-  [tags setString:@"s"];
+  //[msgArray addObject:tags];
+  //[tags setString:@"s"];
   [msgArray addObject:@"touchesByX"];
   
   for(MyTouch* myTouch in valArray){
-    [tags appendString:@"iff"];
+    //[tags appendString:@"iff"];
     [msgArray addObject:[NSNumber numberWithInt:myTouch.polyVox]];//float or int?
     [msgArray addObject:[NSNumber numberWithFloat:myTouch.point.x]];
     [msgArray addObject:[NSNumber numberWithFloat:myTouch.point.y]];
@@ -369,11 +369,11 @@
   
   [msgArray removeAllObjects];
   [msgArray addObject:self.address];
-  [msgArray addObject:tags];
-  [tags setString:@"s"];
+  //[msgArray addObject:tags];
+  //[tags setString:@"s"];
   [msgArray addObject:@"touchesByY"];
   for(MyTouch* myTouch in valArray){
-    [tags appendString:@"iff"];
+    //[tags appendString:@"iff"];
     [msgArray addObject:[NSNumber numberWithInt:myTouch.polyVox]];//float or int?
     [msgArray addObject:[NSNumber numberWithFloat:myTouch.point.x]];
     [msgArray addObject:[NSNumber numberWithFloat:myTouch.point.y]];

@@ -40,7 +40,7 @@
   //kick the pd patch to get it to reconnect
   NSMutableArray* formattedMessageArray = [[NSMutableArray alloc]init];
   [formattedMessageArray addObject:@"/system/opened"];
-  [formattedMessageArray  addObject:[[NSMutableString alloc]initWithString:@"i"]];//tags
+  //[formattedMessageArray  addObject:[[NSMutableString alloc]initWithString:@"i"]];//tags
   [formattedMessageArray addObject:[NSNumber numberWithInt:1]];
   [self sendFormattedMessageArray:formattedMessageArray];
   
@@ -332,7 +332,7 @@
     //send message out in case PD wrapper is listening to update to new port number
     NSMutableArray* formattedMessageArray = [[NSMutableArray alloc]init];
     [formattedMessageArray addObject:@"/system/port"];
-    [formattedMessageArray  addObject:[[NSMutableString alloc]initWithString:@"i"]];//tags
+    //[formattedMessageArray  addObject:[[NSMutableString alloc]initWithString:@"i"]];//tags
     [formattedMessageArray addObject:[NSNumber numberWithInt:val]];
     [self sendFormattedMessageArray:formattedMessageArray];
     
@@ -1077,7 +1077,7 @@
 - (IBAction)lockShakeButtonHit:(NSButton *)sender {
     NSMutableArray* formattedMessageArray = [[NSMutableArray alloc]init];
     [formattedMessageArray addObject:@"/system/shake"];
-    [formattedMessageArray  addObject:[[NSMutableString alloc]initWithString:@"i"]];//tags
+    //[formattedMessageArray  addObject:[[NSMutableString alloc]initWithString:@"i"]];//tags
     [formattedMessageArray addObject:[NSNumber numberWithInt:1]];
     [self sendFormattedMessageArray:formattedMessageArray];
 }
@@ -1126,7 +1126,7 @@
 }
 
 //send out OSC message, formatted from array of messages
--(void)sendFormattedMessageArray:(NSMutableArray*)formattedMessageArray{
+/*-(void)sendFormattedMessageArray:(NSMutableArray*)formattedMessageArray{
     
     NSMutableString* theString = [[NSMutableString alloc]init];
     [theString appendString:@"[out] "];
@@ -1154,6 +1154,30 @@
     //send out
     [[(MMPDocumentController*)[NSDocumentController sharedDocumentController] manager] send:formattedMessageArray withDict:nil] ;
     
+}*/
+
+- (void)sendFormattedMessageArray:(NSArray*)messageArray {
+ 
+  [(MMPDocumentController*)[NSDocumentController sharedDocumentController] sendOSCMessageFromArray:messageArray];
+  
+  NSMutableString* theString = [[NSMutableString alloc]init];
+  [theString appendString:@"[out]"];
+  for(NSObject* obj in messageArray){
+    [theString appendString:@" "];
+    if([obj isKindOfClass:[NSString class]]) {
+      [theString appendString:(NSString*)obj];
+    } else if ([obj isKindOfClass:[NSNumber class]]) {
+      NSNumber* num = (NSNumber*)obj;
+      if([MMPDocumentController numberIsFloat:num]){
+        [theString appendString:[NSString stringWithFormat:@"%.3f ", [num floatValue]]];
+      } else {
+        [theString appendString:[NSString stringWithFormat:@"%d ", [num intValue]]];
+      }
+    }
+  }
+  
+  [self log:theString];
+  
 }
 
 -(void)receiveOSCHelper:(NSMutableArray*)msgArray{
@@ -1163,7 +1187,7 @@
         printf("\nPD requested port number = %d", [documentModel port]);
         NSMutableArray* formattedMessageArray = [[NSMutableArray alloc]init];
         [formattedMessageArray addObject:@"/system/port"];
-        [formattedMessageArray  addObject:[[NSMutableString alloc]initWithString:@"i"]];//tags
+        //[formattedMessageArray  addObject:[[NSMutableString alloc]initWithString:@"i"]];//tags
         [formattedMessageArray addObject:[NSNumber numberWithInt:[documentModel port]]];
         [self sendFormattedMessageArray:formattedMessageArray];
         
@@ -1191,18 +1215,58 @@
   
 }
 
--(void)receiveOSCArray:(NSMutableArray*)msgArray asString:(NSString *)string{//from OSC thread!
-   
+//-(void)receiveOSCArray:(NSMutableArray*)msgArray asString:(NSString *)string{//from OSC thread!
+-(void)receivedOSCMessage:(OSCMessage *)m { //from OSC thread
   
+  NSString *address = [m address];
+	
+  NSMutableArray* msgArray = [[NSMutableArray alloc]init];//create blank message array for sending to pd
+  NSMutableArray* tempOSCValueArray = [[NSMutableArray alloc]init];
+  NSMutableString *string = [[NSMutableString alloc] init];
+  //VV library handles receiving a value confusingly: if just one value, it has a single value in message "m" and no valueArray, if more than one value, it has valuearray. here we just shove either into a temp array to iterate over
+  
+  if([m valueCount]==1)[tempOSCValueArray addObject:[m value]];
+  else for(OSCValue *val in [m valueArray])[tempOSCValueArray addObject:val];
+  
+  //first element in msgArray is address
+  [msgArray addObject:address];
+  [string appendString:@"[in] "];
+  [string appendString:address];
+  
+  //then iterate over all values
+  for(OSCValue *val in tempOSCValueArray){//unpack OSC value to NSNumber or NSString
+    if([val type]==OSCValInt){
+      [msgArray addObject:[NSNumber numberWithInt:[val intValue]]];
+      [string appendString:[NSString stringWithFormat:@" %d", [val intValue]]];
+    }
+    else if([val type]==OSCValFloat){
+      [msgArray addObject:[NSNumber numberWithFloat:[val floatValue]]];
+      [string appendString:[NSString stringWithFormat:@" %f", [val floatValue]]];
+    }
+    else if([val type]==OSCValString){
+      //libpd got _very_ unhappy when it received strings that it couldn't convert to ASCII. Have a check here and convert if needed. This occured when some device user names (coming from LANdini) had odd characters/encodings.
+      if ( ![[val stringValue] canBeConvertedToEncoding:NSASCIIStringEncoding] ) {
+        NSData *asciiData = [[val stringValue] dataUsingEncoding:NSASCIIStringEncoding allowLossyConversion:YES];
+        NSString *asciiString = [[NSString alloc] initWithData:asciiData encoding:NSASCIIStringEncoding];
+        [msgArray addObject:asciiString];
+      }
+      else{
+        [msgArray addObject:[val stringValue]];
+      }
+      [string appendString:@" "];
+      [string appendString:[val stringValue]];
+    }
+    
+  }
     [self performSelectorOnMainThread:@selector(receiveOSCHelper:) withObject:msgArray waitUntilDone:NO];
   if([[msgArray objectAtIndex:0] isEqualToString:@"/system/tableResponse"])return;//TODO print <suppressed>
-    [self performSelectorOnMainThread:@selector(log:) withObject:string waitUntilDone:NO];
+  [self performSelectorOnMainThread:@selector(log:) withObject:string waitUntilDone:NO];
 }
 
 -(void)sendTilts{
     NSMutableArray* formattedMessageArray = [[NSMutableArray alloc]init];
     [formattedMessageArray addObject:@"/system/tilts"];
-    [formattedMessageArray  addObject:[[NSMutableString alloc]initWithString:@"ff"]];//tags
+    //[formattedMessageArray  addObject:[[NSMutableString alloc]initWithString:@"ff"]];//tags
     [formattedMessageArray addObject:[NSNumber numberWithFloat:[self.lockTiltXSlider floatValue]]];
     [formattedMessageArray addObject:[NSNumber numberWithFloat:[self.lockTiltYSlider floatValue]]];
     [self sendFormattedMessageArray:formattedMessageArray];
@@ -1216,7 +1280,7 @@
   
   NSMutableArray* formattedMessageArray = [[NSMutableArray alloc]init];
   [formattedMessageArray addObject:@"/system/page"];
-  [formattedMessageArray  addObject:@"i"];//tags
+  //[formattedMessageArray  addObject:@"i"];//tags
   [formattedMessageArray addObject:[NSNumber numberWithInt:currentPageIndex]];
   
     [self sendFormattedMessageArray:formattedMessageArray];

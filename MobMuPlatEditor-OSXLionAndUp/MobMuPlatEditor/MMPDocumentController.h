@@ -7,11 +7,16 @@
 //
 
 #import <Cocoa/Cocoa.h>
-#import "OSCManager.h"
+//#import "OSCManager.h"
+
+#import <VVOSC/VVOSC.h>
 #import "Document.h"
 
-@interface MMPDocumentController : NSDocumentController<OSCManagerDelegate>{}
+@interface MMPDocumentController : NSDocumentController<OSCDelegateProtocol>{}
 
 @property(retain)OSCManager* manager;
 @property(retain)NSMutableArray* fontArray;
+
+-(void)sendOSCMessageFromArray:(NSArray*) list;
++ (BOOL)numberIsFloat:(NSNumber*)num;
 @end

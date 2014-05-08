@@ -17,7 +17,7 @@
 -(void)controlEditReleased:(MMPControl*)control withShift:(BOOL)shift hadDrag:(BOOL)hadDrag;
 -(void)controlEditDelete;
 -(BOOL) isEditing;//edit vs locked mode in document
--(void)sendFormattedMessageArray:(NSMutableArray*) formattedMessageArray;
+-(void)sendFormattedMessageArray:(NSArray*) formattedMessageArray;
 -(void)canvasClicked;
 -(NSURL*)fileURL;//return the fileURL of the document (in order to get relative paths to MMPPanel images)
 -(void)updateGuide:(MMPControl*)control;
@@ -32,7 +32,6 @@
     BOOL wasSelectedThisCycle;
 }
 
-+(CGColorRef) CGColorFromNSColor:(NSColor*)inColor;
 -(void)hackRefresh;
 -(void) addHandles;
 -(void)bringUpHandle;

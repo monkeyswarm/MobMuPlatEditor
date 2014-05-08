@@ -18,7 +18,7 @@
         
         innerView = [[NSView alloc]init];
         [innerView setWantsLayer:YES];
-        innerView.layer.borderColor = [MMPControl CGColorFromNSColor:self.color];
+        innerView.layer.borderColor = self.color.CGColor;
         innerView.layer.cornerRadius=EDGE_RADIUS;
         [self addSubview:innerView];
         [self setBorderThickness:4];
@@ -49,7 +49,7 @@
     [super hackRefresh];
     innerView.layer.cornerRadius=EDGE_RADIUS;
     innerView.layer.borderWidth = _borderThickness;
-    if(self.value==1)innerView.layer.backgroundColor=[MMPControl CGColorFromNSColor:self.highlightColor];
+    if(self.value==1)innerView.layer.backgroundColor=self.highlightColor.CGColor;
     
 }
 
@@ -63,20 +63,20 @@
 
 -(void)setColor:(NSColor *)color{
     [super setColor:color];
-    innerView.layer.borderColor=[MMPControl CGColorFromNSColor:color];
+    innerView.layer.borderColor=color.CGColor;
 }
 
 -(void)setHighlightColor:(NSColor *)color{
     [super setHighlightColor:color];
-    if(self.value==1)innerView.layer.backgroundColor=[MMPControl CGColorFromNSColor:color];
+    if(self.value==1)innerView.layer.backgroundColor=color.CGColor;
 }
 
 
 -(void)setValue:(int)inVal{
 	_value=inVal;
     
-    if(self.value==1)innerView.layer.backgroundColor=[MMPControl CGColorFromNSColor:self.highlightColor];
-    else innerView.layer.backgroundColor=[MMPControl CGColorFromNSColor:[NSColor clearColor]];
+    if(self.value==1)innerView.layer.backgroundColor=self.highlightColor.CGColor;
+    else innerView.layer.backgroundColor=[[NSColor clearColor]CGColor];
 	
 }
 
@@ -84,7 +84,7 @@
 -(void)sendValue{
     NSMutableArray* formattedMessageArray = [[NSMutableArray alloc]init];
     [formattedMessageArray addObject:self.address];
-    [formattedMessageArray  addObject:[[NSMutableString alloc]initWithString:@"i"]];//tags
+    //[formattedMessageArray  addObject:[[NSMutableString alloc]initWithString:@"i"]];//tags
     [formattedMessageArray addObject:[NSNumber numberWithInt:self.value]];
     [self.editingDelegate sendFormattedMessageArray:formattedMessageArray];
 }

@@ -36,16 +36,16 @@
   self = [super initWithFrame:frame];
   if (self) {
     self.address=@"/myMenu";
-    //self.layer.backgroundColor=[MMPControl CGColorFromNSColor:[NSColor clearColor]];
+    //self.layer.backgroundColor=[NSColor clearColor]];
     //self.layer.cornerRadius=EDGE_RADIUS;
     
     
     innerView = [[NSView alloc]init];
     [innerView setWantsLayer:YES];
-    innerView.layer.borderColor = [MMPControl CGColorFromNSColor:self.color];
+    innerView.layer.borderColor = self.color.CGColor;
     innerView.layer.cornerRadius=EDGE_RADIUS;
     innerView.layer.borderWidth = 2;
-    innerView.layer.backgroundColor=[MMPControl CGColorFromNSColor:[NSColor clearColor]];
+    innerView.layer.backgroundColor=[[NSColor clearColor]CGColor];
     [self addSubview:innerView];
     
     textField = [[NSTextField alloc]initWithFrame:CGRectMake(TAB_WIDTH, 0, frame.size.width-TAB_WIDTH, frame.size.height)];
@@ -63,13 +63,13 @@
     
     downView = [[NSView alloc] initWithFrame:CGRectMake(0, 0, TAB_WIDTH, self.frame.size.height) ];
     [downView setWantsLayer:YES];
-    downView.layer.borderColor = [MMPControl CGColorFromNSColor:self.color];
+    downView.layer.borderColor = self.color.CGColor;
     downView.layer.borderWidth = 2;
     downView.layer.cornerRadius=EDGE_RADIUS;
-    //downView.layer.backgroundColor=[MMPControl CGColorFromNSColor:[NSColor clearColor]];
+    //downView.layer.backgroundColor=[NSColor clearColor]];
     [self addSubview:downView];
    
-    //self.layer.backgroundColor = [MMPControl CGColorFromNSColor:[NSColor clearColor]];
+    //self.layer.backgroundColor = [NSColor clearColor]];
     
     [self setFrame:frame];
     [self addHandles];
@@ -221,7 +221,7 @@
 -(void)sendValueAt:(NSInteger)index{
   NSMutableArray* formattedMessageArray = [[NSMutableArray alloc]init];
   [formattedMessageArray addObject:self.address];
-  [formattedMessageArray addObject:[[NSMutableString alloc]initWithString:@"is"]];//tags
+  //[formattedMessageArray addObject:[[NSMutableString alloc]initWithString:@"is"]];//tags
   [formattedMessageArray addObject:[NSNumber numberWithInt:(int)index]];
   [formattedMessageArray addObject:[_dataArray objectAtIndex:index]];
   [self.editingDelegate sendFormattedMessageArray:formattedMessageArray];
@@ -248,8 +248,8 @@
 
 -(void)setColor:(NSColor *)color{
   [super setColor:color];
-  innerView.layer.borderColor = [MMPControl CGColorFromNSColor:self.color];
-  downView.layer.borderColor = [MMPControl CGColorFromNSColor:self.color];
+  innerView.layer.borderColor = self.color.CGColor;
+  downView.layer.borderColor = self.color.CGColor;
   [textField setTextColor:self.color];
   
 }

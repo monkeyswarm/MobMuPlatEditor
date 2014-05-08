@@ -16,13 +16,13 @@
     if (self) {
         // Initialization code
         [self setWantsLayer:YES];
-        self.layer.backgroundColor = [MMPControl CGColorFromNSColor:[NSColor darkGrayColor]];
+        self.layer.backgroundColor = [[NSColor darkGrayColor]CGColor];
         
         warningLabel = [[NSTextField alloc] initWithFrame:self.bounds];
         //[warningLabel setWantsLayer:YES];
        // [warningLabel alignCenter:nil];
         warningLabel.textColor = [NSColor whiteColor];
-        //warningLabel.layer.backgroundColor = [MMPControl CGColorFromNSColor:[NSColor darkGrayColor]];
+        //warningLabel.layer.backgroundColor = [NSColor darkGrayColor]];
         [warningLabel setEditable:NO];
        // warningLabel.numberOfLines = -1;
         //warningLabel.font = [UIFont systemFontOfSize:12];

@@ -147,12 +147,12 @@
     }
 }
 
-+(CGColorRef) CGColorFromNSColor:(NSColor*)inColor{
+/*+(CGColorRef) CGColorFromNSColor:(NSColor*)inColor{
 
     CGFloat components[4];
     [inColor getComponents:components];
     return CGColorCreateGenericRGB(components[0], components[1], components[2], components[3]);
-}
+}*/
 
 //====copy/paste
 - (void)encodeWithCoder:(NSCoder *)coder {

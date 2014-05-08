@@ -73,9 +73,9 @@
 
 -(void)setColor:(NSColor *)color{
     [super setColor:color];
-    troughView.layer.backgroundColor=[MMPControl CGColorFromNSColor:color];
-    thumbView.layer.backgroundColor=[MMPControl CGColorFromNSColor:color];
-    for(NSView* dot in tickViewArray)dot.layer.backgroundColor = [MMPControl CGColorFromNSColor:color];
+    troughView.layer.backgroundColor=color.CGColor;
+    thumbView.layer.backgroundColor=color.CGColor;
+    for(NSView* dot in tickViewArray)dot.layer.backgroundColor = color.CGColor;
 }
 
 -(void)setRangeObjectUndoable:(NSNumber*)inRangeObject{
@@ -93,7 +93,7 @@
         for(int i=0;i<_range;i++){
             NSView* tick = [[NSView alloc]init];
             [tick setWantsLayer:YES];
-            tick.layer.backgroundColor=[MMPControl CGColorFromNSColor:self.color];
+            tick.layer.backgroundColor=self.color.CGColor;
             [tickViewArray addObject:tick];
             [self addSubview:tick];
         }
@@ -121,7 +121,7 @@
     NSMutableArray* formattedMessageArray = [[NSMutableArray alloc]init];
     [formattedMessageArray addObject:self.address];
     
-    [formattedMessageArray  addObject:[[NSMutableString alloc]initWithString:@"f"]];//tags
+    //[formattedMessageArray  addObject:[[NSMutableString alloc]initWithString:@"f"]];//tags
     [formattedMessageArray addObject:[NSNumber numberWithFloat:self.value]];
     [self.editingDelegate sendFormattedMessageArray:formattedMessageArray];
 }
@@ -164,9 +164,9 @@
             [self sendValue];
         }
         
-        thumbView.layer.backgroundColor=[MMPControl CGColorFromNSColor:self.highlightColor];
-        troughView.layer.backgroundColor=[MMPControl CGColorFromNSColor: self.highlightColor];
-        if(tickViewArray)for (NSView* tick in tickViewArray)tick.layer.backgroundColor=[MMPControl CGColorFromNSColor:self.highlightColor];
+        thumbView.layer.backgroundColor=self.highlightColor.CGColor;
+        troughView.layer.backgroundColor= self.highlightColor.CGColor;
+        if(tickViewArray)for (NSView* tick in tickViewArray)tick.layer.backgroundColor=self.highlightColor.CGColor;
         
     }
 }
@@ -195,9 +195,9 @@
 -(void)mouseUp:(NSEvent *)event  {
     [super mouseUp:event];
     if(![self.editingDelegate isEditing]){
-        thumbView.layer.backgroundColor=[MMPControl CGColorFromNSColor:self.color];
-        troughView.layer.backgroundColor= [MMPControl CGColorFromNSColor:self.color];
-        if(tickViewArray)for (NSView* tick in tickViewArray)tick.layer.backgroundColor=[MMPControl CGColorFromNSColor: self.color];
+        thumbView.layer.backgroundColor=self.color.CGColor;
+        troughView.layer.backgroundColor= self.color.CGColor;
+        if(tickViewArray)for (NSView* tick in tickViewArray)tick.layer.backgroundColor= self.color.CGColor;
     }
 }
 

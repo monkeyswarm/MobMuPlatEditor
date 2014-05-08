@@ -32,7 +32,7 @@
 }
 -(void)setBgColor:(NSColor *)inbgColor{
     bgColor = inbgColor;
-    self.layer.backgroundColor = [MMPControl CGColorFromNSColor:inbgColor];
+  self.layer.backgroundColor = inbgColor.CGColor;
 }
 
 -(void)mouseDown:(NSEvent *)theEvent{

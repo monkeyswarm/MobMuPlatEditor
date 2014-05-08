@@ -23,11 +23,12 @@
 #import "MMPMenu.h"
 #import "MMPTable.h"
 
-#import "OSCManager.h"
+//#import "OSCManager.h"
+#import <VVOSC/VVOSC.h>
 #import "MMPDocumentController.h"
 #define LOGLINES 12
 
-@interface Document : NSDocument<MMPControlEditingDelegate, OSCManagerDelegate>{
+@interface Document : NSDocument<MMPControlEditingDelegate, OSCDelegateProtocol>{
     
 
     DocumentModel* documentModel;

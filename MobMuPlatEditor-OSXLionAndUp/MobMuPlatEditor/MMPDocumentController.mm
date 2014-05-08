@@ -9,7 +9,10 @@
 
 #import "MMPDocumentController.h"
 
-@implementation MMPDocumentController
+@implementation MMPDocumentController {
+  OSCInPort *inPort;
+	OSCOutPort *outPort;
+}
 
 -(id)init{
     self = [super init];
@@ -17,11 +20,16 @@
     [[NSColorPanel sharedColorPanel] setShowsAlpha:YES];
     
     //set up one OSC manager for all open documents
-    _manager = [[OSCManager alloc]init];
+   /* _manager = [[OSCManager alloc]init];
     [_manager setOSCReceivePort:[NSMutableArray arrayWithObjects:[NSNumber numberWithInt:54310], nil] withDict:nil];
     [_manager setIPAddressAndPort:[NSMutableArray arrayWithObjects:@"localhost", [NSNumber numberWithInt:54300], nil] withDict:nil];
     _manager.delegate=self;
-    
+    */
+  _manager = [[OSCManager alloc] init];
+	[_manager setDelegate:self];
+  outPort = [_manager createNewOutputToAddress:@"127.0.0.1" atPort:54300];
+  inPort = [_manager createNewInputForPort:54310];
+
     NSString* fontnamesjson = [NSString stringWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"uifontlist" ofType:@"txt"]];
     //_fontArray = [[fontnamesjson objectFromJSONString] mutableCopy];//array of dictionaries
     NSData *data = [fontnamesjson dataUsingEncoding:NSUTF8StringEncoding];
@@ -93,10 +101,40 @@
 }
 
 //OSC manager delegate method: get OSC message, sent it to ALL open documents
-- (void)receiveOSCArray:(NSMutableArray *)oscArray asString:(NSString*)string{
-    for(Document* doc in [self documents]){
-        [doc receiveOSCArray:oscArray asString:string];
+//- (void)receiveOSCArray:(NSMutableArray *)oscArray asString:(NSString*)string{
+- (void) receivedOSCMessage:(OSCMessage *)m {
+  for(Document* doc in [self documents]){
+        //[doc receiveOSCArray:oscArray asString:string];
+    [doc receivedOSCMessage:m];
     }
+}
+
++ (OSCMessage*) oscMessageFromList:(NSArray*)list{
+  OSCMessage *msg = [OSCMessage createWithAddress:[list objectAtIndex:0]];
+  for(id item in [list subarrayWithRange:NSMakeRange(1, [list count]-1)]){
+    if([item isKindOfClass:[NSString class]]) [msg addString:item];
+    else if([item isKindOfClass:[NSNumber class]]){
+      NSNumber* itemNumber = (NSNumber*)item;
+      if([MMPDocumentController numberIsFloat:itemNumber]) {
+        [msg addFloat:[item floatValue]];
+      }
+      else {
+        [msg addInt:[item intValue]];
+      }
+    }
+  }
+  return msg;
+}
+
++ (BOOL)numberIsFloat:(NSNumber*)num {
+  if(strcmp([num objCType], @encode(float)) == 0 || strcmp([num objCType], @encode(double)) == 0) {
+    return YES;
+  }
+  else return NO;
+}
+
+-(void)sendOSCMessageFromArray:(NSArray*) list {
+  [outPort sendThisPacket:[OSCPacket createWithContent:[MMPDocumentController oscMessageFromList:list]]];
 }
 
 @end

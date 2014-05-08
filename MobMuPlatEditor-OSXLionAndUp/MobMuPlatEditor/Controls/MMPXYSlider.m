@@ -56,9 +56,9 @@
 
 -(void)setColor:(NSColor *)color{
     [super setColor:color];
-    borderView.layer.borderColor = [MMPControl CGColorFromNSColor:color];
-    cursorVertView.layer.backgroundColor = [MMPControl CGColorFromNSColor:color];
-    cursorHorizView.layer.backgroundColor = [MMPControl CGColorFromNSColor:color];
+    borderView.layer.borderColor = color.CGColor;
+    cursorVertView.layer.backgroundColor = color.CGColor;
+    cursorHorizView.layer.backgroundColor = color.CGColor;
 }
 
 
@@ -77,7 +77,7 @@
     NSMutableArray* formattedMessageArray = [[NSMutableArray alloc]init];
     [formattedMessageArray addObject:self.address];
     
-    [formattedMessageArray  addObject:[[NSMutableString alloc]initWithString:@"ff"]];//tags
+    //[formattedMessageArray  addObject:[[NSMutableString alloc]initWithString:@"ff"]];//tags
     [formattedMessageArray addObject:[NSNumber numberWithFloat:self.valueX]];
     [formattedMessageArray addObject:[NSNumber numberWithFloat:self.valueY]];
     [self.editingDelegate sendFormattedMessageArray:formattedMessageArray];
@@ -87,9 +87,9 @@
     [super mouseDown:theEvent];
     
     if(![self.editingDelegate isEditing]){
-        cursorHorizView.layer.backgroundColor=[MMPControl CGColorFromNSColor:self.highlightColor];
-        cursorVertView.layer.backgroundColor=[MMPControl CGColorFromNSColor:self.highlightColor];
-        borderView.layer.borderColor=[MMPControl CGColorFromNSColor:self.highlightColor];
+        cursorHorizView.layer.backgroundColor=self.highlightColor.CGColor;
+        cursorVertView.layer.backgroundColor=self.highlightColor.CGColor;
+        borderView.layer.borderColor=self.highlightColor.CGColor;
         [self mouseDragged:theEvent];
     }
 }
@@ -113,9 +113,9 @@
 -(void)mouseUp:(NSEvent *)theEvent{
     [super mouseUp:theEvent];
     if(![self.editingDelegate isEditing]){
-        cursorHorizView.layer.backgroundColor=[MMPControl CGColorFromNSColor:self.color];
-        cursorVertView.layer.backgroundColor=[MMPControl CGColorFromNSColor:self.color];
-        borderView.layer.borderColor=[MMPControl CGColorFromNSColor:self.color];
+        cursorHorizView.layer.backgroundColor=self.color.CGColor;
+        cursorVertView.layer.backgroundColor=self.color.CGColor;
+        borderView.layer.borderColor=self.color.CGColor;
     }
     
 }

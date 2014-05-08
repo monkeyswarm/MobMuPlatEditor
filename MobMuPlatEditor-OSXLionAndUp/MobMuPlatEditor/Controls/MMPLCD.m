@@ -28,7 +28,7 @@
     self = [super initWithFrame:frame];
     if (self) {
         self.address=@"/myLCD";
-        self.layer.backgroundColor=[MMPControl CGColorFromNSColor:self.color];
+        self.layer.backgroundColor=self.color.CGColor;
         
         penPoint = CGPointMake(0, 0);
       
@@ -89,7 +89,7 @@
 
 -(void)setColor:(NSColor *)color{
     [super setColor:color];
-    self.layer.backgroundColor=[MMPControl CGColorFromNSColor:color];
+    self.layer.backgroundColor=color.CGColor;
     
 }
 
@@ -318,7 +318,7 @@
     NSMutableArray* formattedMessageArray = [[NSMutableArray alloc]init];
     [formattedMessageArray addObject:self.address];
     
-    [formattedMessageArray  addObject:[[NSMutableString alloc]initWithString:@"fff"]];//tags
+    //[formattedMessageArray  addObject:[[NSMutableString alloc]initWithString:@"fff"]];//tags
     [formattedMessageArray addObject:[NSNumber numberWithFloat:state]];
     [formattedMessageArray addObject:[NSNumber numberWithFloat:x]];
     [formattedMessageArray addObject:[NSNumber numberWithFloat:y]];

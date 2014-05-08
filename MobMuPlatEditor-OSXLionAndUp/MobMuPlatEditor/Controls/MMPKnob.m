@@ -46,7 +46,7 @@ int osxMinorVersion=-1;
         
         knobView = [[NSView alloc]init];//create, don't set frame until setFrame
         [knobView setWantsLayer:YES];
-        knobView.layer.backgroundColor=[MMPControl CGColorFromNSColor:self.color];
+        knobView.layer.backgroundColor=self.color.CGColor;
         [self addSubview:knobView];
         
         indicatorView=[[NSView alloc]init ];//create, don't set frame until setFrame
@@ -74,14 +74,14 @@ int osxMinorVersion=-1;
 
 -(void)setIndicatorColor:(NSColor*)inColor{
     _indicatorColor = inColor;
-    indicatorView.layer.backgroundColor=[MMPControl CGColorFromNSColor:inColor];
+    indicatorView.layer.backgroundColor=inColor.CGColor;
 }
 
 -(void)hackRefresh{
     [super hackRefresh];
     knobView.layer.cornerRadius=radius;
     indicatorView.layer.cornerRadius=3;
-    indicatorView.layer.backgroundColor=[MMPControl CGColorFromNSColor:_indicatorColor];
+    indicatorView.layer.backgroundColor=_indicatorColor.CGColor;
     for(NSView* dot in tickViewArray)dot.layer.cornerRadius=TICK_DIM/2;
     [self updateIndicator];
 }
@@ -122,8 +122,8 @@ int osxMinorVersion=-1;
 
 -(void)setColor:(NSColor *)color{
     [super setColor:color];
-    knobView.layer.backgroundColor=[MMPControl CGColorFromNSColor:color];
-    for(NSView* dot in tickViewArray)dot.layer.backgroundColor = [MMPControl CGColorFromNSColor:color];
+    knobView.layer.backgroundColor=color.CGColor;
+    for(NSView* dot in tickViewArray)dot.layer.backgroundColor = color.CGColor;
 }
 
 -(void)setRangeObjectUndoable:(NSNumber*)inRangeObject{
@@ -146,7 +146,7 @@ int osxMinorVersion=-1;
     for(int i=0;i<_range;i++){
         NSView* dot = [[NSView alloc]init];
         [dot setWantsLayer:YES];
-        dot.layer.backgroundColor=[MMPControl CGColorFromNSColor:self.color];
+        dot.layer.backgroundColor=self.color.CGColor;
         dot.layer.cornerRadius=TICK_DIM/2;
         //printf("\n%.2f, %.2f", dot.center.x, dot.center.y);
         [self addSubview:dot];
@@ -181,11 +181,11 @@ int osxMinorVersion=-1;
     NSMutableArray* formattedMessageArray = [[NSMutableArray alloc]init];
     [formattedMessageArray addObject:self.address];
     if(_range>2){
-        [formattedMessageArray  addObject:[[NSMutableString alloc]initWithString:@"i"]];//tags
+        //[formattedMessageArray  addObject:[[NSMutableString alloc]initWithString:@"i"]];//tags
         [formattedMessageArray addObject:[NSNumber numberWithInt:(int)self.value]];
     }
     else{
-        [formattedMessageArray  addObject:[[NSMutableString alloc]initWithString:@"f"]];//tags
+        //[formattedMessageArray  addObject:[[NSMutableString alloc]initWithString:@"f"]];//tags
         [formattedMessageArray addObject:[NSNumber numberWithFloat:self.value]];
     }
     [self.editingDelegate sendFormattedMessageArray:formattedMessageArray];
@@ -222,7 +222,7 @@ int osxMinorVersion=-1;
     [super mouseDown:event];
     
    if(![self.editingDelegate isEditing]){
-       knobView.layer.backgroundColor = [MMPControl CGColorFromNSColor:self.highlightColor];
+       knobView.layer.backgroundColor = self.highlightColor.CGColor;
        [self mouseDragged:event];
     }
 }
@@ -258,7 +258,7 @@ int osxMinorVersion=-1;
 -(void)mouseUp:(NSEvent *)event{
     [super mouseUp:event];
     if(![self.editingDelegate isEditing]){
-        knobView.layer.backgroundColor = [MMPControl CGColorFromNSColor:self.color];
+        knobView.layer.backgroundColor = self.color.CGColor;
     }
 }
 

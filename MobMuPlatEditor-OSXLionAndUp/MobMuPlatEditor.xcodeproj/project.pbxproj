@@ -10,17 +10,9 @@
 		DC34E248168BB79800648C2F /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DC34E247168BB79800648C2F /* Cocoa.framework */; };
 		DC5A5ADE18825DFB00FC97D5 /* MMPUnknown.m in Sources */ = {isa = PBXBuildFile; fileRef = DC5A5ADD18825DFB00FC97D5 /* MMPUnknown.m */; };
 		DC5A5AE118825E3200FC97D5 /* MMPLCD.m in Sources */ = {isa = PBXBuildFile; fileRef = DC5A5AE018825E3200FC97D5 /* MMPLCD.m */; };
-		DC8146A91732BF750041F394 /* IpEndpointName.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC8146A81732BF750041F394 /* IpEndpointName.cpp */; };
-		DC8146AF1732BF980041F394 /* OSCManager.mm in Sources */ = {isa = PBXBuildFile; fileRef = DC8146AE1732BF980041F394 /* OSCManager.mm */; };
-		DC8146B21732C0090041F394 /* NetworkingUtils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC8146B01732C0090041F394 /* NetworkingUtils.cpp */; };
-		DC8146B31732C0090041F394 /* UdpSocket.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC8146B11732C0090041F394 /* UdpSocket.cpp */; };
 		DC8146B51732C43E0041F394 /* infoicon_100x100.png in Resources */ = {isa = PBXBuildFile; fileRef = DCE2F0371732BD86002B897C /* infoicon_100x100.png */; };
 		DC8146BC1732C4E10041F394 /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = DC8146B81732C4E10041F394 /* Credits.rtf */; };
 		DC8146BD1732C4E10041F394 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = DC8146BA1732C4E10041F394 /* InfoPlist.strings */; };
-		DCE2EFF51732BA83002B897C /* OscOutboundPacketStream.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DCE2EFEC1732BA83002B897C /* OscOutboundPacketStream.cpp */; };
-		DCE2EFF61732BA83002B897C /* OscPrintReceivedElements.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DCE2EFEF1732BA83002B897C /* OscPrintReceivedElements.cpp */; };
-		DCE2EFF71732BA83002B897C /* OscReceivedElements.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DCE2EFF11732BA83002B897C /* OscReceivedElements.cpp */; };
-		DCE2EFF81732BA83002B897C /* OscTypes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DCE2EFF31732BA83002B897C /* OscTypes.cpp */; };
 		DCE2F00D1732BAA6002B897C /* MMPButton.m in Sources */ = {isa = PBXBuildFile; fileRef = DCE2EFFA1732BAA6002B897C /* MMPButton.m */; };
 		DCE2F00E1732BAA6002B897C /* MMPControl.m in Sources */ = {isa = PBXBuildFile; fileRef = DCE2EFFC1732BAA6002B897C /* MMPControl.m */; };
 		DCE2F00F1732BAA6002B897C /* MMPGrid.m in Sources */ = {isa = PBXBuildFile; fileRef = DCE2EFFE1732BAA6002B897C /* MMPGrid.m */; };
@@ -43,8 +35,26 @@
 		DCE2F0361732BB39002B897C /* uifontlist.txt in Resources */ = {isa = PBXBuildFile; fileRef = DCE2F0311732BB39002B897C /* uifontlist.txt */; };
 		F9109646190DFBC8008707EE /* MMPTable.m in Sources */ = {isa = PBXBuildFile; fileRef = F9109645190DFBC8008707EE /* MMPTable.m */; };
 		F94FB53C18F5A045003BFB18 /* MMPMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = F94FB53B18F5A045003BFB18 /* MMPMenu.m */; };
+		F9A72B26191AF9F5000A386C /* VVOSC.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F9A72B24191AF9F5000A386C /* VVOSC.framework */; };
+		F9A72B27191AF9F5000A386C /* VVBasics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F9A72B25191AF9F5000A386C /* VVBasics.framework */; };
+		F9A72B3E191B0102000A386C /* VVBasics.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = F9A72B3C191B0102000A386C /* VVBasics.framework */; };
+		F9A72B3F191B0102000A386C /* VVOSC.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = F9A72B3D191B0102000A386C /* VVOSC.framework */; };
 		F9F44F3918BC2A3200101132 /* MMPMultiTouch.m in Sources */ = {isa = PBXBuildFile; fileRef = F9F44F3818BC2A3200101132 /* MMPMultiTouch.m */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		F9A72B37191B00E3000A386C /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				F9A72B3E191B0102000A386C /* VVBasics.framework in CopyFiles */,
+				F9A72B3F191B0102000A386C /* VVOSC.framework in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		DC084BA9168E13B100664E0E /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
@@ -57,30 +67,8 @@
 		DC5A5ADD18825DFB00FC97D5 /* MMPUnknown.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MMPUnknown.m; path = MobMuPlatEditor/Controls/MMPUnknown.m; sourceTree = SOURCE_ROOT; };
 		DC5A5ADF18825E3200FC97D5 /* MMPLCD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MMPLCD.h; path = MobMuPlatEditor/Controls/MMPLCD.h; sourceTree = SOURCE_ROOT; };
 		DC5A5AE018825E3200FC97D5 /* MMPLCD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MMPLCD.m; path = MobMuPlatEditor/Controls/MMPLCD.m; sourceTree = SOURCE_ROOT; };
-		DC8146A81732BF750041F394 /* IpEndpointName.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = IpEndpointName.cpp; path = oscpack/ip/IpEndpointName.cpp; sourceTree = SOURCE_ROOT; };
-		DC8146AE1732BF980041F394 /* OSCManager.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = OSCManager.mm; path = oscpack/OSCManager.mm; sourceTree = SOURCE_ROOT; };
-		DC8146B01732C0090041F394 /* NetworkingUtils.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = NetworkingUtils.cpp; path = oscpack/ip/NetworkingUtils.cpp; sourceTree = SOURCE_ROOT; };
-		DC8146B11732C0090041F394 /* UdpSocket.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = UdpSocket.cpp; path = oscpack/ip/UdpSocket.cpp; sourceTree = SOURCE_ROOT; };
 		DC8146B91732C4E10041F394 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = en; path = MobMuPlatEditor/en.lproj/Credits.rtf; sourceTree = SOURCE_ROOT; };
 		DC8146BB1732C4E10041F394 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = MobMuPlatEditor/en.lproj/InfoPlist.strings; sourceTree = SOURCE_ROOT; };
-		DCE0BC84168E782A001B6DF3 /* IpEndpointName.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = IpEndpointName.h; path = oscpack/ip/IpEndpointName.h; sourceTree = "<group>"; };
-		DCE0BC85168E782A001B6DF3 /* NetworkingUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NetworkingUtils.h; path = oscpack/ip/NetworkingUtils.h; sourceTree = "<group>"; };
-		DCE0BC86168E782A001B6DF3 /* PacketListener.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PacketListener.h; path = oscpack/ip/PacketListener.h; sourceTree = "<group>"; };
-		DCE0BC87168E782A001B6DF3 /* TimerListener.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TimerListener.h; path = oscpack/ip/TimerListener.h; sourceTree = "<group>"; };
-		DCE0BC88168E782A001B6DF3 /* UdpSocket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UdpSocket.h; path = oscpack/ip/UdpSocket.h; sourceTree = "<group>"; };
-		DCE0BC8F168E783F001B6DF3 /* OSCManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OSCManager.h; path = oscpack/OSCManager.h; sourceTree = "<group>"; };
-		DCE2EFE91732BA83002B897C /* MessageMappingOscPacketListener.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MessageMappingOscPacketListener.h; path = oscpack/osc/MessageMappingOscPacketListener.h; sourceTree = SOURCE_ROOT; };
-		DCE2EFEA1732BA83002B897C /* OscException.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OscException.h; path = oscpack/osc/OscException.h; sourceTree = SOURCE_ROOT; };
-		DCE2EFEB1732BA83002B897C /* OscHostEndianness.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OscHostEndianness.h; path = oscpack/osc/OscHostEndianness.h; sourceTree = SOURCE_ROOT; };
-		DCE2EFEC1732BA83002B897C /* OscOutboundPacketStream.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = OscOutboundPacketStream.cpp; path = oscpack/osc/OscOutboundPacketStream.cpp; sourceTree = SOURCE_ROOT; };
-		DCE2EFED1732BA83002B897C /* OscOutboundPacketStream.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OscOutboundPacketStream.h; path = oscpack/osc/OscOutboundPacketStream.h; sourceTree = SOURCE_ROOT; };
-		DCE2EFEE1732BA83002B897C /* OscPacketListener.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OscPacketListener.h; path = oscpack/osc/OscPacketListener.h; sourceTree = SOURCE_ROOT; };
-		DCE2EFEF1732BA83002B897C /* OscPrintReceivedElements.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = OscPrintReceivedElements.cpp; path = oscpack/osc/OscPrintReceivedElements.cpp; sourceTree = SOURCE_ROOT; };
-		DCE2EFF01732BA83002B897C /* OscPrintReceivedElements.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OscPrintReceivedElements.h; path = oscpack/osc/OscPrintReceivedElements.h; sourceTree = SOURCE_ROOT; };
-		DCE2EFF11732BA83002B897C /* OscReceivedElements.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = OscReceivedElements.cpp; path = oscpack/osc/OscReceivedElements.cpp; sourceTree = SOURCE_ROOT; };
-		DCE2EFF21732BA83002B897C /* OscReceivedElements.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OscReceivedElements.h; path = oscpack/osc/OscReceivedElements.h; sourceTree = SOURCE_ROOT; };
-		DCE2EFF31732BA83002B897C /* OscTypes.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = OscTypes.cpp; path = oscpack/osc/OscTypes.cpp; sourceTree = SOURCE_ROOT; };
-		DCE2EFF41732BA83002B897C /* OscTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OscTypes.h; path = oscpack/osc/OscTypes.h; sourceTree = SOURCE_ROOT; };
 		DCE2EFF91732BAA6002B897C /* MMPButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MMPButton.h; path = MobMuPlatEditor/Controls/MMPButton.h; sourceTree = SOURCE_ROOT; };
 		DCE2EFFA1732BAA6002B897C /* MMPButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MMPButton.m; path = MobMuPlatEditor/Controls/MMPButton.m; sourceTree = SOURCE_ROOT; };
 		DCE2EFFB1732BAA6002B897C /* MMPControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MMPControl.h; path = MobMuPlatEditor/Controls/MMPControl.h; sourceTree = SOURCE_ROOT; };
@@ -123,6 +111,10 @@
 		F9109645190DFBC8008707EE /* MMPTable.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MMPTable.m; path = MobMuPlatEditor/Controls/MMPTable.m; sourceTree = SOURCE_ROOT; };
 		F94FB53A18F5A045003BFB18 /* MMPMenu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MMPMenu.h; path = MobMuPlatEditor/Controls/MMPMenu.h; sourceTree = SOURCE_ROOT; };
 		F94FB53B18F5A045003BFB18 /* MMPMenu.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MMPMenu.m; path = MobMuPlatEditor/Controls/MMPMenu.m; sourceTree = SOURCE_ROOT; };
+		F9A72B24191AF9F5000A386C /* VVOSC.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = VVOSC.framework; path = "../../../Documents/vvopensource-master/build@rpath/VVOSC.framework"; sourceTree = "<group>"; };
+		F9A72B25191AF9F5000A386C /* VVBasics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = VVBasics.framework; path = "../../../Documents/vvopensource-master/build@rpath/VVBasics.framework"; sourceTree = "<group>"; };
+		F9A72B3C191B0102000A386C /* VVBasics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = VVBasics.framework; path = ../../../builds/Products/Release/VVBasics.framework; sourceTree = "<group>"; };
+		F9A72B3D191B0102000A386C /* VVOSC.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = VVOSC.framework; path = ../../../builds/Products/Release/VVOSC.framework; sourceTree = "<group>"; };
 		F9F44F3718BC2A3200101132 /* MMPMultiTouch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MMPMultiTouch.h; path = MobMuPlatEditor/MMPMultiTouch.h; sourceTree = SOURCE_ROOT; };
 		F9F44F3818BC2A3200101132 /* MMPMultiTouch.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MMPMultiTouch.m; path = MobMuPlatEditor/MMPMultiTouch.m; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
@@ -132,6 +124,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F9A72B26191AF9F5000A386C /* VVOSC.framework in Frameworks */,
+				F9A72B27191AF9F5000A386C /* VVBasics.framework in Frameworks */,
 				DC34E248168BB79800648C2F /* Cocoa.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -142,7 +136,8 @@
 		DC34E238168BB79800648C2F = {
 			isa = PBXGroup;
 			children = (
-				DCE0BC6F168E77C6001B6DF3 /* oscpack */,
+				F9A72B3C191B0102000A386C /* VVBasics.framework */,
+				F9A72B3D191B0102000A386C /* VVOSC.framework */,
 				DC34E24D168BB79800648C2F /* MobMuPlatEd */,
 				DC34E246168BB79800648C2F /* Frameworks */,
 				DC34E244168BB79800648C2F /* Products */,
@@ -160,6 +155,8 @@
 		DC34E246168BB79800648C2F /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				F9A72B24191AF9F5000A386C /* VVOSC.framework */,
+				F9A72B25191AF9F5000A386C /* VVBasics.framework */,
 				DC084BA9168E13B100664E0E /* QuartzCore.framework */,
 				DC34E247168BB79800648C2F /* Cocoa.framework */,
 				DC34E249168BB79800648C2F /* Other Frameworks */,
@@ -214,52 +211,6 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
-		DCE0BC6F168E77C6001B6DF3 /* oscpack */ = {
-			isa = PBXGroup;
-			children = (
-				DC8146AE1732BF980041F394 /* OSCManager.mm */,
-				DCE0BC8F168E783F001B6DF3 /* OSCManager.h */,
-				DCE0BC82168E7808001B6DF3 /* ip */,
-				DCE0BC71168E77F1001B6DF3 /* osc */,
-			);
-			name = oscpack;
-			path = MobMuPlatEd1;
-			sourceTree = "<group>";
-		};
-		DCE0BC71168E77F1001B6DF3 /* osc */ = {
-			isa = PBXGroup;
-			children = (
-				DCE2EFE91732BA83002B897C /* MessageMappingOscPacketListener.h */,
-				DCE2EFEA1732BA83002B897C /* OscException.h */,
-				DCE2EFEB1732BA83002B897C /* OscHostEndianness.h */,
-				DCE2EFEC1732BA83002B897C /* OscOutboundPacketStream.cpp */,
-				DCE2EFED1732BA83002B897C /* OscOutboundPacketStream.h */,
-				DCE2EFEE1732BA83002B897C /* OscPacketListener.h */,
-				DCE2EFEF1732BA83002B897C /* OscPrintReceivedElements.cpp */,
-				DCE2EFF01732BA83002B897C /* OscPrintReceivedElements.h */,
-				DCE2EFF11732BA83002B897C /* OscReceivedElements.cpp */,
-				DCE2EFF21732BA83002B897C /* OscReceivedElements.h */,
-				DCE2EFF31732BA83002B897C /* OscTypes.cpp */,
-				DCE2EFF41732BA83002B897C /* OscTypes.h */,
-			);
-			name = osc;
-			sourceTree = "<group>";
-		};
-		DCE0BC82168E7808001B6DF3 /* ip */ = {
-			isa = PBXGroup;
-			children = (
-				DC8146B01732C0090041F394 /* NetworkingUtils.cpp */,
-				DC8146B11732C0090041F394 /* UdpSocket.cpp */,
-				DC8146A81732BF750041F394 /* IpEndpointName.cpp */,
-				DCE0BC84168E782A001B6DF3 /* IpEndpointName.h */,
-				DCE0BC85168E782A001B6DF3 /* NetworkingUtils.h */,
-				DCE0BC86168E782A001B6DF3 /* PacketListener.h */,
-				DCE0BC87168E782A001B6DF3 /* TimerListener.h */,
-				DCE0BC88168E782A001B6DF3 /* UdpSocket.h */,
-			);
-			name = ip;
-			sourceTree = "<group>";
-		};
 		DCFBBF39168D1ACB00746B04 /* Controls */ = {
 			isa = PBXGroup;
 			children = (
@@ -307,6 +258,7 @@
 				DC34E23F168BB79800648C2F /* Sources */,
 				DC34E240168BB79800648C2F /* Frameworks */,
 				DC34E241168BB79800648C2F /* Resources */,
+				F9A72B37191B00E3000A386C /* CopyFiles */,
 			);
 			buildRules = (
 			);
@@ -365,10 +317,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DCE2EFF51732BA83002B897C /* OscOutboundPacketStream.cpp in Sources */,
-				DCE2EFF61732BA83002B897C /* OscPrintReceivedElements.cpp in Sources */,
-				DCE2EFF71732BA83002B897C /* OscReceivedElements.cpp in Sources */,
-				DCE2EFF81732BA83002B897C /* OscTypes.cpp in Sources */,
 				DCE2F00D1732BAA6002B897C /* MMPButton.m in Sources */,
 				F94FB53C18F5A045003BFB18 /* MMPMenu.m in Sources */,
 				DCE2F00E1732BAA6002B897C /* MMPControl.m in Sources */,
@@ -389,10 +337,6 @@
 				DCE2F0241732BAD3002B897C /* EditHandle.m in Sources */,
 				DCE2F0251732BAD3002B897C /* MMPDocumentController.mm in Sources */,
 				DCE2F0331732BB39002B897C /* main.m in Sources */,
-				DC8146A91732BF750041F394 /* IpEndpointName.cpp in Sources */,
-				DC8146AF1732BF980041F394 /* OSCManager.mm in Sources */,
-				DC8146B21732C0090041F394 /* NetworkingUtils.cpp in Sources */,
-				DC8146B31732C0090041F394 /* UdpSocket.cpp in Sources */,
 				F9109646190DFBC8008707EE /* MMPTable.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -495,10 +439,15 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = YES;
 				COMBINE_HIDPI_IMAGES = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"/Users/diglesia/Documents/vvopensource-master/build@rpath",
+				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "MobMuPlatEditor/MobMuPlatEditor-Prefix.pch";
 				HEADER_SEARCH_PATHS = "";
 				INFOPLIST_FILE = "$(SRCROOT)/MobMuPlatEditor/MobMuPlatEditor-Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				PRODUCT_NAME = MobMuPlatEditor;
 				WRAPPER_EXTENSION = app;
@@ -510,10 +459,15 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = YES;
 				COMBINE_HIDPI_IMAGES = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"/Users/diglesia/Documents/vvopensource-master/build@rpath",
+				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "MobMuPlatEditor/MobMuPlatEditor-Prefix.pch";
 				HEADER_SEARCH_PATHS = "";
 				INFOPLIST_FILE = "$(SRCROOT)/MobMuPlatEditor/MobMuPlatEditor-Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				PRODUCT_NAME = MobMuPlatEditor;
 				WRAPPER_EXTENSION = app;

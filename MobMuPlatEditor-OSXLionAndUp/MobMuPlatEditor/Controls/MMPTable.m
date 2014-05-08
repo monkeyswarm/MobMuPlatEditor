@@ -35,7 +35,7 @@
   if (self) {
     self.address=@"/myTable";
     _created = YES;
-    self.layer.backgroundColor=[MMPControl CGColorFromNSColor:self.color];
+    self.layer.backgroundColor=self.color.CGColor;
     self.selectionColor = [NSColor colorWithCalibratedRed:1. green:1. blue:1. alpha:.5];
     
     //self.userInteractionEnabled = NO;//until table load TODO
@@ -60,7 +60,6 @@
 
 -(void)loadTable {
     [self.editingDelegate sendFormattedMessageArray:[NSMutableArray arrayWithObjects:@"/system/requestTable",
-                                     [[NSMutableString alloc]initWithString:@"s"],
                                      self.address, nil]];
 }
 
@@ -126,7 +125,7 @@
 
 -(void)setColor:(NSColor *)color{
   [super setColor:color];
-  self.layer.backgroundColor=[MMPControl CGColorFromNSColor:color];
+  self.layer.backgroundColor=color.CGColor;
   
 }
 
@@ -240,7 +239,7 @@
 
 -(void)sendSetTableMessageFromIndex:(int)indexA val:(float)valA indexB:(int)indexB val:(float)valB {
   [self.editingDelegate sendFormattedMessageArray:[NSMutableArray arrayWithObjects:@"/system/setTable",
-                                                   [[NSMutableString alloc]initWithString:@"sifif"],//startx/y endx/y
+                                                   //[[NSMutableString alloc]initWithString:@"sifif"],//startx/y endx/y
                                                    self.address,
                                                    [NSNumber numberWithInt:indexA],
                                                    [NSNumber numberWithFloat:valA],
@@ -253,7 +252,7 @@
 -(void)sendRangeMessageFromIndex:(int)indexA toIndex:(int)indexB {
   /*[self.controlDelegate sendGUIMessageArray:[NSArray arrayWithObjects:self.address, @"range", [NSNumber numberWithInt:indexA], [NSNumber numberWithInt:indexB], nil]];*/
   [self.editingDelegate sendFormattedMessageArray:[NSMutableArray arrayWithObjects:self.address,
-                                                   [[NSMutableString alloc]initWithString:@"sii"],
+                                                   //[[NSMutableString alloc]initWithString:@"sii"],
                                                    @"range",
                                                    [NSNumber numberWithInt:indexA],
                                                    [NSNumber numberWithInt:indexB], nil]];

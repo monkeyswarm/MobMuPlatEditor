@@ -76,7 +76,7 @@
 
 -(void)setColor:(NSColor *)color{
     [super setColor:color];
-    imageView.layer.backgroundColor=[MMPControl CGColorFromNSColor:color];
+    imageView.layer.backgroundColor=color.CGColor;
 }
 
 
@@ -95,8 +95,8 @@
     //turn highlight color on or off with "highlight 0/1"
     else if([inArray count]==2 &&[[inArray objectAtIndex:0] isEqualToString:@"highlight"]){
         int val = [[inArray objectAtIndex:1] intValue];//0,1
-        if(val>0)imageView.layer.backgroundColor=[MMPControl CGColorFromNSColor:self.highlightColor];
-        else imageView.layer.backgroundColor=[MMPControl CGColorFromNSColor:self.color];
+        if(val>0)imageView.layer.backgroundColor=self.highlightColor.CGColor;
+        else imageView.layer.backgroundColor=self.color.CGColor;
     }
 }
 

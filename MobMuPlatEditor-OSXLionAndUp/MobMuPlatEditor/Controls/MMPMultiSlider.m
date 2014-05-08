@@ -53,8 +53,8 @@
 
 -(void)setColor:(NSColor *)color{
     [super setColor:color];
-    box.layer.borderColor=[MMPControl CGColorFromNSColor:color];
-    for(NSView* head in headViewArray)head.layer.backgroundColor = [MMPControl CGColorFromNSColor:color];
+    box.layer.borderColor=color.CGColor;
+    for(NSView* head in headViewArray)head.layer.backgroundColor = color.CGColor;
 }
 
 -(void)setRangeUndoable:(NSNumber*)inVal{
@@ -83,7 +83,7 @@
         [headView setWantsLayer:YES];
         //tick = [[UIView alloc]initWithFrame:CGRectMake(6-1+i*((frame.size.width-12)/(range-1)), 6, 2, 8)];
             
-        headView.layer.backgroundColor=[MMPControl CGColorFromNSColor:self.color];//[UIColor blueColor];//[MBConstants thePurpleColor];
+        headView.layer.backgroundColor=self.color.CGColor;
         headView.layer.cornerRadius=CORNER_RADIUS;
         [headViewArray addObject:headView];
         [self addSubview:headView];
@@ -97,9 +97,9 @@
     NSMutableArray* formattedMessageArray = [[NSMutableArray alloc]init];
     [formattedMessageArray addObject:self.address];
     
-    NSString* formatString=@"";
-    for(int i=0;i<[_valueArray count];i++)formatString = [formatString stringByAppendingString:@"f"];
-    [formattedMessageArray addObject:formatString];//tags string
+    //NSString* formatString=@"";
+    //for(int i=0;i<[_valueArray count];i++)formatString = [formatString stringByAppendingString:@"f"];
+    //[formattedMessageArray addObject:formatString];//tags string
     for(NSNumber* val in _valueArray)[formattedMessageArray addObject:val];//add values
     [self.editingDelegate sendFormattedMessageArray:formattedMessageArray];
 }
@@ -124,7 +124,7 @@
         CGRect newFrame = CGRectMake(headIndex*headWidth, clippedPointY-SLIDER_HEIGHT/2, headWidth, SLIDER_HEIGHT);
         currHead.frame=newFrame;
         //printf("\n%.2f %.2f %.2f %.2f", currHead.frame.origin.x, currHead.frame.origin.y, currHead.frame.size.width, currHead.frame.size.height );
-        currHead.layer.backgroundColor=[MMPControl CGColorFromNSColor:self.highlightColor];
+        currHead.layer.backgroundColor=self.highlightColor.CGColor;
         currHeadIndex=headIndex;
     }
 }
@@ -165,8 +165,8 @@
         
         if(headIndex!=currHeadIndex){//dragged to new head
             NSView* prevHead = [headViewArray objectAtIndex:currHeadIndex];
-            prevHead.layer.backgroundColor=[MMPControl CGColorFromNSColor:self.color];//change prev head back
-            currHead.layer.backgroundColor=[MMPControl CGColorFromNSColor:self.highlightColor];
+            prevHead.layer.backgroundColor=self.color.CGColor;//change prev head back
+            currHead.layer.backgroundColor=self.highlightColor.CGColor;
             currHeadIndex=headIndex;
         }
     }
@@ -180,7 +180,7 @@
 -(void)mouseUp:(NSEvent *)event  {
     [super mouseUp:event];
     if(![self.editingDelegate isEditing]){
-            for(NSView* head in headViewArray) head.layer.backgroundColor=[MMPControl CGColorFromNSColor:self.color];
+            for(NSView* head in headViewArray) head.layer.backgroundColor=self.color.CGColor;
     
     }
 }
