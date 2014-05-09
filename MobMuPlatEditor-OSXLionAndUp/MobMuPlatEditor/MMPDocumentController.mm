@@ -16,7 +16,13 @@
 
 -(id)init{
     self = [super init];
-    
+  
+  NSNotificationCenter* nc = [NSNotificationCenter defaultCenter];
+  [nc addObserver:self
+         selector:@selector(appWillTerminate:)
+             name:NSApplicationWillTerminateNotification
+           object:nil];
+  
     [[NSColorPanel sharedColorPanel] setShowsAlpha:YES];
     
     //set up one OSC manager for all open documents
@@ -45,21 +51,11 @@
     [defaultDict setObject:[NSArray array] forKey:@"types"];
     [_fontArray addObject:defaultDict];
   
-    //create temp directory for interacting with PD tables.
-  /*NSString *path = nil;
-  NSArray *paths = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES);
-  if ([paths count])
-  {
-    NSString *bundleName = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleIdentifier"];
-    path = [[paths objectAtIndex:0] stringByAppendingPathComponent:bundleName];
-  }*/
-  
-  /*NSError *error;
-  NSURL* url = [[NSFileManager defaultManager] URLForDirectory:NSCachesDirectory inDomain:NSUserDomainMask appropriateForURL:nil create:YES error:&error];
-  NSLog(@"url: %@", [url absoluteString]);
-  */
-  
-  /*NSURL *cache = [[NSFileManager defaultManager] URLForDirectory:NSCachesDirectory
+  return self;
+}
+
++ (NSString*)cachePathWithAddress:(NSString *)address {
+  NSURL *cache = [[NSFileManager defaultManager] URLForDirectory:NSCachesDirectory
                                                         inDomain:NSUserDomainMask
                                                appropriateForURL:nil
                                                           create:YES
@@ -68,40 +64,24 @@
   NSURL *scratchFolder = [cache URLByAppendingPathComponent:bundleName];
   if(![[NSFileManager defaultManager] fileExistsAtPath:[scratchFolder absoluteString]]) {
     [[NSFileManager defaultManager] createDirectoryAtURL:scratchFolder
-                           withIntermediateDirectories:YES
-                                            attributes:@{}
-                                                 error:nil];
-  }*/
-  
-  //make file
-  /*NSString *tempFileTemplate = [path stringByAppendingPathComponent:@"myapptempfile.XXXXXX"];
-  const char *tempFileTemplateCString = [tempFileTemplate fileSystemRepresentation];
-  char *tempFileNameCString = (char *)malloc(strlen(tempFileTemplateCString) + 1);
-  strcpy(tempFileNameCString, tempFileTemplateCString);
-  int fileDescriptor = mkstemp(tempFileNameCString);
-  
-  if (fileDescriptor == -1)
-  {
-    // handle file creation failure
+                             withIntermediateDirectories:YES
+                                              attributes:@{}
+                                                   error:nil];
   }
   
-  // This is the file name if you need to access the file by name, otherwise you can remove
-  // this line.
+  if(address == nil){//just want folder
+    return [scratchFolder path];
+  }
   
-  NSString* tempFileName = [[NSFileManager defaultManager] stringWithFileSystemRepresentation:tempFileNameCString length:strlen(tempFileNameCString)];
+  //strip off slash :(
+  if([address hasPrefix:@"/"])
+    address = [address substringFromIndex:1];
   
-  free(tempFileNameCString);
-  NSFileHandle* tempFileHandle =
-  [[NSFileHandle alloc]
-   initWithFileDescriptor:fileDescriptor
-   closeOnDealloc:NO];*/
-  
-  
-  return self;
+  NSURL *scratchFile = [scratchFolder URLByAppendingPathComponent:address];
+  return [scratchFile path] ;
 }
 
 //OSC manager delegate method: get OSC message, sent it to ALL open documents
-//- (void)receiveOSCArray:(NSMutableArray *)oscArray asString:(NSString*)string{
 - (void) receivedOSCMessage:(OSCMessage *)m {
   for(Document* doc in [self documents]){
         //[doc receiveOSCArray:oscArray asString:string];
@@ -135,6 +115,20 @@
 
 -(void)sendOSCMessageFromArray:(NSArray*) list {
   [outPort sendThisPacket:[OSCPacket createWithContent:[MMPDocumentController oscMessageFromList:list]]];
+}
+
+-(void)appWillTerminate:(NSNotification*)notif{ //clear cache!
+  
+  NSFileManager *fm = [NSFileManager defaultManager];
+  NSString *directory = [MMPDocumentController cachePathWithAddress:nil];
+  NSError *error = nil;
+  for (NSString *file in [fm contentsOfDirectoryAtPath:directory error:&error]) {
+    //BOOL success = [fm removeItemAtPath:[NSString stringWithFormat:@"%@%@", directory, file] error:&error];
+    BOOL success = [fm removeItemAtPath:[directory stringByAppendingPathComponent:file] error:&error];
+    if (!success || error) {
+      // it failed.
+    }
+  }
 }
 
 @end

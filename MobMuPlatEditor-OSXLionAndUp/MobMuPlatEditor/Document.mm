@@ -1362,6 +1362,12 @@
                 [[documentModel controlArray]  addObject:newControl];
                 [canvasView addSubview:newControl];
                 [newControl setIsSelected:YES];
+              
+                //class specific post stuff loading/needs delegate
+              if ([newControl isKindOfClass:[MMPTable class]]){
+                [((MMPTable*)newControl) loadTable];
+              }
+              
             }
             if([copiedItems count]==1)
                 [self controlEditClicked:[copiedItems lastObject] withShift:NO wasAlreadySelected:NO];

@@ -7,10 +7,11 @@
 //
 
 #import "MMPTable.h"
+#import "MMPDocumentController.h"
 
 @implementation MMPTable {
   NSUInteger _fillIndex;
-  int _tableSize;
+  NSUInteger _tableSize;
   float* _tableData;
   
   CGContextRef _cacheContext;
@@ -59,8 +60,10 @@
 }
 
 -(void)loadTable {
+  loadedTable = NO;
     [self.editingDelegate sendFormattedMessageArray:[NSMutableArray arrayWithObjects:@"/system/requestTable",
-                                     self.address, nil]];
+                                                     [MMPDocumentController cachePathWithAddress:self.address],
+                                       self.address, nil]];
 }
 
 
@@ -84,6 +87,7 @@
   
   _cacheContextSelection = CGBitmapContextCreate (nil, (int)frame.size.width, (int)frame.size.height, 8, 0, CGColorSpaceCreateDeviceRGB(),  kCGImageAlphaPremultipliedLast  );
   //CGContextSetRGBFillColor(_cacheContextSelection, 1., 0., 1., .5);
+  [self draw];
 
 }
 
@@ -155,7 +159,8 @@
   [self drawFromIndex:0 toIndex:_tableSize-1];
 }
 
--(void)drawFromIndex:(int)indexA toIndex:(int)indexB {
+-(void)drawFromIndex:(NSUInteger)indexA toIndex:(NSUInteger)indexB {
+  if(!_tableData)return;
   CGContextSetRGBStrokeColor(_cacheContext, fR,fG,fB,fA);
   CGContextMoveToPoint(_cacheContext, 0,0);
 	int padding = 3;
@@ -170,7 +175,7 @@
   
   for(int i=indexDrawPointA; i<=indexDrawPointB; i++){
     float x = (float)i;//(float)i/self.frame.size.width;
-    int index = (int)((float)i/self.frame.size.width*_tableSize);
+    NSUInteger index = (int)((float)i/self.frame.size.width*_tableSize);
     
     //if touch down one point, make sure that point is represented in redraw and not skipped over
     int prevIndex = (int)((float)(i-1)/self.frame.size.width*_tableSize);
@@ -225,21 +230,14 @@
       _tableData[touchDownTableIndex] = flippedY;//check bounds
       [self drawFromIndex:touchDownTableIndex toIndex:touchDownTableIndex];
       
-      //make one-element array to send in
-      //float* touchValArray = (float*)malloc(1*sizeof(float));
-      //touchValArray[0] = flippedY;
-      //[PdBase copyArray:touchValArray toArrayNamed:_tableName withOffset:touchDownTableIndex count:1];//put this in draw?
+      //send one element
       [self sendSetTableMessageFromIndex:touchDownTableIndex val:flippedY indexB:touchDownTableIndex val:flippedY];
-      //free(touchValArray);
-   
     }
-    
   }
 }
 
 -(void)sendSetTableMessageFromIndex:(int)indexA val:(float)valA indexB:(int)indexB val:(float)valB {
   [self.editingDelegate sendFormattedMessageArray:[NSMutableArray arrayWithObjects:@"/system/setTable",
-                                                   //[[NSMutableString alloc]initWithString:@"sifif"],//startx/y endx/y
                                                    self.address,
                                                    [NSNumber numberWithInt:indexA],
                                                    [NSNumber numberWithFloat:valA],
@@ -375,43 +373,54 @@
     CGContextClearRect(_cacheContextSelection, self.bounds);
     [self setNeedsDisplay ];
   }
+  else if([inArray count]==2 && [[inArray objectAtIndex:0] isEqualToString:@"done"] && [[inArray objectAtIndex:1] isKindOfClass:[NSNumber class]]){
+      NSLog(@"%@ done %d", self.address, [[inArray objectAtIndex:1]intValue]);
+    [self readFileToArray];
+      loadedTable = YES;
+    [self draw];
+  }
   else if ([inArray count]==1 && [[inArray objectAtIndex:0] isKindOfClass:[NSString class]] && [[inArray objectAtIndex:0] isEqualToString:@"refresh"] ){
     //NSLog(@"receive refresh on %@", self.address);
     [self loadTable];
   }
-  else if([inArray count]==2 && [[inArray objectAtIndex:0] isEqualToString:@"fillTable"] && [[inArray objectAtIndex:1] isKindOfClass:[NSNumber class]]){
-    NSLog(@"%@ filltable %d", self.address, [[inArray objectAtIndex:1]intValue]);
-    loadedTable = NO;
-    _fillIndex = 0;
-    _tableSize = [[inArray objectAtIndex:1]intValue];
-    if(_tableData){
-      free(_tableData);
-    }
-    _tableData = (float*)malloc(_tableSize*sizeof(float));
-    NSLog(@" alloc table data %p size %d", _tableData, _tableSize);
-    chunkCount = 0;
+}
+
+- (void)readFileToArray {
+  NSString *path = [MMPDocumentController cachePathWithAddress:self.address];
+  if(![[NSFileManager defaultManager] fileExistsAtPath:path]) return;
+  
+  NSString * zStr =
+  [NSString stringWithContentsOfFile:path
+                            encoding:NSASCIIStringEncoding
+                               error:NULL];
+  
+  // extract the data line by line
+  NSArray * zAryOfLines = [zStr componentsSeparatedByString:@"\n"];
+  if([zAryOfLines count] == 0) {
+    NSLog(@"zAryOfLines count = 0");
+    return;
   }
-  else if([inArray count]==1 && [[inArray objectAtIndex:0] isEqualToString:@"done"]){
-    NSLog(@"%@ filltable DONE chunkcount %d", self.address, chunkCount);
-    loadedTable = YES;
-    [self draw];
+  
+  _fillIndex = 0;
+  _tableSize = [zAryOfLines count] ;
+  if(_tableData){
+    free(_tableData);
   }
-  else if([inArray count]>0 && [[inArray objectAtIndex:1] isKindOfClass:[NSNumber class]]){
-    //NSLog(@"%@ inarray count %lu fillIndex %lu", self.address, (unsigned long)[inArray count], (unsigned long)_fillIndex);
-    //TODO catch array error?
-    NSUInteger count = [inArray count];
-    for (int i=0;i<count;i++){
-      if(_fillIndex+i > _tableSize){
-        NSLog(@"error, out of bounds");
-        break;
-      }
-      _tableData[_fillIndex+i] = [[inArray objectAtIndex:i]floatValue];
-      //NSLog(@"tableData[%d] = %.2f", _fillIndex+i, _tableData[_fillIndex+i]);
-    }
-    _fillIndex+=count;
-    chunkCount++;
+  _tableData = (float*)malloc(_tableSize*sizeof(float));
+  int i=0;
+  for (NSString * zStrLine in zAryOfLines) {
+    /*NSInteger zInt;
+    NSString * zStr2;
+    NSScanner* zScanner = [NSScanner scannerWithString:zStrLine];
+    [zScanner scanString:@"i=" intoString:&zStr2];
+    [zScanner scanInteger:&zInt];
+    NSLog(@"zStr2= %@, zInt=%ld",zStr2,(long)zInt);*/
+    float val = [zStrLine floatValue];
+    _tableData[i++]=val;
+    //NSLog(@"%.4f",val);
   }
 }
+
 
 //coder for copy/paste
 

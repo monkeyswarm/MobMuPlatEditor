@@ -19,4 +19,5 @@
 
 -(void)sendOSCMessageFromArray:(NSArray*) list;
 + (BOOL)numberIsFloat:(NSNumber*)num;
++ (NSString*)cachePathWithAddress:(NSString*)address;
 @end
