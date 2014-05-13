@@ -1310,7 +1310,7 @@ a PD table of the same name
                     </textFieldCell>
                 </textField>
                 <textField verticalHuggingPriority="750" id="72z-WC-Uxf">
-                    <rect key="frame" x="9" y="43" width="85" height="17"/>
+                    <rect key="frame" x="9" y="51" width="85" height="17"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Touch Mode:" id="10K-W4-dnG">
                         <font key="font" metaFont="system"/>
@@ -1319,7 +1319,7 @@ a PD table of the same name
                     </textFieldCell>
                 </textField>
                 <popUpButton verticalHuggingPriority="750" id="iDt-04-xkp">
-                    <rect key="frame" x="98" y="37" width="119" height="26"/>
+                    <rect key="frame" x="98" y="45" width="119" height="26"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <popUpButtonCell key="cell" type="push" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" id="7R3-oY-3kV">
                         <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
@@ -1340,7 +1340,7 @@ a PD table of the same name
                     </connections>
                 </popUpButton>
                 <textField verticalHuggingPriority="750" id="ExZ-Cc-J4v">
-                    <rect key="frame" x="8" y="18" width="99" height="17"/>
+                    <rect key="frame" x="8" y="20" width="99" height="17"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Selection Color" id="79e-1U-yOa">
                         <font key="font" metaFont="system"/>
@@ -1349,7 +1349,7 @@ a PD table of the same name
                     </textFieldCell>
                 </textField>
                 <colorWell id="3Vq-4U-DCA">
-                    <rect key="frame" x="134" y="12" width="44" height="23"/>
+                    <rect key="frame" x="134" y="14" width="44" height="23"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <color key="color" red="0.05813049898" green="0.055541899059999997" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                     <connections>

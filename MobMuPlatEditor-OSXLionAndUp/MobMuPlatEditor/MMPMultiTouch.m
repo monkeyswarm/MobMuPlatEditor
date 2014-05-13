@@ -165,7 +165,6 @@
       
       NSMutableArray* formattedMessageArray = [[NSMutableArray alloc]init];
       [formattedMessageArray addObject:self.address];
-      //[formattedMessageArray  addObject:[[NSMutableString alloc]initWithString:@"siiff"]];//tags
       [formattedMessageArray addObject:@"touch"];
       [formattedMessageArray addObject:[NSNumber numberWithInt:myTouch.polyVox]];
       [formattedMessageArray addObject:[NSNumber numberWithInt:1]];
@@ -218,7 +217,6 @@
      
         NSMutableArray* formattedMessageArray = [[NSMutableArray alloc]init];
         [formattedMessageArray addObject:self.address];
-        //[formattedMessageArray  addObject:[[NSMutableString alloc]initWithString:@"siiff"]];//tags
         [formattedMessageArray addObject:@"touch"];
         [formattedMessageArray addObject:[NSNumber numberWithInt:_currMyTouch.polyVox]];
         [formattedMessageArray addObject:[NSNumber numberWithInt:2]];
@@ -267,7 +265,6 @@
     
     NSMutableArray* formattedMessageArray = [[NSMutableArray alloc]init];
     [formattedMessageArray addObject:self.address];
-    //[formattedMessageArray  addObject:[[NSMutableString alloc]initWithString:@"siiff"]];//tags
     [formattedMessageArray addObject:@"touch"];
     [formattedMessageArray addObject:[NSNumber numberWithInt:myTouch.polyVox]];
     [formattedMessageArray addObject:[NSNumber numberWithInt:0]];
@@ -304,11 +301,8 @@
   //send as is
   NSMutableArray* msgArray = [[NSMutableArray alloc]init];
   [msgArray addObject:self.address];
-  //NSMutableString* tags = [[NSMutableString alloc]initWithString:@"s"];
-  //[msgArray addObject:tags];
   [msgArray addObject:@"touchesByTime"];
   for(MyTouch* myTouch in valArray){
-    //[tags appendString:@"iff"];
     [msgArray addObject:[NSNumber numberWithInt:myTouch.polyVox]];//float or int?
     [msgArray addObject:[NSNumber numberWithFloat:myTouch.point.x]];
     [msgArray addObject:[NSNumber numberWithFloat:myTouch.point.y]];
@@ -324,16 +318,12 @@
   
   [msgArray removeAllObjects];
   [msgArray addObject:self.address];
-  //[tags setString:@"s"];
-  //[msgArray addObject:tags];
   [msgArray addObject:@"touchesByVox"];
   for(MyTouch* myTouch in valArray){
-    //[tags appendString:@"iff"];
     [msgArray addObject:[NSNumber numberWithInt:myTouch.polyVox]];//float or int?
     [msgArray addObject:[NSNumber numberWithFloat:myTouch.point.x]];
     [msgArray addObject:[NSNumber numberWithFloat:myTouch.point.y]];
   }
-  //ios [self.controlDelegate sendGUIMessageArray:msgArray];
   [self.editingDelegate sendFormattedMessageArray:msgArray];
   
   //sort via X
@@ -346,17 +336,13 @@
   
   [msgArray removeAllObjects];
   [msgArray addObject:self.address];
-  //[msgArray addObject:tags];
-  //[tags setString:@"s"];
   [msgArray addObject:@"touchesByX"];
   
   for(MyTouch* myTouch in valArray){
-    //[tags appendString:@"iff"];
     [msgArray addObject:[NSNumber numberWithInt:myTouch.polyVox]];//float or int?
     [msgArray addObject:[NSNumber numberWithFloat:myTouch.point.x]];
     [msgArray addObject:[NSNumber numberWithFloat:myTouch.point.y]];
   }
-  //ios [self.controlDelegate sendGUIMessageArray:msgArray];
   [self.editingDelegate sendFormattedMessageArray:msgArray];
   
   //sort via Y
@@ -369,18 +355,13 @@
   
   [msgArray removeAllObjects];
   [msgArray addObject:self.address];
-  //[msgArray addObject:tags];
-  //[tags setString:@"s"];
   [msgArray addObject:@"touchesByY"];
   for(MyTouch* myTouch in valArray){
-    //[tags appendString:@"iff"];
     [msgArray addObject:[NSNumber numberWithInt:myTouch.polyVox]];//float or int?
     [msgArray addObject:[NSNumber numberWithFloat:myTouch.point.x]];
     [msgArray addObject:[NSNumber numberWithFloat:myTouch.point.y]];
   }
-  //ios [self.controlDelegate sendGUIMessageArray:msgArray];
   [self.editingDelegate sendFormattedMessageArray:msgArray];
-  
   
 }
 

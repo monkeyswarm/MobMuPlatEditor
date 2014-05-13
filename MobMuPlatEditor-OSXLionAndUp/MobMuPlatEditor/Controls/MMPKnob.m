@@ -181,11 +181,9 @@ int osxMinorVersion=-1;
     NSMutableArray* formattedMessageArray = [[NSMutableArray alloc]init];
     [formattedMessageArray addObject:self.address];
     if(_range>2){
-        //[formattedMessageArray  addObject:[[NSMutableString alloc]initWithString:@"i"]];//tags
         [formattedMessageArray addObject:[NSNumber numberWithInt:(int)self.value]];
     }
     else{
-        //[formattedMessageArray  addObject:[[NSMutableString alloc]initWithString:@"f"]];//tags
         [formattedMessageArray addObject:[NSNumber numberWithFloat:self.value]];
     }
     [self.editingDelegate sendFormattedMessageArray:formattedMessageArray];

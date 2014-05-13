@@ -221,7 +221,6 @@
 -(void)sendValueAt:(NSInteger)index{
   NSMutableArray* formattedMessageArray = [[NSMutableArray alloc]init];
   [formattedMessageArray addObject:self.address];
-  //[formattedMessageArray addObject:[[NSMutableString alloc]initWithString:@"is"]];//tags
   [formattedMessageArray addObject:[NSNumber numberWithInt:(int)index]];
   [formattedMessageArray addObject:[_dataArray objectAtIndex:index]];
   [self.editingDelegate sendFormattedMessageArray:formattedMessageArray];

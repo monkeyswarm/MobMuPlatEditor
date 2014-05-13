@@ -10,7 +10,7 @@
 #import "MMPDocumentController.h"
 
 @implementation MMPTable {
-  NSUInteger _fillIndex;
+  
   NSUInteger _tableSize;
   float* _tableData;
   
@@ -56,7 +56,7 @@
 
 -(void)setAddress:(NSString *)address{
   [super setAddress:address];
-  if(_created)[self loadTable];
+  if(_created)[self loadTable];//the check is to prevent loading table until delegate is set after init...though not a prob?
 }
 
 -(void)loadTable {
@@ -141,7 +141,7 @@
   fB  = [highlightColor blueComponent];
   fA  = [highlightColor alphaComponent];
   
- 
+  [self draw];
 }
 
 -(void)setSelectionColor:(NSColor *)selectionColor{
@@ -196,10 +196,9 @@
   
   
   CGContextStrokePath(_cacheContext);
-  /*
-   CGRect newRect = CGRectMake(MIN(penPoint.x, x)-penWidth, MIN(penPoint.y, y)-penWidth, fabs(penPoint.x-x)+(2*penWidth), fabs(penPoint.y-y)+(2*penWidth));
-   [self setNeedsDisplayInRect:newRect];*/
-  [self setNeedsDisplay ];//]InRect:rect];
+  
+  CGRect newRect = CGRectMake(indexDrawPointA, 0, indexDrawPointB,self.frame.size.height);
+  [self setNeedsDisplayInRect:newRect];
 }
 
 -(void)drawHighlightBetween:(CGPoint)pointA and:(CGPoint)pointB{
@@ -217,11 +216,21 @@
     lastPoint = [self convertPoint:[theEvent locationInWindow] fromView:nil];
     touchDownPoint = lastPoint;
     if(_mode==0) { //select
-      [self drawHighlightBetween:lastPoint and:lastPoint];
-    
+      
+      float normalizedXA = touchDownPoint.x/self.frame.size.width;
+      normalizedXA = MAX(MIN(normalizedXA,1),0);//touch down should always be in bounds, prob unnecc
+      int downTableIndex = (int)(normalizedXA*(_tableSize));
+      downTableIndex = MIN(downTableIndex, (int)_tableSize-1);//clip to max index in case we go off end, prob unnecc
+      
+      [self sendRangeMessageFromIndex:downTableIndex toIndex:downTableIndex];
+      
+      [self drawHighlightBetween:lastPoint and:lastPoint];//HERE make one pix wide
+      
     } else if (_mode == 1) {//draw
       float normalizedX = lastPoint.x/self.frame.size.width;
       int touchDownTableIndex = (int)(normalizedX*_tableSize);
+      touchDownTableIndex = MIN(touchDownTableIndex, (int)_tableSize-1);//clip to max index
+      
       lastTableIndex = touchDownTableIndex;
       float normalizedY = lastPoint.y/self.frame.size.height;//change to -1 to 1
       float flippedY = (1-normalizedY)*2-1;
@@ -263,12 +272,14 @@
     CGPoint dragPoint = [self convertPoint:[theEvent locationInWindow] fromView:nil];
     if(_mode==0) {//select
       float normalizedXA = touchDownPoint.x/self.frame.size.width;
-      normalizedXA = MAX(MIN(normalizedXA,1),0);//touch down should always be in bounds
+      normalizedXA = MAX(MIN(normalizedXA,1),0);//touch down should always be in bounds, prob unnecc
       int dragTableIndexA = (int)(normalizedXA*_tableSize);
+      dragTableIndexA = MIN(dragTableIndexA, (int)_tableSize-1);//clip to max index, prob unnecc
       
       float normalizedXB = dragPoint.x/self.frame.size.width;
       normalizedXB = MAX(MIN(normalizedXB,1),0);
       int dragTableIndexB = (int)(normalizedXB*_tableSize);
+      dragTableIndexB = MIN(dragTableIndexB, (int)_tableSize-1);//clip to max index
       
       [self sendRangeMessageFromIndex:MIN(dragTableIndexA,dragTableIndexB) toIndex:MAX(dragTableIndexA,dragTableIndexB)];
       
@@ -279,15 +290,14 @@
       float normalizedX = dragPoint.x/self.frame.size.width;
       normalizedX = MAX(MIN(normalizedX,1),0);
       int dragTableIndex = (int)(normalizedX*_tableSize);
+      dragTableIndex = MIN(dragTableIndex, (int)_tableSize-1);//clip to max index
       float normalizedY = dragPoint.y/self.frame.size.height;//change to -1 to 1
       normalizedY = MAX(MIN(normalizedY,1),0);
       float flippedY = (1-normalizedY)*2-1;
-      //NSLog(@"dragTableIndex %d", dragTableIndex);
       
       //compute size, including self but not prev
       int traversedElementCount = abs(dragTableIndex-lastTableIndex);
       if(traversedElementCount==0)traversedElementCount=1;
-      //float* touchValArray = (float*)malloc(traversedElementCount*sizeof(float));
       
       _tableData[dragTableIndex] = flippedY;
       //==================just for local representation
@@ -295,8 +305,7 @@
       if(traversedElementCount==1) {
         
         [self drawFromIndex:dragTableIndex toIndex:dragTableIndex];
-        //touchValArray[0] = flippedY;
-        //[PdBase copyArray:touchValArray toArrayNamed:_tableName withOffset:dragTableIndex count:1];
+        
       } else {
         //NSLog(@"multi!");
         int minIndex = MIN(lastTableIndex, dragTableIndex);
@@ -373,8 +382,8 @@
     CGContextClearRect(_cacheContextSelection, self.bounds);
     [self setNeedsDisplay ];
   }
-  else if([inArray count]==2 && [[inArray objectAtIndex:0] isEqualToString:@"done"] && [[inArray objectAtIndex:1] isKindOfClass:[NSNumber class]]){
-      NSLog(@"%@ done %d", self.address, [[inArray objectAtIndex:1]intValue]);
+  else if([inArray count]==1 && [[inArray objectAtIndex:0] isEqualToString:@"done"] ){
+    
     [self readFileToArray];
       loadedTable = YES;
     [self draw];
@@ -387,12 +396,11 @@
 
 - (void)readFileToArray {
   NSString *path = [MMPDocumentController cachePathWithAddress:self.address];
-  if(![[NSFileManager defaultManager] fileExistsAtPath:path]) return;
+  if(![[NSFileManager defaultManager] fileExistsAtPath:path]) return;//error?
   
-  NSString * zStr =
-  [NSString stringWithContentsOfFile:path
-                            encoding:NSASCIIStringEncoding
-                               error:NULL];
+  NSString * zStr =  [NSString stringWithContentsOfFile:path
+                                               encoding:NSASCIIStringEncoding
+                                                  error:NULL];
   
   // extract the data line by line
   NSArray * zAryOfLines = [zStr componentsSeparatedByString:@"\n"];
@@ -401,8 +409,7 @@
     return;
   }
   
-  _fillIndex = 0;
-  _tableSize = [zAryOfLines count] ;
+  _tableSize = [zAryOfLines count]-1;//PD WRITES AN EMPTY LINE AT THE END!!!
   if(_tableData){
     free(_tableData);
   }

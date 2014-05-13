@@ -193,8 +193,6 @@
             else currButton.layer.backgroundColor=self.highlightColor.CGColor;
             
             if(sendVal){
-                //NSMutableString* tags = [[NSMutableString alloc]init];
-                //[tags appendString:@"iii"];
                 NSMutableArray *formattedMessageArray = [NSMutableArray arrayWithObjects:self.address, [NSNumber numberWithInt:indexX], [NSNumber numberWithInt:indexY], [NSNumber numberWithInt:val],  nil];
                 [self.editingDelegate sendFormattedMessageArray:formattedMessageArray];
             }
@@ -206,17 +204,13 @@
         int colIndex = [[inArray objectAtIndex:1] intValue];
         //printf("\n getcol %d", colIndex);
         if(colIndex>=0 && colIndex<_dimX){
-            //NSMutableString* tags = [[NSMutableString alloc]init];
-            //[tags appendString:@"s"];
             NSMutableArray *formattedMessageArray = [NSMutableArray arrayWithObjects:self.address,@"column", nil];
         
             for(int i=0;i<_dimY;i++){
                 int val = (int)[[gridButtons objectAtIndex:(colIndex+_dimX*i)] tag];//0 or 1
-                //[tags appendString:@"i"];
                 [formattedMessageArray addObject:[NSNumber numberWithInt:val]];
             }
-        //[PdBase sendList:msgArray toReceiver:@"fromGUI"];
-        [self.editingDelegate sendFormattedMessageArray:formattedMessageArray];
+          [self.editingDelegate sendFormattedMessageArray:formattedMessageArray];
         }
     }
     
@@ -225,13 +219,10 @@
         int rowIndex = [[inArray objectAtIndex:1] intValue];
         //printf("\n getrow %d dimX %d: ", rowIndex, _dimX);
         if(rowIndex>=0 && rowIndex<_dimY){
-            //NSMutableString* tags = [[NSMutableString alloc]init];
-            //[tags appendString:@"s"];
             NSMutableArray *formattedMessageArray = [NSMutableArray arrayWithObjects:self.address, @"row", nil];
         
             for(int i=0;i<_dimX;i++){
                 int val = (int)[[gridButtons objectAtIndex:(i+_dimX*rowIndex)] tag];//0 or 1
-                //[tags appendString:@"i"];
                 [formattedMessageArray addObject:[NSNumber numberWithInt:val]];
             }
             [self.editingDelegate sendFormattedMessageArray:formattedMessageArray];

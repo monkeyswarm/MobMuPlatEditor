@@ -123,7 +123,6 @@
   NSString *directory = [MMPDocumentController cachePathWithAddress:nil];
   NSError *error = nil;
   for (NSString *file in [fm contentsOfDirectoryAtPath:directory error:&error]) {
-    //BOOL success = [fm removeItemAtPath:[NSString stringWithFormat:@"%@%@", directory, file] error:&error];
     BOOL success = [fm removeItemAtPath:[directory stringByAppendingPathComponent:file] error:&error];
     if (!success || error) {
       // it failed.

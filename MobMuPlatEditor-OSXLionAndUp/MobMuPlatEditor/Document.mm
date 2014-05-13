@@ -40,7 +40,6 @@
   //kick the pd patch to get it to reconnect
   NSMutableArray* formattedMessageArray = [[NSMutableArray alloc]init];
   [formattedMessageArray addObject:@"/system/opened"];
-  //[formattedMessageArray  addObject:[[NSMutableString alloc]initWithString:@"i"]];//tags
   [formattedMessageArray addObject:[NSNumber numberWithInt:1]];
   [self sendFormattedMessageArray:formattedMessageArray];
   
@@ -332,7 +331,6 @@
     //send message out in case PD wrapper is listening to update to new port number
     NSMutableArray* formattedMessageArray = [[NSMutableArray alloc]init];
     [formattedMessageArray addObject:@"/system/port"];
-    //[formattedMessageArray  addObject:[[NSMutableString alloc]initWithString:@"i"]];//tags
     [formattedMessageArray addObject:[NSNumber numberWithInt:val]];
     [self sendFormattedMessageArray:formattedMessageArray];
     
@@ -1077,7 +1075,6 @@
 - (IBAction)lockShakeButtonHit:(NSButton *)sender {
     NSMutableArray* formattedMessageArray = [[NSMutableArray alloc]init];
     [formattedMessageArray addObject:@"/system/shake"];
-    //[formattedMessageArray  addObject:[[NSMutableString alloc]initWithString:@"i"]];//tags
     [formattedMessageArray addObject:[NSNumber numberWithInt:1]];
     [self sendFormattedMessageArray:formattedMessageArray];
 }
@@ -1125,37 +1122,6 @@
   return canvasOuterView;
 }
 
-//send out OSC message, formatted from array of messages
-/*-(void)sendFormattedMessageArray:(NSMutableArray*)formattedMessageArray{
-    
-    NSMutableString* theString = [[NSMutableString alloc]init];
-    [theString appendString:@"[out] "];
-    [theString appendString:[formattedMessageArray objectAtIndex:0]];
-    [theString appendString:@" "];
-    NSString* tagsString = [formattedMessageArray objectAtIndex:1];
-    for (int i = 0; i < [tagsString length]; i++){
-        unichar c = [tagsString characterAtIndex:i];
-        switch(c){
-            case 'i':
-                [theString appendString:[NSString stringWithFormat:@"%d ", [[formattedMessageArray objectAtIndex:i+2] intValue]]];
-                 break;
-            case 'f':
-                [theString appendString:[NSString stringWithFormat:@"%.3f ", [[formattedMessageArray objectAtIndex:i+2] floatValue]]];
-                break;
-            case 's':
-                [theString appendString:[formattedMessageArray objectAtIndex:i+2]];
-                [theString appendString:@" "];
-                 break;
-
-        }
-    }
-    //console
-    [self log:theString];
-    //send out
-    [[(MMPDocumentController*)[NSDocumentController sharedDocumentController] manager] send:formattedMessageArray withDict:nil] ;
-    
-}*/
-
 - (void)sendFormattedMessageArray:(NSArray*)messageArray {
  
   [(MMPDocumentController*)[NSDocumentController sharedDocumentController] sendOSCMessageFromArray:messageArray];
@@ -1184,18 +1150,15 @@
   
     //I respond to this message
     if([[msgArray objectAtIndex:0] isEqualToString:@"/system"] && [[msgArray objectAtIndex:1] isEqualToString:@"requestPort"]){
-        printf("\nPD requested port number = %d", [documentModel port]);
         NSMutableArray* formattedMessageArray = [[NSMutableArray alloc]init];
         [formattedMessageArray addObject:@"/system/port"];
-        //[formattedMessageArray  addObject:[[NSMutableString alloc]initWithString:@"i"]];//tags
         [formattedMessageArray addObject:[NSNumber numberWithInt:[documentModel port]]];
         [self sendFormattedMessageArray:formattedMessageArray];
         
     }
   
     else if([msgArray count]>2 && [[msgArray objectAtIndex:0] isEqualToString:@"/system/tableResponse"] && [[msgArray objectAtIndex:1] isKindOfClass:[NSString class]]){
-        // /controlAddress fillTable <size>, /controlAddress [list], /controlAddress done
-        
+      
         NSString *address =[msgArray objectAtIndex:1];
       for(MMPControl* currControl in [documentModel controlArray]){//TODO HASH TABLE!!! and/or table of MMPTables!
         if([currControl isKindOfClass:[MMPTable class]] && [currControl.address isEqualToString:address]){
@@ -1258,15 +1221,16 @@
     }
     
   }
-    [self performSelectorOnMainThread:@selector(receiveOSCHelper:) withObject:msgArray waitUntilDone:NO];
-  if([[msgArray objectAtIndex:0] isEqualToString:@"/system/tableResponse"])return;//TODO print <suppressed>
+  
   [self performSelectorOnMainThread:@selector(log:) withObject:string waitUntilDone:NO];
+    
+  [self performSelectorOnMainThread:@selector(receiveOSCHelper:) withObject:msgArray waitUntilDone:NO];
+    
 }
 
 -(void)sendTilts{
     NSMutableArray* formattedMessageArray = [[NSMutableArray alloc]init];
     [formattedMessageArray addObject:@"/system/tilts"];
-    //[formattedMessageArray  addObject:[[NSMutableString alloc]initWithString:@"ff"]];//tags
     [formattedMessageArray addObject:[NSNumber numberWithFloat:[self.lockTiltXSlider floatValue]]];
     [formattedMessageArray addObject:[NSNumber numberWithFloat:[self.lockTiltYSlider floatValue]]];
     [self sendFormattedMessageArray:formattedMessageArray];
@@ -1280,10 +1244,8 @@
   
   NSMutableArray* formattedMessageArray = [[NSMutableArray alloc]init];
   [formattedMessageArray addObject:@"/system/page"];
-  //[formattedMessageArray  addObject:@"i"];//tags
   [formattedMessageArray addObject:[NSNumber numberWithInt:currentPageIndex]];
-  
-    [self sendFormattedMessageArray:formattedMessageArray];
+  [self sendFormattedMessageArray:formattedMessageArray];
 }
 
 
@@ -1297,8 +1259,8 @@
             [self.propLabelFontPopButton addItemWithTitle:fontName];
         
             if([NSFont fontWithName:fontName size:12]){//if font exists when called by family!
-                NSMenuItem *menuItem = [self.propLabelFontPopButton itemWithTitle:fontName];//[[NSMenuItem alloc] initWithTitle:@"Hi, how are you?" action:nil  keyEquivalent:@""];
-                NSDictionary *attributes = @{
+                NSMenuItem *menuItem = [self.propLabelFontPopButton itemWithTitle:fontName];
+              NSDictionary *attributes = @{
                                          NSFontAttributeName: [NSFont fontWithName:fontName size:12.0],
                                          NSForegroundColorAttributeName: [NSColor blackColor]
                                          };
@@ -1307,7 +1269,7 @@
             }
             
             else if ([[fontDict objectForKey:@"types"] count]>0 &&[NSFont fontWithName:[[fontDict objectForKey:@"types"]objectAtIndex:0] size:12]){//try calling by a type
-                NSMenuItem *menuItem = [self.propLabelFontPopButton itemWithTitle:fontName];//[[NSMenuItem alloc] initWithTitle:@"Hi, how are you?" action:nil keyEquivalent:@""];
+                NSMenuItem *menuItem = [self.propLabelFontPopButton itemWithTitle:fontName];
                 NSDictionary *attributes = @{
                                          NSFontAttributeName: [NSFont fontWithName:[[fontDict objectForKey:@"types"]objectAtIndex:0] size:12],
                                          NSForegroundColorAttributeName: [NSColor blackColor]

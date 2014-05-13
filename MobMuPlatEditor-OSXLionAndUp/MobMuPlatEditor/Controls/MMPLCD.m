@@ -317,8 +317,6 @@
 -(void)sendValueState:(float)state X:(float)x Y:(float)y{
     NSMutableArray* formattedMessageArray = [[NSMutableArray alloc]init];
     [formattedMessageArray addObject:self.address];
-    
-    //[formattedMessageArray  addObject:[[NSMutableString alloc]initWithString:@"fff"]];//tags
     [formattedMessageArray addObject:[NSNumber numberWithFloat:state]];
     [formattedMessageArray addObject:[NSNumber numberWithFloat:x]];
     [formattedMessageArray addObject:[NSNumber numberWithFloat:y]];

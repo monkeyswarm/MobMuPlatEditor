@@ -55,7 +55,6 @@
 	//send out message
     NSMutableArray* formattedMessageArray = [[NSMutableArray alloc]init];
     [formattedMessageArray addObject:self.address];
-    //[formattedMessageArray  addObject:[[NSMutableString alloc]initWithString:@"i"]];//tags
     [formattedMessageArray addObject:[NSNumber numberWithInt:self.value]];
     [self.editingDelegate sendFormattedMessageArray:formattedMessageArray];
 }

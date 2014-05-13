@@ -120,8 +120,6 @@
 -(void)sendValue{
     NSMutableArray* formattedMessageArray = [[NSMutableArray alloc]init];
     [formattedMessageArray addObject:self.address];
-    
-    //[formattedMessageArray  addObject:[[NSMutableString alloc]initWithString:@"f"]];//tags
     [formattedMessageArray addObject:[NSNumber numberWithFloat:self.value]];
     [self.editingDelegate sendFormattedMessageArray:formattedMessageArray];
 }

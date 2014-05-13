@@ -97,9 +97,6 @@
     NSMutableArray* formattedMessageArray = [[NSMutableArray alloc]init];
     [formattedMessageArray addObject:self.address];
     
-    //NSString* formatString=@"";
-    //for(int i=0;i<[_valueArray count];i++)formatString = [formatString stringByAppendingString:@"f"];
-    //[formattedMessageArray addObject:formatString];//tags string
     for(NSNumber* val in _valueArray)[formattedMessageArray addObject:val];//add values
     [self.editingDelegate sendFormattedMessageArray:formattedMessageArray];
 }
