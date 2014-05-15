@@ -53,6 +53,7 @@
                 <outlet property="propGridBorderThicknessField" destination="100394" id="100406"/>
                 <outlet property="propGridDimXField" destination="100292" id="100404"/>
                 <outlet property="propGridDimYField" destination="100299" id="100405"/>
+                <outlet property="propGridModePopButton" destination="Jgl-sb-wV2" id="9aF-ix-wjM"/>
                 <outlet property="propGridPaddingField" destination="100397" id="100407"/>
                 <outlet property="propGridView" destination="100289" id="100414"/>
                 <outlet property="propHighlightColorWell" destination="100214" id="100312"/>
@@ -1066,7 +1067,7 @@ A range of &gt;2 sends integers.</string>
                     </textFieldCell>
                 </textField>
                 <textField verticalHuggingPriority="750" id="100400">
-                    <rect key="frame" x="29" y="61" width="141" height="17"/>
+                    <rect key="frame" x="29" y="76" width="141" height="17"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Cell Border Thickness" id="100401">
                         <font key="font" metaFont="system"/>
@@ -1075,7 +1076,7 @@ A range of &gt;2 sends integers.</string>
                     </textFieldCell>
                 </textField>
                 <textField verticalHuggingPriority="750" id="100402">
-                    <rect key="frame" x="87" y="18" width="83" height="17"/>
+                    <rect key="frame" x="87" y="39" width="83" height="17"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Cell Padding" id="100403">
                         <font key="font" metaFont="system"/>
@@ -1093,7 +1094,7 @@ A range of &gt;2 sends integers.</string>
                     </textFieldCell>
                 </textField>
                 <textField verticalHuggingPriority="750" id="100394">
-                    <rect key="frame" x="178" y="59" width="41" height="22"/>
+                    <rect key="frame" x="178" y="74" width="41" height="22"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" drawsBackground="YES" id="100395">
                         <numberFormatter key="formatter" formatterBehavior="default10_4" positiveFormat="#,##0.###" negativeFormat="#,##0.###" numberStyle="decimal" minimumIntegerDigits="1" maximumIntegerDigits="309" minimumFractionDigits="0" maximumFractionDigits="3" id="100396">
@@ -1111,7 +1112,7 @@ A range of &gt;2 sends integers.</string>
                     </connections>
                 </textField>
                 <textField verticalHuggingPriority="750" id="100397">
-                    <rect key="frame" x="178" y="15" width="41" height="22"/>
+                    <rect key="frame" x="178" y="36" width="41" height="22"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" drawsBackground="YES" id="100398">
                         <numberFormatter key="formatter" formatterBehavior="default10_4" positiveFormat="#,##0.###" negativeFormat="#,##0.###" numberStyle="decimal" minimumIntegerDigits="1" maximumIntegerDigits="309" minimumFractionDigits="0" maximumFractionDigits="3" id="100399">
@@ -1128,6 +1129,39 @@ A range of &gt;2 sends integers.</string>
                         <action selector="propGridCellPaddingChanged:" target="-2" id="100415"/>
                     </connections>
                 </textField>
+                <textField verticalHuggingPriority="750" id="2L9-AR-Cpc">
+                    <rect key="frame" x="14" y="10" width="85" height="17"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Touch Mode:" id="jxf-rr-37k">
+                        <font key="font" metaFont="system"/>
+                        <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
+                </textField>
+                <popUpButton verticalHuggingPriority="750" id="Jgl-sb-wV2">
+                    <rect key="frame" x="103" y="4" width="119" height="26"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <popUpButtonCell key="cell" type="push" title="Toggle" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" selectedItem="Unj-eg-fa4" id="44z-Nn-y9u">
+                        <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
+                        <font key="font" metaFont="menu"/>
+                        <menu key="menu" title="OtherViews" id="lGS-WM-dda">
+                            <items>
+                                <menuItem title="Toggle" state="on" id="Unj-eg-fa4">
+                                    <modifierMask key="keyEquivalentModifierMask"/>
+                                </menuItem>
+                                <menuItem title="Momentary" id="0LK-CC-DKh">
+                                    <modifierMask key="keyEquivalentModifierMask"/>
+                                </menuItem>
+                                <menuItem title="Hybrid" id="aCc-nd-Hol">
+                                    <modifierMask key="keyEquivalentModifierMask"/>
+                                </menuItem>
+                            </items>
+                        </menu>
+                    </popUpButtonCell>
+                    <connections>
+                        <action selector="propGridModeChanged:" target="-2" id="Mft-EA-jq6"/>
+                    </connections>
+                </popUpButton>
             </subviews>
         </customView>
         <customView id="101066">

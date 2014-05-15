@@ -599,6 +599,7 @@
             [self.propGridDimYField setStringValue:[NSString stringWithFormat:@"%d", [(MMPGrid*)control dimY ]]];
             [self.propGridBorderThicknessField setStringValue:[NSString stringWithFormat:@"%d", [(MMPGrid*)control borderThickness ]]];
             [self.propGridPaddingField setStringValue:[NSString stringWithFormat:@"%d", [(MMPGrid*)control cellPadding ]]];
+            [self.propGridModePopButton selectItemAtIndex:[(MMPGrid*)control mode]];
         }
         else if([control isKindOfClass:[MMPPanel class]]){
             [self.propVarView addSubview:self.propPanelView];
@@ -850,6 +851,21 @@
   
   [currTable setMode:(int)[self.propTableModePopButton indexOfSelectedItem] ];
 }
+
+//just for proper undo/redo
+-(void)setPropGridModePopButtonNumber:(NSNumber*)inNumber{
+  [[self undoManager] registerUndoWithTarget:self selector:@selector(setPropGridModePopButtonNumber:) object:[NSNumber numberWithInt:(int)[self.propGridModePopButton indexOfSelectedItem] ]];
+  [self.propGridModePopButton selectItemAtIndex:[inNumber intValue]];
+}
+
+- (IBAction)propGridModeChanged:(NSPopUpButton *)sender {
+  MMPGrid *currGrid = (MMPGrid*)currentSingleSelection;
+  [[self undoManager] registerUndoWithTarget:self selector:@selector(setPropGridModePopButtonNumber:) object:[NSNumber numberWithInt:[currGrid mode]]];
+  [[self undoManager] registerUndoWithTarget:currGrid selector:@selector(setModeObjectUndoable:) object:[NSNumber numberWithInt:[currGrid mode]]];
+  
+  [currGrid setMode:(int)[self.propGridModePopButton indexOfSelectedItem] ];
+}
+
 
 
 //just for proper undo/redo
@@ -1157,6 +1173,11 @@
         
     }
   
+    else if([msgArray count]==2 && [[msgArray objectAtIndex:0] isEqualToString:@"/system/setPage"] && [[msgArray objectAtIndex:1] isKindOfClass:[NSNumber class]]){
+      int page = [[msgArray objectAtIndex:1] intValue];
+      if(page<0)page=0; if (page>documentModel.pageCount-1)page=documentModel.pageCount-1;
+      [self setCurrentPage:page];
+    }
     else if([msgArray count]>2 && [[msgArray objectAtIndex:0] isEqualToString:@"/system/tableResponse"] && [[msgArray objectAtIndex:1] isKindOfClass:[NSString class]]){
       
         NSString *address =[msgArray objectAtIndex:1];

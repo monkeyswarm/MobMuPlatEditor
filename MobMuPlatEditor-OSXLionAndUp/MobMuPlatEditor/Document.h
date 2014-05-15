@@ -183,6 +183,7 @@
 - (IBAction)propGridDimYChanged:(NSTextField *)sender;
 - (IBAction)propGridBorderThicknessChanged:(NSTextField *)sender;
 - (IBAction)propGridCellPaddingChanged:(NSTextField *)sender;
+- (IBAction)propGridModeChanged:(NSPopUpButton *)sender;
 - (IBAction)propPanelChooseImage:(NSButton *)sender;
 - (IBAction)propPanelImagePathTextChanged:(NSTextField *)sender;
 - (IBAction)propPanelPassTouchesChanged:(NSButton *)sender;
@@ -236,6 +237,7 @@
 @property (strong) IBOutlet NSTextField *propGridDimYField;
 @property (strong) IBOutlet NSTextField *propGridBorderThicknessField;
 @property (strong) IBOutlet NSTextField *propGridPaddingField;
+@property (strong) IBOutlet NSPopUpButton *propGridModePopButton;
 @property (strong) IBOutlet NSView *propGridView;
 @property (strong) IBOutlet NSButton *lockClearButton;
 @property (strong) IBOutlet NSSlider *lockTiltXSlider;

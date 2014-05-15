@@ -104,8 +104,9 @@
         //grid
         else if([control isKindOfClass:[MMPGrid class]]){
             [GUIDict setObject:[NSArray arrayWithObjects:[NSNumber numberWithInt:[(MMPGrid*)control dimX]], [NSNumber numberWithInt:[(MMPGrid*)control dimY]],nil] forKey:@"dim"] ;
-            [GUIDict setObject:[NSNumber numberWithInt:[(MMPGrid*)control cellPadding]] forKey:@"cellPadding"] ;
-            [GUIDict setObject:[NSNumber numberWithInt:[(MMPGrid*)control borderThickness]] forKey:@"borderThickness"] ;
+            [GUIDict setObject:[NSNumber numberWithInt:[(MMPGrid*)control cellPadding]] forKey:@"cellPadding"];
+            [GUIDict setObject:[NSNumber numberWithInt:[(MMPGrid*)control borderThickness]] forKey:@"borderThickness"];
+            [GUIDict setObject:[NSNumber numberWithInt:[(MMPGrid*)control mode]] forKey:@"mode"];
         }
         //panel
         else if([control isKindOfClass:[MMPPanel class]]){
@@ -272,6 +273,8 @@
                     [(MMPGrid*)control setBorderThickness:[[guiDict objectForKey:@"borderThickness"] intValue] ];
                 if([guiDict objectForKey:@"cellPadding"])
                     [(MMPGrid*)control setCellPadding:[[guiDict objectForKey:@"cellPadding"] intValue] ];
+                if([guiDict objectForKey:@"mode"])
+                  [(MMPGrid*)control setMode:[[guiDict objectForKey:@"mode"] intValue] ];
 
             }
             else if([classString isEqualToString:@"MMPPanel"]){

@@ -8,7 +8,10 @@
 
 #import "MMPGrid.h"
 
-@implementation MMPGrid
+@implementation MMPGrid {
+  NSTrackingArea *currentTrackingArea;
+  NSControl* heldControl;//used in mode 1+2 for detecting when we have dragged out of a control.
+}
 
 - (id)initWithFrame:(NSRect)frame{
     self = [super initWithFrame:frame];
@@ -21,11 +24,19 @@
         [self setDimX:4];
         [self setDimY:3];
         [self redrawDim];
+        //[self setFrame:frame];//necc?
         
         [self addHandles];
     }
     return self;
 }
+
+-(void)setModeObjectUndoable:(NSNumber*)inVal{
+  [[self undoManager] registerUndoWithTarget:self selector:@selector(setModeObjectUndoable:) object:[NSNumber numberWithInt:[self mode]]];
+  
+  [self setMode:[inVal intValue]];
+}
+
 
 -(void)setCellPaddingUndoable:(NSNumber*)inVal{
     [[self undoManager] registerUndoWithTarget:self selector:@selector(setCellPaddingUndoable:) object:[NSNumber numberWithInt:[self cellPadding]]];
@@ -108,14 +119,17 @@
     
     for(int j=0;j<_dimY;j++){
         for(int i=0;i<_dimX;i++){
-            
-            NSControl* newButtonView = [[NSControl alloc]initWithFrame:CGRectMake(i*buttonWidth, j*buttonHeight, buttonWidth-_cellPadding, buttonHeight-_cellPadding)];
+          CGRect rect = CGRectMake(i*buttonWidth, j*buttonHeight, buttonWidth-_cellPadding, buttonHeight-_cellPadding);
+            NSControl* newButtonView = [[NSControl alloc]initWithFrame:rect];
             [newButtonView setWantsLayer:YES];
             newButtonView.layer.cornerRadius=2;
             newButtonView.layer.borderWidth=_borderThickness;
           newButtonView.layer.borderColor=self.color.CGColor;
             [gridButtons addObject:newButtonView];
             [self addSubview:newButtonView];
+          
+          NSTrackingArea* trackingArea = [[NSTrackingArea alloc] initWithRect:newButtonView.bounds options:NSTrackingMouseEnteredAndExited | NSTrackingActiveAlways|NSTrackingInVisibleRect owner:newButtonView userInfo:nil];
+              [newButtonView addTrackingArea:trackingArea];
             
         }
     }
@@ -125,36 +139,88 @@
 }
 
 -(void)mouseDown:(NSEvent *)event
-{
+{//NSLog(@"currtrack %@", currentTrackingArea.owner);
     [super mouseDown:event];
-    if(![self.editingDelegate isEditing]){
-        NSPoint clickLocation = [self convertPoint:[event locationInWindow]fromView:nil];
-        //find out which grid element we hit
-        for(NSControl* hitView in gridButtons){
-            BOOL itemHit = NSPointInRect(clickLocation,[hitView frame]);
-            if(itemHit){
-                
-                [hitView setTag:1-hitView.tag ];
-                if(hitView.tag==1)hitView.layer.backgroundColor=self.highlightColor.CGColor;
-                else hitView.layer.backgroundColor=[[NSColor clearColor]CGColor];
-                
-                //get coordinate of cell
-                NSInteger hitViewIndex = [gridButtons indexOfObject:hitView];
-                
-                //send message
-                NSMutableArray* formattedMessageArray = [[NSMutableArray alloc]init];
-                [formattedMessageArray addObject:self.address];
-                //[formattedMessageArray  addObject:[[NSMutableString alloc]initWithString:@"iii"]];//tags
-                [formattedMessageArray addObject:[NSNumber numberWithInt:hitViewIndex%_dimX]];
-                [formattedMessageArray addObject:[NSNumber numberWithInt:hitViewIndex/_dimX]];
-                [formattedMessageArray addObject:[NSNumber numberWithInt:hitView.tag]];
-                [self.editingDelegate sendFormattedMessageArray:formattedMessageArray];
-                
-            }
-        }
+    if(![self.editingDelegate isEditing] && currentTrackingArea){
+      NSControl *currControl = currentTrackingArea.owner;
+      
+      if(_mode==0){//toggle on down
+        if(currControl.tag==0)[self doOn:currControl];
+        else [self doOff:currControl];
+      }
+      else if (_mode==1){//momentary
+        heldControl = currControl;
+        if(currControl.tag==0)[self doOn:currControl];
+      }
+      else {//hybrid, on change
+        heldControl = currControl;
+        if(currControl.tag==0)[self doOn:currControl];
+        else [self doOff:currControl];
+      }
     }
 }
 
+-(void)mouseExited:(NSEvent *)theEvent{
+  [super mouseExited:theEvent];
+  if(_mode==1) {//release button if it was the one that was just pressed
+    if([[theEvent trackingArea] owner] == heldControl) {
+      [self doOff:heldControl];
+      heldControl=nil;
+    }
+  }
+  
+  currentTrackingArea = nil;
+}
+
+-(void)mouseEntered:(NSEvent *)theEvent{
+  [super mouseEntered:theEvent];
+  currentTrackingArea = theEvent.trackingArea;
+}
+
+-(void)mouseUp:(NSEvent *)event{
+
+  [super mouseUp:event];
+  if(![self.editingDelegate isEditing] && currentTrackingArea){
+    
+    NSControl *currControl = currentTrackingArea.owner;
+    
+    if(_mode ==1 && currControl.tag==1 &&currControl == heldControl)
+      [self doOff:currControl];
+    else if (_mode ==2 && currControl.tag==1 && currControl==heldControl)
+      [self doOff:currControl];
+        
+    heldControl=nil;
+  }
+}
+
+-(void)doOn:(NSControl*)control{
+  [control setTag:1];
+  control.layer.backgroundColor=self.highlightColor.CGColor;
+  
+  [self sendValueForControl:control];
+}
+
+- (void)doOff:(NSControl*)control{
+  [control setTag:0];
+  control.layer.backgroundColor=[[NSColor clearColor]CGColor];
+  
+ [self sendValueForControl:control];
+}
+
+//- (void)sendValueX:(int)x Y:(int)y val:(int)val {
+-(void)sendValueForControl:(NSControl*)control{
+  
+  //get coordinate of cell
+  int controlIndex = (int)[gridButtons indexOfObject:control];
+  
+//send message
+  NSMutableArray* formattedMessageArray = [[NSMutableArray alloc]init];
+  [formattedMessageArray addObject:self.address];
+  [formattedMessageArray addObject:[NSNumber numberWithInt:controlIndex%_dimX]];
+  [formattedMessageArray addObject:[NSNumber numberWithInt:controlIndex/_dimX]];
+  [formattedMessageArray addObject:[NSNumber numberWithInt:(int)control.tag]];
+  [self.editingDelegate sendFormattedMessageArray:formattedMessageArray];
+}
 
 -(void)setColor:(NSColor *)color{
     [super setColor:color];

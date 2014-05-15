@@ -16,6 +16,7 @@
 @property (nonatomic) int dimY;
 @property (nonatomic) int borderThickness;
 @property (nonatomic) int cellPadding;
+@property (nonatomic) int mode;
 
 
 
