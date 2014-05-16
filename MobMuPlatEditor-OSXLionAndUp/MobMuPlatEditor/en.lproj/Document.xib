@@ -1141,18 +1141,18 @@ A range of &gt;2 sends integers.</string>
                 <popUpButton verticalHuggingPriority="750" id="Jgl-sb-wV2">
                     <rect key="frame" x="103" y="4" width="119" height="26"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                    <popUpButtonCell key="cell" type="push" title="Toggle" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" selectedItem="Unj-eg-fa4" id="44z-Nn-y9u">
+                    <popUpButtonCell key="cell" type="push" title="Hybrid" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" selectedItem="aCc-nd-Hol" id="44z-Nn-y9u">
                         <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
                         <font key="font" metaFont="menu"/>
                         <menu key="menu" title="OtherViews" id="lGS-WM-dda">
                             <items>
-                                <menuItem title="Toggle" state="on" id="Unj-eg-fa4">
+                                <menuItem title="Toggle" id="Unj-eg-fa4">
                                     <modifierMask key="keyEquivalentModifierMask"/>
                                 </menuItem>
                                 <menuItem title="Momentary" id="0LK-CC-DKh">
                                     <modifierMask key="keyEquivalentModifierMask"/>
                                 </menuItem>
-                                <menuItem title="Hybrid" id="aCc-nd-Hol">
+                                <menuItem title="Hybrid" state="on" id="aCc-nd-Hol">
                                     <modifierMask key="keyEquivalentModifierMask"/>
                                 </menuItem>
                             </items>

@@ -307,16 +307,17 @@
 
 - (void)encodeWithCoder:(NSCoder *)coder {
     [super encodeWithCoder:coder];
+    [coder encodeInt:self.mode forKey:@"mode"];
     [coder encodeInt:self.dimX forKey:@"dimX"];
     [coder encodeInt:self.dimY forKey:@"dimY"];
     [coder encodeInt:self.borderThickness forKey:@"borderThickness"];
     [coder encodeInt:self.cellPadding forKey:@"cellPadding"];
-    
 }
 
 - (id)initWithCoder:(NSCoder *)coder {
     
     if(self=[super initWithCoder:coder]){
+        [self setMode:[coder decodeIntForKey:@"mode"]];
         [self setDimX:[coder decodeIntForKey:@"dimX"]];
         [self setDimY:[coder decodeIntForKey:@"dimY"]];
         [self setBorderThickness:[coder decodeIntForKey:@"borderThickness"]];
