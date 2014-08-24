@@ -90,6 +90,30 @@
     [self setPageViewIndex:_pageViewIndex];
 }
 
+-(void)refreshGuides; {
+  [self setNeedsDisplay:YES];
+}
+
+- (void)drawRect:(NSRect)dirtyRect {
+  if(![_editingDelegate guidesEnabled]) return;
+  NSBezierPath *line = [NSBezierPath bezierPath];
+  [line setLineWidth:1.0];
+  NSColor * white = [NSColor colorWithWhite:0 alpha:.2];
+  [white set];
+
+  for (int i = 0; i <self.frame.size.width; i+=[_editingDelegate guidesX]) {
+    [line moveToPoint:NSMakePoint(i, NSMinY([self bounds]))];
+    [line lineToPoint:NSMakePoint(i, NSMaxY([self bounds]))];
+  }
+
+  for (int i = 0; i <self.frame.size.height; i+=[_editingDelegate guidesY]) {
+    [line moveToPoint:NSMakePoint(NSMinX([self bounds]), i)];
+    [line lineToPoint:NSMakePoint(NSMaxX([self bounds]), i)];
+  }
+  
+  [line stroke];
+}
+
 -(void)setPageCount:(int)pageCount{
     _pageCount=pageCount;
     [self refresh];

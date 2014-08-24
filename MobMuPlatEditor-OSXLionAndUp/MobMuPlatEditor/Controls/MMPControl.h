@@ -23,6 +23,9 @@
 -(void)updateGuide:(MMPControl*)control;
 -(NSColor*)patchBackgroundColor;
 -(NSView*)canvasOuterView;
+-(BOOL)guidesEnabled;
+-(NSUInteger)guidesX;
+-(NSUInteger)guidesY;
 @end
 
 @interface MMPControl : NSControl <NSCoding, NSPasteboardReading, NSPasteboardWriting>{

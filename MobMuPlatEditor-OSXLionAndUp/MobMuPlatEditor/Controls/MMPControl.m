@@ -72,7 +72,7 @@
         lastDragLocation=[[self superview] convertPoint:[event locationInWindow]fromView:nil];
         clickOffsetInMe=[self convertPoint:[event locationInWindow] fromView:nil];
       
-        [self.editingDelegate updateGuide:self];
+        [self.editingDelegate updateGuide:self]; //TODO move to delegate controlEditClicked
     }
 }
 
@@ -103,12 +103,12 @@
         
         [[NSCursor closedHandCursor] push];
         NSPoint newDragLocation=[[self superview] convertPoint:[event locationInWindow] fromView:nil];
-        CGPoint newOrigin = CGPointMake(newDragLocation.x-clickOffsetInMe.x, newDragLocation.y-clickOffsetInMe.y);
+        //CGPoint newOrigin = CGPointMake(newDragLocation.x-clickOffsetInMe.x, newDragLocation.y-clickOffsetInMe.y);
         
-        [self setFrameOriginObjectUndoable:[NSValue valueWithPoint:newOrigin]];
+        //[self setFrameOriginObjectUndoable:[NSValue valueWithPoint:newOrigin]]; //move movement to delegate
         [self autoscroll:event];
         [self.editingDelegate controlEditMoved:self deltaPoint:CGPointMake(newDragLocation.x-lastDragLocation.x, newDragLocation.y-lastDragLocation.y)];
-        [self.editingDelegate updateGuide:self];
+        //[self.editingDelegate updateGuide:self];
         lastDragLocation=newDragLocation;
     }
 }

@@ -134,6 +134,15 @@
 - (IBAction)pageDownHit:(NSButton *)sender;
 - (IBAction)pageUpHit:(NSButton *)sender;
 
+//editing grid
+- (IBAction)openEditingGridPanel:(id)sender;
+- (IBAction)closeEditingGridPanel:(id)sender;
+- (IBAction)enableEditingGridChanged:(NSButton *)sender;
+- (IBAction)snapWidgetsToGrid:(NSButton *)sender;
+- (IBAction)editingGridXChanged:(NSTextField *)sender;
+- (IBAction)editingGridYChanged:(NSTextField *)sender;
+
+
 //doc
 - (IBAction)canvasChanged:(NSPopUpButton*)sender;
 - (IBAction)orientationChanged:(NSPopUpButton *)sender;
@@ -278,4 +287,11 @@
 @property (strong) IBOutlet NSView *propTableView;
 @property (strong) IBOutlet NSColorWell *propTableSelectionColorWell;
 @property (strong) IBOutlet NSPopUpButton *propTableModePopButton;
+
+@property (strong) IBOutlet NSPanel *editingGridPanel;
+@property (strong) IBOutlet NSButton *editingGridEnableCheckButton;
+@property (strong) IBOutlet NSTextField *editingGridXTextField;
+@property (strong) IBOutlet NSTextField *editingGridYTextField;
+@property (strong) IBOutlet NSButton *editingGridSnapToGridButton;
+@property (strong) IBOutlet NSButton *editingGridCloseButton;
 @end

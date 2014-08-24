@@ -22,4 +22,6 @@
 @property  (nonatomic) int canvasType;
 @property (nonatomic) BOOL isOrientationLandscape;
 
+- (void)refreshGuides;
+
 @end

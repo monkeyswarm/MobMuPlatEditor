@@ -14,7 +14,11 @@
 #define CANVAS_LEFT 250
 #define CANVAS_TOP 8
 
-@implementation Document
+@implementation Document {
+  BOOL _snapToGridEnabled;
+  NSUInteger _snapToGridXVal;
+  NSUInteger _snapToGridYVal;
+}
 @synthesize isEditing;
 
 - (id)init{
@@ -36,7 +40,30 @@
 - (void)windowControllerDidLoadNib:(NSWindowController *)aController
 {
     [super windowControllerDidLoadNib:aController];
-  
+
+  // guides
+  _snapToGridXVal = 20;
+  _snapToGridYVal = 20;
+  NSUserDefaults* defaults = [NSUserDefaults standardUserDefaults];
+  NSNumber *x = [defaults objectForKey:@"snapToGridXVal"];
+  if (x) {
+    _snapToGridXVal = [x integerValue];
+    _snapToGridXVal = MAX(MIN(_snapToGridXVal,1000),5);
+    [_editingGridXTextField setStringValue:[NSString stringWithFormat:@"%lu", (unsigned long)_snapToGridXVal]];
+  }
+  NSNumber *y = [defaults objectForKey:@"snapToGridYVal"];
+  if (y) {
+    _snapToGridYVal = [y integerValue];
+    _snapToGridYVal = MAX(MIN(_snapToGridYVal,1000),5);
+    [_editingGridYTextField setStringValue:[NSString stringWithFormat:@"%lu", (unsigned long)_snapToGridYVal]];
+  }
+  NSNumber *en = [defaults objectForKey:@"snapToGridEnabled"];
+  if (en){
+    _snapToGridEnabled = [en boolValue];
+    [_editingGridEnableCheckButton setState:_snapToGridEnabled ? 1 : 0];
+  }
+
+
   //kick the pd patch to get it to reconnect
   NSMutableArray* formattedMessageArray = [[NSMutableArray alloc]init];
   [formattedMessageArray addObject:@"/system/opened"];
@@ -47,6 +74,7 @@
     canvasOuterView.layer.backgroundColor=CGColorCreateGenericGray(.1, 1);
     
     canvasView.editingDelegate=self;
+    [canvasView refreshGuides];
     [[self canvasTypePopButton] selectItemAtIndex:-1];
     [[self canvasTypePopButton] synchronizeTitleAndSelectedItem];//clears check by "iphone" drop down element
     [[self orientationPopButton ] selectItemAtIndex:-1];
@@ -62,9 +90,7 @@
     [self.propKnobIndicatorColorWell setColor:[NSColor colorWithCalibratedRed:1 green:1 blue:1 alpha:1]];
     [self.tabView selectFirstTabViewItem:nil];
     [self setIsEditing:YES];
-    
-  
-    
+
 }
 
 + (BOOL)autosavesInPlace{
@@ -636,17 +662,40 @@
 //one control has moved, move all other selected controls
 -(void)controlEditMoved:(MMPControl*)control deltaPoint:(CGPoint)deltaPoint{
     for(MMPControl* currControl in [documentModel controlArray]){
-        if([currControl isSelected] && currControl!=control){
+      if([currControl isSelected]) {//&& currControl!=control){ //now handling original control as well here.
             [[self undoManager] registerUndoWithTarget:currControl selector:@selector(setFrameOriginObjectUndoable:) object:[NSValue valueWithPoint:currControl.frame.origin]];
-            CGPoint newOrigin = CGPointMake(currControl.frame.origin.x+deltaPoint.x, currControl.frame.origin.y+deltaPoint.y);
-            [currControl setFrameOrigin:newOrigin];
+          CGFloat x = currControl.frame.origin.x+deltaPoint.x;
+          CGFloat y = currControl.frame.origin.y+deltaPoint.y;
+
+          CGPoint newOrigin = CGPointMake(x,y);
+          [currControl setFrameOrigin:newOrigin];
+          if(currControl == control) {
+            [self updateGuide:currControl];
+          }
         }
     }
 }
 
-//I clicked a single control and released it (without drag or shift), deselect everything else
 -(void)controlEditReleased:(MMPControl*)control withShift:(BOOL)shift hadDrag:(BOOL)hadDrag{
-    if(!hadDrag && !shift) {
+  //I had dragged, so snap stuff if enabled
+  if(hadDrag && _snapToGridEnabled) {
+    for(MMPControl* currControl in [documentModel controlArray]){
+      if([currControl isSelected]) {
+        CGFloat x = currControl.frame.origin.x;
+        CGFloat y = currControl.frame.origin.y;
+        //NSLog(@"pre %.2f %.2f", x,y);
+        x = _snapToGridXVal * floor((x/_snapToGridXVal)+0.5);
+        y = _snapToGridYVal * floor((y/_snapToGridYVal)+0.5);
+        //NSLog(@"post %.2f %.2f", x,y);
+        CGPoint newOrigin = CGPointMake(x,y);
+        [currControl setFrameOrigin:newOrigin];
+      }
+    }
+  }
+
+
+  //I clicked a single control and released it (without drag or shift), deselect everything else
+  if(!hadDrag && !shift) {
         for(MMPControl* currControl in [documentModel controlArray]){
             if(currControl!=control) [currControl setIsSelected:NO];
         }
@@ -1369,5 +1418,79 @@
     }
 }
 
+- (IBAction)openEditingGridPanel:(id)sender {
+  [NSApp beginSheet:_editingGridPanel
+     modalForWindow:documentWindow
+      modalDelegate:self
+     didEndSelector:nil
+        contextInfo:nil];
+}
+
+-(IBAction)closeEditingGridPanel:(id)sender {
+  [NSApp endSheet:_editingGridPanel];
+  [_editingGridPanel orderOut:sender];
+}
+
+- (IBAction)enableEditingGridChanged:(NSButton *)sender {
+  _snapToGridEnabled = [(NSButton*)sender state];
+  [canvasView refreshGuides];
+
+  NSUserDefaults* defaults = [NSUserDefaults standardUserDefaults];
+  [defaults setObject:[NSNumber numberWithBool:_snapToGridEnabled] forKey:@"snapToGridEnabled"];
+  [defaults synchronize];
+  [[NSUserDefaults standardUserDefaults] synchronize];
+}
+
+- (IBAction)snapWidgetsToGrid:(NSButton *)sender {
+  [[self undoManager] beginUndoGrouping];
+  for (MMPControl *control in [documentModel controlArray]) {
+    CGFloat originX = control.frame.origin.x;
+    CGFloat originY = control.frame.origin.y;
+    CGFloat width = control.frame.size.width;
+    CGFloat height = control.frame.size.height;
+
+    NSUInteger snapToGridXVal = [control.editingDelegate guidesX];
+    NSUInteger snapToGridYVal = [control.editingDelegate guidesY];
+
+    originX = snapToGridXVal * floor((originX/snapToGridXVal)+0.5);
+    originY = snapToGridYVal * floor((originY/snapToGridYVal)+0.5);
+    width = snapToGridXVal * floor((width/snapToGridXVal)+0.5);
+    height = snapToGridYVal * floor((height/snapToGridYVal)+0.5);
+    width = MAX(width, 40);
+    height = MAX(height, 40);
+    CGRect newFrame = CGRectMake(originX, originY, width, height);
+    [control setFrameObjectUndoable:[NSValue valueWithRect: newFrame]];
+  }
+  [[self undoManager] endUndoGrouping];
+}
+
+- (IBAction)editingGridXChanged:(NSTextField *)sender {
+  _snapToGridXVal = [sender intValue];
+  if (_snapToGridXVal < 5) _snapToGridXVal = 5;
+  if(_snapToGridEnabled) [canvasView refreshGuides];
+  NSUserDefaults* defaults = [NSUserDefaults standardUserDefaults];
+  [defaults setObject:[NSNumber numberWithInteger:_snapToGridXVal] forKey:@"snapToGridXVal"];
+  [defaults synchronize];
+}
+
+- (IBAction)editingGridYChanged:(NSTextField *)sender {
+  _snapToGridYVal = [sender intValue];
+  if (_snapToGridYVal < 5) _snapToGridYVal = 5;
+  if(_snapToGridEnabled) [canvasView refreshGuides];
+  NSUserDefaults* defaults = [NSUserDefaults standardUserDefaults];
+  [defaults setObject:[NSNumber numberWithInteger:_snapToGridYVal] forKey:@"snapToGridYVal"];
+  [defaults synchronize];
+}
+
+// editing delegate for
+-(BOOL)guidesEnabled {
+  return _snapToGridEnabled;
+}
+-(NSUInteger)guidesX {
+  return _snapToGridXVal;
+}
+-(NSUInteger)guidesY {
+  return _snapToGridYVal;
+}
 
 @end

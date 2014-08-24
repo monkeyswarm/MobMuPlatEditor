@@ -33,14 +33,14 @@
 
 -(void)mouseDragged:(NSEvent *)event{
     NSPoint newDragLocation=[[[self superview] superview] convertPoint:[event locationInWindow] fromView:nil];
-   
-    CGFloat newWidth = [self superview].frame.size.width+(newDragLocation.x-startDragPoint.x);
-    CGFloat newHeight = [self superview].frame.size.height+(newDragLocation.y-startDragPoint.y);
-    CGRect newFrame = CGRectMake([self superview].frame.origin.x, [self superview].frame.origin.y, newWidth, newHeight);
+    MMPControl* control = (MMPControl*)[self superview];
+    CGFloat newWidth = control.frame.size.width+(newDragLocation.x-startDragPoint.x);
+    CGFloat newHeight = control.frame.size.height+(newDragLocation.y-startDragPoint.y);
+
+    CGRect newFrame = CGRectMake(control.frame.origin.x, control.frame.origin.y, newWidth, newHeight);
     
     //keep it from getting too small
-    if(newWidth>40 && newHeight>40){
-      MMPControl* control = (MMPControl*)[self superview];
+    if(newWidth>=40 && newHeight>=40){
       [control setFrameObjectUndoable:[NSValue valueWithRect: newFrame]];
       [control.editingDelegate updateGuide:control];
     }
@@ -50,6 +50,23 @@
 -(void)mouseUp:(NSEvent *)theEvent{
     [[self undoManager] endUndoGrouping];
     MMPControl* control = (MMPControl*)[self superview];
+    if ([control.editingDelegate guidesEnabled]) {
+      CGFloat newWidth = control.frame.size.width;
+      CGFloat newHeight = control.frame.size.height;
+      NSUInteger snapToGridXVal = [control.editingDelegate guidesX];
+      NSUInteger snapToGridYVal = [control.editingDelegate guidesY];
+      newWidth = snapToGridXVal * floor((newWidth/snapToGridXVal)+0.5);
+      newHeight = snapToGridYVal * floor((newHeight/snapToGridYVal)+0.5);
+
+      CGRect newFrame = CGRectMake(control.frame.origin.x, control.frame.origin.y, newWidth, newHeight);
+
+      //keep it from getting too small
+      if(newWidth>=40 && newHeight>=40){
+        [control setFrame:newFrame];
+        //[control setFrameObjectUndoable:[NSValue valueWithRect: newFrame]];
+        [control.editingDelegate updateGuide:control];
+      }
+    }
     [control.editingDelegate updateGuide:nil];
 }
 
