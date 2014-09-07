@@ -55,6 +55,9 @@
         case (canvasTypeIPad):
             offset = (_isOrientationLandscape ? 1024:768);
             break;
+        case (canvasTypeAndroid7Inch):
+            offset = (_isOrientationLandscape ? 960:600); //different
+            break;
     }
     //slide to new offset to show the page of controls
     [NSAnimationContext beginGrouping];
@@ -85,6 +88,11 @@
             height = (_isOrientationLandscape ? 768:1024);
              [buttonBlankView setFrame:CGRectMake(20, 20, 40, 40)];
             break;
+      case (canvasTypeAndroid7Inch):
+        width = (_isOrientationLandscape ? 960:600);
+        height = (_isOrientationLandscape ? 552:912);
+        [buttonBlankView setFrame:CGRectMake(20, 20, 40, 40)];
+        break;
     }
     [self setFrame:CGRectMake(0, 0, width*_pageCount, height)];
     [self setPageViewIndex:_pageViewIndex];

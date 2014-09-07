@@ -61,6 +61,9 @@
     if(_canvasType==canvasTypeIPhone3p5Inch)[topDict setObject:@"iPhone3p5Inch" forKey:@"canvasType"];
     else if(_canvasType==canvasTypeIPhone4Inch)[topDict setObject:@"iPhone4Inch" forKey:@"canvasType"];
     else if(_canvasType==canvasTypeIPad)[topDict setObject:@"iPad" forKey:@"canvasType"];
+    else if(_canvasType==canvasTypeAndroid7Inch)[topDict setObject:@"android7Inch" forKey:@"canvasType"];
+
+
     
     [topDict setObject:[NSNumber numberWithBool:_isOrientationLandscape] forKey:@"isOrientationLandscape"];
     [topDict setObject:[NSNumber numberWithBool:_isPageScrollShortEnd] forKey:@"isPageScrollShortEnd"];
@@ -100,6 +103,7 @@
             [GUIDict setObject:[NSNumber numberWithInt:[(MMPLabel*)control textSize]] forKey:@"textSize"] ;
             [GUIDict setObject:[(MMPLabel*)control fontFamily] forKey:@"textFontFamily"] ;
             [GUIDict setObject:[(MMPLabel*)control fontName] forKey:@"textFont"] ;
+            [GUIDict setObject:[(MMPLabel*)control androidFontName] forKey:@"androidFont"] ;
         }
         //grid
         else if([control isKindOfClass:[MMPGrid class]]){
@@ -174,6 +178,7 @@
         if([[topDict objectForKey:@"canvasType"] isEqualToString:@"iPhone3p5Inch"])[model setCanvasType:canvasTypeIPhone3p5Inch];
          if([[topDict objectForKey:@"canvasType"] isEqualToString:@"iPhone4Inch"])[model setCanvasType:canvasTypeIPhone4Inch];
          if([[topDict objectForKey:@"canvasType"] isEqualToString:@"iPad"])[model setCanvasType:canvasTypeIPad];
+      if([[topDict objectForKey:@"canvasType"] isEqualToString:@"android7Inch"])[model setCanvasType:canvasTypeAndroid7Inch];
     }
         
     if([topDict objectForKey:@"isOrientationLandscape"])
@@ -258,6 +263,9 @@
                     [(MMPLabel*)control setTextSize:[[guiDict objectForKey:@"textSize"] intValue]];
                 if([guiDict objectForKey:@"textFont"] && [guiDict objectForKey:@"textFontFamily"])
                     [(MMPLabel*)control setFontFamily:[guiDict objectForKey:@"textFontFamily"] fontName:[guiDict objectForKey:@"textFont"]];
+                if([guiDict objectForKey:@"androidFont"]) {
+                  [(MMPLabel*)control setAndroidFontName:[guiDict objectForKey:@"androidFont"]];
+                }
             }
             else if([classString isEqualToString:@"MMPXYSlider"]){
                 control = [[MMPXYSlider alloc] initWithFrame:newFrame];

@@ -31,14 +31,28 @@
         
         [textView setEditable:NO];
         [textView setTextColor:self.color];
-      
+
+        androidTextView = [[NSTextView alloc]initWithFrame:CGRectMake(0, 0, frame.size.width, frame.size.height)];
+        androidTextView.backgroundColor=[NSColor clearColor];
+        androidTextView.hidden = YES;
+
+        [androidTextView setEditable:NO];
+        [androidTextView setTextColor:self.color];
+        [self setAndroidFontName:@"Roboto-Regular"];
+
         [self setStringValue:@"my text goes here"];
         [self setTextSize:DEFAULT_FONTSIZE];
         [self addSubview:textView];
-        
+        [self addSubview:androidTextView];
+
         [self addHandles];
     }
     return self;
+}
+
+-(void)showAndroidFont:(BOOL)showAndroidFont {
+    androidTextView.hidden = !showAndroidFont;
+    textView.hidden = showAndroidFont;
 }
 
 //ugly hack so that this object doesn't take touches, but passes to controls underneath
@@ -74,6 +88,7 @@
 -(void)setStringValue:(NSString *)aString{
     _stringValue = aString;
     [textView setString:aString];
+    [androidTextView setString:aString];
 }
 
 -(void)setTextSizeUndoable:(NSNumber*)inNumber{
@@ -83,13 +98,17 @@
 
 -(void)setTextSize:(int)inInt{
     _textSize = inInt;
+  //iOS
     if([_fontFamily isEqualToString:@"Default"])[textView setFont:[NSFont fontWithName:DEFAULT_FONT size:inInt]];
     else [textView setFont:[NSFont fontWithName:_fontName size:inInt]];
+  //Android
+    [androidTextView setFont:[NSFont fontWithName:_androidFontName size:inInt]];
 }
 
 -(void)setColor:(NSColor *)color{
     [super setColor:color];
     [textView setTextColor:color];
+    [androidTextView setTextColor:color];
 }
 
 -(void)setFontFamily:(NSString *)fontFamily fontName:(NSString *)fontName{
@@ -99,9 +118,16 @@
     else [textView setFont:[NSFont fontWithName:fontName size:_textSize]];
 }
 
+-(void)setAndroidFontName:(NSString *)fontName{
+    _androidFontName = fontName;
+    NSFont *test = [NSFont fontWithName:fontName size:12];
+    [androidTextView setFont:[NSFont fontWithName:fontName size:_textSize]];
+}
+
 -(void)setFrame:(NSRect)frameRect{
     [super setFrame:frameRect];
     [textView setFrame:CGRectMake(0, 0, self.frame.size.width, self.frame.size.height)];
+    [androidTextView setFrame:CGRectMake(0, 0, self.frame.size.width, self.frame.size.height)];
 }
 
 //receive messages from PureData (via [send toGUI]), routed from ViewController via the address to this object
@@ -109,8 +135,14 @@
     //if "highlight 0/1", set to highlight color
     if(([inArray count]==2) && [[inArray objectAtIndex:0] isKindOfClass:[NSString class]] && [[inArray objectAtIndex:0] isEqualToString:@"highlight"]){
         if([[inArray objectAtIndex:1] isKindOfClass:[NSNumber class]]){
-            if ([[inArray objectAtIndex:1] intValue]>0)[textView setTextColor:self.highlightColor];
-            else [textView setTextColor:self.color];
+            if ([[inArray objectAtIndex:1] intValue]>0) {
+                [textView setTextColor:self.highlightColor];
+                [androidTextView setTextColor:self.highlightColor];
+            }
+            else {
+                [textView setTextColor:self.color];
+                [androidTextView setTextColor:self.highlightColor];
+            }
         }
     }
     
@@ -133,6 +165,7 @@
             [newString appendString:@" "];
         }
         [textView setString:newString];
+        [androidTextView setString:newString];
     }
 }
 
@@ -141,10 +174,11 @@
 - (void)encodeWithCoder:(NSCoder *)coder {
     [super encodeWithCoder:coder];
     [coder encodeObject:self.stringValue forKey:@"stringValue"];
-	[coder encodeInt:self.textSize forKey:@"textSize"];
+    [coder encodeInt:self.textSize forKey:@"textSize"];
     [coder encodeObject:self.fontFamily forKey:@"fontFamily"];
     [coder encodeObject:self.fontName forKey:@"fontName"];
-    
+    [coder encodeObject:self.androidFontName forKey:@"androidFontName"];
+
 }
 
 - (id)initWithCoder:(NSCoder *)coder {
@@ -152,6 +186,7 @@
     if(self=[super initWithCoder:coder]){
         [self setStringValue:[coder decodeObjectForKey:@"stringValue"]];
         [self setFontFamily:[coder decodeObjectForKey:@"fontFamily"] fontName:[coder decodeObjectForKey:@"fontName"]];
+        [self setAndroidFontName:[coder decodeObjectForKey:@"androidFontName"]];
         [self setTextSize:[coder decodeIntForKey:@"textSize"]];
     }
     return self;

@@ -41,6 +41,7 @@
                 <outlet property="editingGridSnapToGridButton" destination="szH-HS-UzS" id="W3V-Se-mfg"/>
                 <outlet property="editingGridXTextField" destination="ZuJ-nX-VtH" id="Xhf-3g-Ojl"/>
                 <outlet property="editingGridYTextField" destination="m3M-UK-f5c" id="Grb-iL-N9p"/>
+                <outlet property="labelTabView" destination="2eS-eT-KXH" id="iXi-SA-4eq"/>
                 <outlet property="lockClearButton" destination="100365" id="100434"/>
                 <outlet property="lockShakeButton" destination="100430" id="100437"/>
                 <outlet property="lockTextScrollView" destination="100357" id="101208"/>
@@ -65,6 +66,7 @@
                 <outlet property="propKnobRangeChanged" destination="100265" id="100314"/>
                 <outlet property="propKnobRangeTextField" destination="100265" id="100313"/>
                 <outlet property="propKnobView" destination="100264" id="101041"/>
+                <outlet property="propLabelAndroidFontPopButton" destination="ymg-Ak-brI" id="ODi-dg-79N"/>
                 <outlet property="propLabelFontPopButton" destination="101042" id="101050"/>
                 <outlet property="propLabelFontType" destination="101154" id="101159"/>
                 <outlet property="propLabelFontTypeButton" destination="101153" id="101161"/>
@@ -127,16 +129,17 @@
                                                             <popUpButton verticalHuggingPriority="750" id="100152">
                                                                 <rect key="frame" x="97" y="297" width="122" height="26"/>
                                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                                                <popUpButtonCell key="cell" type="push" title="iPhone - 3.5&quot;" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" selectedItem="100155" id="100153">
+                                                                <popUpButtonCell key="cell" type="push" title="Android 7&quot;" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" selectedItem="UuM-jE-1Ku" id="100153">
                                                                     <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
                                                                     <font key="font" metaFont="menu"/>
                                                                     <menu key="menu" title="OtherViews" id="100154">
                                                                         <items>
-                                                                            <menuItem title="iPhone - 3.5&quot;" state="on" id="100155"/>
+                                                                            <menuItem title="iPhone - 3.5&quot;" id="100155"/>
                                                                             <menuItem title="iPhone - 4&quot;" id="101119">
                                                                                 <modifierMask key="keyEquivalentModifierMask"/>
                                                                             </menuItem>
                                                                             <menuItem title="iPad" id="100156"/>
+                                                                            <menuItem title="Android 7&quot;" state="on" id="UuM-jE-1Ku"/>
                                                                         </items>
                                                                     </menu>
                                                                 </popUpButtonCell>
@@ -490,7 +493,7 @@ touch</string>
                                                                 </connections>
                                                             </button>
                                                             <button verticalHuggingPriority="750" id="101075">
-                                                                <rect key="frame" x="41" y="25" width="137" height="32"/>
+                                                                <rect key="frame" x="41" y="20" width="137" height="32"/>
                                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                                 <buttonCell key="cell" type="push" title="Delete" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="101076">
                                                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -512,7 +515,7 @@ touch</string>
                                                                 </connections>
                                                             </button>
                                                             <customView id="100211">
-                                                                <rect key="frame" x="-3" y="73" width="224" height="144"/>
+                                                                <rect key="frame" x="-3" y="52" width="224" height="165"/>
                                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                             </customView>
                                                             <colorWell id="100213">
@@ -912,11 +915,11 @@ A range of &gt;2 sends integers.</string>
             </subviews>
         </customView>
         <customView id="100272">
-            <rect key="frame" x="0.0" y="0.0" width="224" height="137"/>
+            <rect key="frame" x="0.0" y="0.0" width="224" height="165"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
             <subviews>
                 <textField verticalHuggingPriority="750" id="100284">
-                    <rect key="frame" x="11" y="62" width="104" height="17"/>
+                    <rect key="frame" x="11" y="93" width="104" height="17"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Label Text Size " id="100285">
                         <font key="font" metaFont="system"/>
@@ -924,17 +927,8 @@ A range of &gt;2 sends integers.</string>
                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                     </textFieldCell>
                 </textField>
-                <textField verticalHuggingPriority="750" id="101048">
-                    <rect key="frame" x="11" y="36" width="70" height="17"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Label Font" id="101049">
-                        <font key="font" metaFont="system"/>
-                        <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
-                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                    </textFieldCell>
-                </textField>
                 <textField verticalHuggingPriority="750" id="100286">
-                    <rect key="frame" x="154" y="57" width="62" height="22"/>
+                    <rect key="frame" x="154" y="88" width="62" height="22"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" drawsBackground="YES" id="100287">
                         <numberFormatter key="formatter" formatterBehavior="default10_4" positiveFormat="#,##0.###" negativeFormat="#,##0.###" numberStyle="decimal" paddingCharacter="*" minimumIntegerDigits="1" maximumIntegerDigits="309" maximumFractionDigits="3" decimalSeparator="." groupingSeparator="," currencyDecimalSeparator="." plusSign="+" minusSign="-" notANumberSymbol="NaN" perMillSymbol="‰" percentSymbol="%" exponentSymbol="E" positivePrefix="" positiveSuffix="" negativePrefix="-" negativeSuffix="" id="100288"/>
@@ -947,7 +941,7 @@ A range of &gt;2 sends integers.</string>
                     </connections>
                 </textField>
                 <textField verticalHuggingPriority="750" id="100371">
-                    <rect key="frame" x="14" y="95" width="202" height="31"/>
+                    <rect key="frame" x="14" y="128" width="202" height="31"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" drawsBackground="YES" id="100372">
                         <font key="font" metaFont="system"/>
@@ -958,41 +952,8 @@ A range of &gt;2 sends integers.</string>
                         <action selector="propLabelTextChanged:" target="-2" id="100374"/>
                     </connections>
                 </textField>
-                <popUpButton verticalHuggingPriority="750" id="101042">
-                    <rect key="frame" x="83" y="30" width="136" height="26"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                    <popUpButtonCell key="cell" type="push" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" id="101043">
-                        <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
-                        <font key="font" metaFont="menu"/>
-                        <menu key="menu" title="OtherViews" id="101044"/>
-                    </popUpButtonCell>
-                    <connections>
-                        <action selector="propLabelFontChanged:" target="-2" id="101051"/>
-                    </connections>
-                </popUpButton>
-                <textField verticalHuggingPriority="750" id="101152">
-                    <rect key="frame" x="11" y="10" width="67" height="17"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Font Type" id="101156">
-                        <font key="font" metaFont="system"/>
-                        <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
-                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                    </textFieldCell>
-                </textField>
-                <popUpButton verticalHuggingPriority="750" id="101153">
-                    <rect key="frame" x="83" y="4" width="136" height="26"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                    <popUpButtonCell key="cell" type="push" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" id="101154">
-                        <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
-                        <font key="font" metaFont="menu"/>
-                        <menu key="menu" title="OtherViews" id="101155"/>
-                    </popUpButtonCell>
-                    <connections>
-                        <action selector="propLabelFontTypeChanged:" target="-2" id="101162"/>
-                    </connections>
-                </popUpButton>
                 <textField verticalHuggingPriority="750" id="101145">
-                    <rect key="frame" x="17" y="79" width="220" height="17"/>
+                    <rect key="frame" x="17" y="112" width="220" height="17"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="(hit option-enter to insert new line)" id="101146">
                         <font key="font" metaFont="smallSystem"/>
@@ -1000,6 +961,95 @@ A range of &gt;2 sends integers.</string>
                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                     </textFieldCell>
                 </textField>
+                <tabView id="2eS-eT-KXH">
+                    <rect key="frame" x="6" y="-5" width="217" height="95"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <font key="font" metaFont="system"/>
+                    <tabViewItems>
+                        <tabViewItem label="iOS" identifier="1" id="ftB-TQ-TgO">
+                            <view key="view" id="t7j-5u-S3C">
+                                <rect key="frame" x="10" y="33" width="197" height="49"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                <subviews>
+                                    <textField verticalHuggingPriority="750" id="101048">
+                                        <rect key="frame" x="-1" y="31" width="70" height="17"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Label Font" id="101049">
+                                            <font key="font" metaFont="system"/>
+                                            <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                        </textFieldCell>
+                                    </textField>
+                                    <popUpButton verticalHuggingPriority="750" id="101042">
+                                        <rect key="frame" x="73" y="25" width="125" height="26"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                        <popUpButtonCell key="cell" type="push" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" id="101043">
+                                            <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
+                                            <font key="font" metaFont="menu"/>
+                                            <menu key="menu" title="OtherViews" id="101044"/>
+                                        </popUpButtonCell>
+                                        <connections>
+                                            <action selector="propLabelFontChanged:" target="-2" id="101051"/>
+                                        </connections>
+                                    </popUpButton>
+                                    <textField verticalHuggingPriority="750" id="101152">
+                                        <rect key="frame" x="-1" y="6" width="67" height="17"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Font Type" id="101156">
+                                            <font key="font" metaFont="system"/>
+                                            <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                        </textFieldCell>
+                                    </textField>
+                                    <popUpButton verticalHuggingPriority="750" id="101153">
+                                        <rect key="frame" x="73" y="0.0" width="125" height="26"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                        <popUpButtonCell key="cell" type="push" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" id="101154">
+                                            <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
+                                            <font key="font" metaFont="menu"/>
+                                            <menu key="menu" title="OtherViews" id="101155"/>
+                                        </popUpButtonCell>
+                                        <connections>
+                                            <action selector="propLabelFontTypeChanged:" target="-2" id="101162"/>
+                                        </connections>
+                                    </popUpButton>
+                                </subviews>
+                            </view>
+                        </tabViewItem>
+                        <tabViewItem label="Android" identifier="2" id="3Qy-V6-EdM">
+                            <view key="view" id="ItV-CF-C7d">
+                                <rect key="frame" x="10" y="33" width="197" height="49"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                <subviews>
+                                    <textField verticalHuggingPriority="750" id="cst-nY-bhh">
+                                        <rect key="frame" x="0.0" y="17" width="67" height="17"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Font Type" id="UQQ-pB-RGc">
+                                            <font key="font" metaFont="system"/>
+                                            <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                        </textFieldCell>
+                                    </textField>
+                                    <popUpButton verticalHuggingPriority="750" id="ymg-Ak-brI">
+                                        <rect key="frame" x="71" y="12" width="125" height="26"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                        <popUpButtonCell key="cell" type="push" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" id="It2-2O-1vY">
+                                            <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
+                                            <font key="font" metaFont="menu"/>
+                                            <menu key="menu" title="OtherViews" id="G5t-Nf-Om0"/>
+                                        </popUpButtonCell>
+                                        <connections>
+                                            <action selector="propLabelAndroidFontTypeChanged:" target="-2" id="MCN-vA-38o"/>
+                                        </connections>
+                                    </popUpButton>
+                                </subviews>
+                            </view>
+                        </tabViewItem>
+                    </tabViewItems>
+                    <connections>
+                        <outlet property="delegate" destination="-2" id="LUd-dN-Rlt"/>
+                    </connections>
+                </tabView>
             </subviews>
         </customView>
         <customView id="100289">

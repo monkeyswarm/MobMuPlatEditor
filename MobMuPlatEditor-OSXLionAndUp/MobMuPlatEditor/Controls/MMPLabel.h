@@ -10,13 +10,17 @@
 #import "MMPControl.h"
 
 @interface MMPLabel : MMPControl{
-    NSTextView* textView;
+    NSTextView* textView, *androidTextView;
 }
 @property (nonatomic) int textSize;
 @property (nonatomic) NSString* stringValue;
-@property(nonatomic, readonly) NSString *fontName;
 @property(nonatomic, readonly)NSString* fontFamily;
+@property(nonatomic, readonly) NSString *fontName;
+@property(nonatomic, readonly) NSString *androidFontName; //family is always default, this is bold, italic, light/condensed
 
 -(void)setFontFamily:(NSString *)fontFamily fontName:(NSString*)fontName;
+-(void)setAndroidFontName:(NSString*)fontName;
+-(void)showAndroidFont:(BOOL)showAndroidFont;
+
 + (BOOL)numberIsFloat:(NSNumber*)num;
 @end

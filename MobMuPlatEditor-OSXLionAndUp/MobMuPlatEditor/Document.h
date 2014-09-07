@@ -40,7 +40,6 @@
     IBOutlet NSScrollView* documentView;
     IBOutlet NSScrollView* documentScrollView;
     
-    NSTabView *_tabView;
     int currentPageIndex;//0-index
     
     NSMutableArray* textLineArray;//array (last N) of strings for display
@@ -187,6 +186,8 @@
 - (IBAction)propLabelTextSizeChanged:(NSTextField *)sender;
 - (IBAction)propLabelFontChanged:(NSPopUpButton *)sender;
 - (IBAction)propLabelFontTypeChanged:(NSPopUpButton *)sender;
+- (IBAction)propLabelAndroidFontTypeChanged:(NSPopUpButton *)sender;
+
 - (IBAction)propToggleThicknessChanged:(NSTextField *)sender;
 - (IBAction)propGridDimXChanged:(NSTextField *)sender;
 - (IBAction)propGridDimYChanged:(NSTextField *)sender;
@@ -262,6 +263,8 @@
 @property (strong) IBOutlet NSPopUpButton *propSliderOrientationPopButton;
 @property (strong) IBOutlet NSTextField *propSliderRangeTextField;
 @property (strong) IBOutlet NSPopUpButton *propLabelFontPopButton;
+@property (strong) IBOutlet NSPopUpButton *propLabelAndroidFontPopButton;//new
+@property (strong) IBOutlet NSTabView *labelTabView;
 @property (strong) IBOutlet NSButton *addPanelButton;
 @property (strong) IBOutlet NSView *propPanelView;
 @property (strong) IBOutlet NSButton *propDeleteButton;

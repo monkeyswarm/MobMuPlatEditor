@@ -28,6 +28,7 @@ typedef enum{
     canvasTypeIPhone3p5Inch = 0,
     canvasTypeIPhone4Inch = 1,
     canvasTypeIPad = 2,
+    canvasTypeAndroid7Inch = 3
 } canvasType;
 
 @interface DocumentModel : NSObject

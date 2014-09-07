@@ -50,8 +50,30 @@
     [defaultDict setObject:@"Default" forKey:@"family"];
     [defaultDict setObject:[NSArray array] forKey:@"types"];
     [_fontArray addObject:defaultDict];
-  
-  return self;
+
+    //android
+    _androidFontArray = [[NSMutableArray alloc] initWithObjects:
+                         /*@"Roboto-Black",
+                         @"Roboto-BlackItalic",*/
+                         @"Roboto-Regular",
+                         @"Roboto-Bold",
+                         @"Roboto-Italic",
+                         @"Roboto-BoldItalic",
+                         @"Roboto-Light",
+                         @"Roboto-LightItalic",
+                         /*@"Roboto-Medium",
+                         @"Roboto-MediumItalic",*/
+                         @"Roboto-Thin",
+                         @"Roboto-ThinItalic",
+                         @"RobotoCondensed-Regular",
+                         @"RobotoCondensed-Bold",
+                         @"RobotoCondensed-Italic",
+                         @"RobotoCondensed-BoldItalic",
+                         /*@"RobotoCondensed-Light",
+                         @"RobotoCondensed-LightItalic",*/
+                         nil];
+
+    return self;
 }
 
 + (NSString*)cachePathWithAddress:(NSString *)address {

@@ -15,7 +15,8 @@
 @interface MMPDocumentController : NSDocumentController<OSCDelegateProtocol>{}
 
 @property(retain)OSCManager* manager;
-@property(retain)NSMutableArray* fontArray;
+@property(retain)NSMutableArray* fontArray; //array of dictionaries (family, dict of types)
+@property(retain)NSMutableArray* androidFontArray; //For now, just string font names
 
 -(void)sendOSCMessageFromArray:(NSArray*) list;
 + (BOOL)numberIsFloat:(NSNumber*)num;

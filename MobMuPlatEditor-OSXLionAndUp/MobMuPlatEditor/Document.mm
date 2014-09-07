@@ -231,7 +231,7 @@
             [canvasOuterView setFrame:CGRectMake(CANVAS_LEFT,documentView.frame.size.height-320-CANVAS_TOP, 568, 320)];
         }
     }
-    else{//ipad
+    else if ([documentModel canvasType]==canvasTypeIPad){//ipad
         if(![documentModel isOrientationLandscape]){//portrait
             
             [documentWindow setFrame:CGRectMake(0, screenFrame.origin.y, CANVAS_LEFT+768+CANVAS_TOP+10, screenFrame.size.height) display:YES animate:NO];
@@ -251,6 +251,28 @@
 
         }
     }
+    else{//android 7
+      if(![documentModel isOrientationLandscape]){//portrait
+
+        [documentWindow setFrame:CGRectMake(0, screenFrame.origin.y, CANVAS_LEFT+600+CANVAS_TOP+10, screenFrame.size.height) display:YES animate:NO];
+        [documentScrollView setFrame:CGRectMake(0, 0, documentView.frame.size.width, documentView.frame.size.height)];
+        [documentScrollView.documentView setFrameSize:CGSizeMake(CANVAS_LEFT+600+CANVAS_TOP, 912+CANVAS_TOP+CANVAS_TOP) ];
+
+        [canvasOuterView setFrame:CGRectMake(CANVAS_LEFT,CANVAS_TOP, 600, 912)];
+        [documentScrollView.documentView scrollPoint:CGPointMake(0, [documentScrollView.documentView frame].size.height)];
+
+      }
+      else{//landscape
+        [documentWindow setFrame:CGRectMake(0, screenFrame.origin.y, CANVAS_LEFT+960+CANVAS_TOP, 552+CANVAS_TOP+CANVAS_TOP+20) display:YES animate:NO];
+
+        [documentScrollView setFrame:CGRectMake(0, 0, documentView.frame.size.width, documentView.frame.size.height)];
+        [documentScrollView.documentView setFrameSize:documentScrollView.contentSize];
+        [canvasOuterView setFrame:CGRectMake(CANVAS_LEFT,documentView.frame.size.height-552-CANVAS_TOP, 960, 552)];
+
+      }
+    }
+  //TODO srsly make these consants
+
     //this has to be done after setting outerview, it doesn't move with the change of outerview!
     [canvasView setCanvasType:[documentModel canvasType]];
     [canvasView setIsOrientationLandscape:[documentModel isOrientationLandscape]];
@@ -272,6 +294,10 @@
     else if ([sender indexOfSelectedItem]==2 && [documentModel canvasType]!=canvasTypeIPad){//change other to pad
         [documentModel setCanvasType:canvasTypeIPad];
         [self updateWindowAndCanvas];
+    }
+    else if ([sender indexOfSelectedItem]==3 && [documentModel canvasType]!=canvasTypeAndroid7Inch){//change other to android 7"
+      [documentModel setCanvasType:canvasTypeAndroid7Inch];
+      [self updateWindowAndCanvas];
     }
 }
 
@@ -617,7 +643,9 @@
             [self.propLabelFontPopButton selectItemWithTitle:[(MMPLabel*)control fontFamily]];
             [self populateFont];
             [self.propLabelFontType selectItemWithTitle:[(MMPLabel*)control fontName]];
-            
+
+            [self.propLabelAndroidFontPopButton selectItemWithTitle:[(MMPLabel*)control androidFontName]];
+
         }
         else if([control isKindOfClass:[MMPGrid class]]){
             [self.propVarView addSubview:self.propGridView];
@@ -709,12 +737,18 @@
 
 //based on which of the 4 tabs are open, turn editing on/off
 -(void)tabView:(NSTabView*)tabView didSelectTabViewItem:(NSTabViewItem *)tabViewItem{
+  if(tabView == _tabView) {
     if([tabView indexOfTabViewItem:tabViewItem]==3){//lock
         [self setIsEditing:NO];
     }
     else [self setIsEditing:YES];
-    
-   
+  } else if (tabView == _labelTabView) {
+    BOOL showAndroid = ([tabView indexOfTabViewItem:tabViewItem] == 1);
+    for (MMPControl *control in documentModel.controlArray) {
+      if ([control isKindOfClass:[MMPLabel class]])
+        [(MMPLabel*)control showAndroidFont:showAndroid];
+    }
+  }
 }
 
 - (void)updateGuide:(MMPControl*)control {
@@ -978,6 +1012,16 @@
     else{
         //can't make the font...
     }
+}
+
+- (IBAction)propLabelAndroidFontTypeChanged:(NSPopUpButton *)sender {
+  NSString* newFontName = [[sender selectedItem] title];
+  if([NSFont fontWithName:newFontName size:12]){
+    [(MMPLabel*) currentSingleSelection setAndroidFontName:newFontName ];
+  }
+  else{
+    //can't make the font...
+  }
 }
 
 //just for proper undo/redo
@@ -1353,6 +1397,24 @@
     }
     //add this one last
     [self.propLabelFontPopButton addItemWithTitle:@"Default"];
+
+  // android default types
+    NSArray* androidFontArray=[(MMPDocumentController*)[NSDocumentController sharedDocumentController] androidFontArray];
+  for (NSString *fontName in androidFontArray) {
+    [self.propLabelAndroidFontPopButton addItemWithTitle:fontName];
+
+    if([NSFont fontWithName:fontName size:12]){//if font exists when called by family!
+      NSMenuItem *menuItem = [self.propLabelAndroidFontPopButton itemWithTitle:fontName];
+      NSDictionary *attributes = @{
+                                   NSFontAttributeName: [NSFont fontWithName:fontName size:12.0],
+                                   NSForegroundColorAttributeName: [NSColor blackColor]
+                                   };
+      NSAttributedString *attributedTitle = [[NSAttributedString alloc] initWithString:fontName attributes:attributes];
+      [menuItem setAttributedTitle:attributedTitle];
+
+    }
+    //[self.propLabelAndroidFontPopButton addItem]
+  }
 }
 
 //=======copy/paste - only allowed while editing, not locked
