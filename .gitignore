@@ -16,4 +16,4 @@ DerivedData
 .idea/
 *.hmap
 #Java
-*/bin
+bin/

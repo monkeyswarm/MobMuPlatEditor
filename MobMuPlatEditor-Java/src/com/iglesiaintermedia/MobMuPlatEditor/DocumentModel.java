@@ -143,6 +143,7 @@ public class DocumentModel {
 	        	GUIDict.put("dim", dim);
 	        	GUIDict.put("cellPadding", new Integer(currGrid.cellPadding));
 	        	GUIDict.put("borderThickness", new Integer(currGrid.borderThickness));
+	        	GUIDict.put("mode", new Integer(currGrid.getMode()));
 	        }
 	        //panel
 	        else if(control instanceof MMPPanel){
@@ -317,6 +318,9 @@ public class DocumentModel {
 		                    ((MMPGrid)control).setBorderThickness( guiDict.get("borderThickness").getAsInt()  );
 		                if(guiDict.get("cellPadding")!=null)
 		                    ((MMPGrid)control).setCellPadding( guiDict.get("cellPadding").getAsInt()  );
+		                if(guiDict.get("mode")!=null) {
+		                	((MMPGrid)control).setMode(guiDict.get("mode").getAsInt());
+		                }
 		                
 		            }
 		            else if(classString.equals("MMPPanel")){

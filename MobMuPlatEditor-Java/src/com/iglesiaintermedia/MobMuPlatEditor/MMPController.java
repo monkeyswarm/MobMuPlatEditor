@@ -680,6 +680,10 @@ public class MMPController {
 	        	windowDelegate.propGridCellPaddingTextField.setText(""+currGrid.cellPadding);
 	        	windowDelegate.propGridCellPaddingTextField.addActionListener(windowDelegate);
 	        	
+	        	windowDelegate.propGridModeBox.removeActionListener(windowDelegate.propGridModeBox.getActionListeners()[0]);
+	        	windowDelegate.propGridModeBox.setSelectedIndex(currGrid.getMode());
+	            	windowDelegate.propGridModeBox.addActionListener(windowDelegate);
+	        	
 	        }
 	        else if(control instanceof MMPPanel){
 	        	windowDelegate.propVarPanelPanel.setVisible(true);
@@ -722,7 +726,7 @@ public class MMPController {
 	        	windowDelegate.propVarTablePanel.setVisible(true);
 	        	MMPTable currTable = (MMPTable)control;
 	        	windowDelegate.propTableModeBox.removeActionListener(windowDelegate);
-	        	windowDelegate.propTableModeBox.setSelectedItem(currTable.getMode());
+	        	windowDelegate.propTableModeBox.setSelectedIndex(currTable.getMode());
 	            windowDelegate.propTableModeBox.addActionListener(windowDelegate);
 	            windowDelegate.propTableSelectionColorWell.setColor(currTable.getSelectionColor());
 	        }
