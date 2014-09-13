@@ -117,8 +117,12 @@ public class MMPWindow implements ChangeListener, ActionListener, FocusListener,
 	
 	JTextArea propLabelTextField;
 	JTextFieldDirty propLabelSizeTextField;
+	JTabbedPane propLabelTabbedPane;
+	JPanel propLabeliOSPanel;
+	JPanel propLabelAndroidPanel;
 	JComboBox propLabelFontBox;
-	JComboBox propLabelFontTypeBox; 
+	JComboBox propLabelFontTypeBox;
+	JComboBox propLabelAndroidFontTypeBox;
 	JTextFieldDirty propToggleThicknessTextField;
 	
 	JTextFieldDirty propGridDimXTextField;
@@ -296,7 +300,7 @@ public class MMPWindow implements ChangeListener, ActionListener, FocusListener,
 		docPanel.add(lblNewLabel);
 		
 		docCanvasTypeMenu = new JComboBox();
-		docCanvasTypeMenu.setModel(new DefaultComboBoxModel(new String[] {"iPhone - 3.5\"", "iPhone - 4\"", "iPad"}));
+		docCanvasTypeMenu.setModel(new DefaultComboBoxModel(new String[] {"iPhone - 3.5\"", "iPhone - 4\"", "iPad", "Android 7\""}));
 		docCanvasTypeMenu.setBounds(97, 6, 122, 26);
 		docCanvasTypeMenu.setActionCommand("canvasType");
 		docCanvasTypeMenu.addActionListener(this);
@@ -490,14 +494,14 @@ public class MMPWindow implements ChangeListener, ActionListener, FocusListener,
 		propPanel.setLayout(null);
 		
 		 propColorWell = new ColorWell();
-		propColorWell.setBounds(155, 19, 56, 30);
+		propColorWell.setBounds(155, 9, 56, 30);
 		propColorWell.setColor(Color.BLUE);
 		propPanel.add(propColorWell);
 		propColorWell.delegate=this;
 		propColorWell.hasAlpha=true;
 		
 		 propHighlightColorWell = new ColorWell();
-		 propHighlightColorWell.setBounds(155, 52, 56, 30);
+		 propHighlightColorWell.setBounds(155, 42, 56, 30);
 		 propHighlightColorWell.setColor(Color.RED);
 		 propHighlightColorWell.delegate=this;
 		 propHighlightColorWell.hasAlpha=true;
@@ -508,29 +512,29 @@ public class MMPWindow implements ChangeListener, ActionListener, FocusListener,
 		propAddressTextField.addFocusListener(this);
 		propAddressTextField.setActionCommand("propAddressChanged");
 		propAddressTextField.addActionListener(this);
-		propAddressTextField.setBounds(89, 94, 120, 28);
+		propAddressTextField.setBounds(89, 74, 120, 28);
 		propPanel.add(propAddressTextField);
 		
 		JLabel lblNewLabel_2 = new JLabel("Address");
-		lblNewLabel_2.setBounds(17, 100, 61, 16);
+		lblNewLabel_2.setBounds(17, 80, 61, 16);
 		propPanel.add(lblNewLabel_2);
 		
 		JLabel lblNewLabel_3 = new JLabel("Color");
-		lblNewLabel_3.setBounds(17, 26, 61, 16);
+		lblNewLabel_3.setBounds(17, 16, 61, 16);
 		propPanel.add(lblNewLabel_3);
 		
 		JLabel lblNewLabel_4 = new JLabel("Highlight Color");
-		lblNewLabel_4.setBounds(17, 59, 103, 16);
+		lblNewLabel_4.setBounds(17, 49, 103, 16);
 		propPanel.add(lblNewLabel_4);
 		
 		propVarPanel = new JPanel();
-		propVarPanel.setBounds(0, 140, 217, 132);
+		propVarPanel.setBounds(0, 110, 217, 162);
 		propVarPanel.setLayout(null);
 		propPanel.add(propVarPanel);
 		
 		//PROPVAR - GRID
 				propVarGridPanel = new JPanel();
-				propVarGridPanel.setBounds(0, 0, 217, 132);
+				propVarGridPanel.setBounds(0, 0, 217, 162);
 				propVarGridPanel.setLayout(null);
 				propVarGridPanel.setVisible(false);
 				propVarPanel.add(propVarGridPanel);
@@ -598,7 +602,7 @@ public class MMPWindow implements ChangeListener, ActionListener, FocusListener,
 		
 		//propVarPanel - SLIDER
 		propVarSliderPanel = new JPanel();
-		propVarSliderPanel.setBounds(0, 0, 217, 132);
+		propVarSliderPanel.setBounds(0, 0, 217, 162);
 		//propVarSliderPanel.setBackground(Color.BLUE);
 		propVarSliderPanel.setLayout(null);
 		propVarSliderPanel.setVisible(false);
@@ -636,7 +640,7 @@ public class MMPWindow implements ChangeListener, ActionListener, FocusListener,
 		
 		//propVarPanel - KNOB
 		propVarKnobPanel = new JPanel();
-		propVarKnobPanel.setBounds(0, 0, 217, 132);
+		propVarKnobPanel.setBounds(0, 0, 217, 162);
 		//propVarSliderPanel.setBackground(Color.BLUE);
 		propVarKnobPanel.setVisible(false);
 		propVarKnobPanel.setLayout(null);
@@ -671,7 +675,7 @@ public class MMPWindow implements ChangeListener, ActionListener, FocusListener,
 	
 		//PROPVAR LABEL
 		propVarLabelPanel = new JPanel();
-		propVarLabelPanel.setBounds(0, 0, 217, 132);
+		propVarLabelPanel.setBounds(0, 0, 217, 162);
 		propVarLabelPanel.setVisible(false);
 		propVarLabelPanel.setLayout(null);
 		propVarPanel.add(propVarLabelPanel);
@@ -681,49 +685,79 @@ public class MMPWindow implements ChangeListener, ActionListener, FocusListener,
 		//propLabelTextField.setBounds(6, 6, 205, 36);
 		//doesn't need documentlistener added manually...?
 		JScrollPane propLabelScrollPane = new JScrollPane(propLabelTextField);
-		propLabelScrollPane.setBounds(6,0,205,50);
+		propLabelScrollPane.setBounds(6,0,205,40);
 		//propLabelScrollPane.setPreferredSize(new Dimension(205,36));
 		propVarLabelPanel.add(propLabelScrollPane);
 		
 		propLabelSizeTextField = new JTextFieldDirty();
-		propLabelSizeTextField.setBounds(149, 51, 62, 28);
+		propLabelSizeTextField.setBounds(149, 41, 62, 28);
 		propLabelSizeTextField.addFocusListener(this);
 		propLabelSizeTextField.setActionCommand("propVarLabelSizeChanged");
 		propLabelSizeTextField.addActionListener(this);
 		propVarLabelPanel.add(propLabelSizeTextField);
 		propLabelSizeTextField.setColumns(10);
 		
-		 propLabelFontBox = new JComboBox();
-		propLabelFontBox.setBounds(80, 79, 136, 27);
+		//
+		propLabelTabbedPane = new JTabbedPane(JTabbedPane.TOP);
+		propVarLabelPanel.add(propLabelTabbedPane);
+		propLabelTabbedPane.setBounds(0,40+24,220,104);
+		propLabelTabbedPane.addChangeListener(this);
+		
+		propLabeliOSPanel = new JPanel();
+		propLabelTabbedPane.addTab("iOS", null, propLabeliOSPanel, null);
+		propLabeliOSPanel.setLayout(null);
+		
+		propLabelFontBox = new JComboBox();
+		propLabelFontBox.setBounds(70, 0, 126, 27);
 		propLabelFontBox.setActionCommand("font");
 		propLabelFontBox.addActionListener(this);
-		propVarLabelPanel.add(propLabelFontBox);
+		//propVarLabelPanel.add(propLabelFontBox);
+		propLabeliOSPanel.add(propLabelFontBox);
 		
 		 propLabelFontTypeBox = new JComboBox();
-		propLabelFontTypeBox.setBounds(80, 106, 136, 27);
+		propLabelFontTypeBox.setBounds(70, 27, 126, 27);
 		propLabelFontTypeBox.setActionCommand("fontType");
 		propLabelFontTypeBox.addActionListener(this);
-		propVarLabelPanel.add(propLabelFontTypeBox);
+		//propVarLabelPanel.add(propLabelFontTypeBox);
+		propLabeliOSPanel.add(propLabelFontTypeBox);
+		
 		
 		JLabel textSizeLabel = new JLabel("Label Text Size");
-		textSizeLabel.setBounds(16, 58, 121, 15);
+		textSizeLabel.setBounds(16, 48, 121, 15);
 		propVarLabelPanel.add(textSizeLabel);
 		
 		JLabel lblFontFamily = new JLabel("Label Font");
-		lblFontFamily.setBounds(16, 85, 78, 15);
-		propVarLabelPanel.add(lblFontFamily);
+		lblFontFamily.setBounds(3, 3, 78, 15);
+		propLabeliOSPanel.add(lblFontFamily);
 		
 		JLabel lblFontType = new JLabel("Font Type");
-		lblFontType.setBounds(16, 112, 78, 15);
-		propVarLabelPanel.add(lblFontType);
+		lblFontType.setBounds(3, 30, 78, 15);
+		propLabeliOSPanel.add(lblFontType);
+		
+		
+		
+		//android panel
+		propLabelAndroidPanel = new JPanel();
+		propLabelTabbedPane.addTab("Android", null, propLabelAndroidPanel, null);
+		propLabelAndroidPanel.setLayout(null);
+		
+		JLabel lblFontType2 = new JLabel("Font Type");
+		lblFontType2.setBounds(3, 3, 78, 15);
+		propLabelAndroidPanel.add(lblFontType2);
+		
+		propLabelAndroidFontTypeBox = new JComboBox();
+		propLabelAndroidFontTypeBox.setBounds(70, 0, 126, 27);
+		propLabelAndroidFontTypeBox.setActionCommand("androidFontType");
+		propLabelAndroidFontTypeBox.addActionListener(this);
+		//propVarLabelPanel.add(propLabelFontTypeBox);
+		propLabelAndroidPanel.add(propLabelAndroidFontTypeBox);
 		
 		fillFontPop();
 		
 		
-		
 		//PROPVAR - PANEL
 		propVarPanelPanel = new JPanel();
-		propVarPanelPanel.setBounds(0, 0, 217, 132);
+		propVarPanelPanel.setBounds(0, 0, 217, 162);
 		propVarPanelPanel.setLayout(null);
 		propVarPanelPanel.setVisible(false);
 		propVarPanel.add(propVarPanelPanel);
@@ -758,7 +792,7 @@ public class MMPWindow implements ChangeListener, ActionListener, FocusListener,
 		
 		//PROPVAR - MULTISLIDER
 		propVarMultiSliderPanel = new JPanel();
-		propVarMultiSliderPanel.setBounds(0, 0, 217, 132);
+		propVarMultiSliderPanel.setBounds(0, 0, 217, 162);
 		propVarMultiSliderPanel.setLayout(null);
 		propVarMultiSliderPanel.setVisible(false);
 		propVarPanel.add(propVarMultiSliderPanel);
@@ -777,7 +811,7 @@ public class MMPWindow implements ChangeListener, ActionListener, FocusListener,
 		
 		//PROPVAR - Toggle
 		propVarTogglePanel = new JPanel();
-		propVarTogglePanel.setBounds(0, 0, 217, 132);
+		propVarTogglePanel.setBounds(0, 0, 217, 162);
 		propVarTogglePanel.setLayout(null);
 		propVarTogglePanel.setVisible(false);
 		propVarPanel.add(propVarTogglePanel);
@@ -796,13 +830,13 @@ public class MMPWindow implements ChangeListener, ActionListener, FocusListener,
 		
 		//PROPVAR - Menu
 		propVarMenuPanel = new JPanel();
-		propVarMenuPanel.setBounds(0, 0, 217, 132);
+		propVarMenuPanel.setBounds(0, 0, 217, 162);
 		propVarMenuPanel.setLayout(null);
 		propVarMenuPanel.setVisible(false);
 		propVarPanel.add(propVarMenuPanel);
 				
 		JLabel titleLabel = new JLabel("Menu Title");
-		titleLabel.setBounds(21, 11, 61, 16);
+		titleLabel.setBounds(21, 11, 200, 16);
 		propVarMenuPanel.add(titleLabel);
 		
 		propMenuTitleTextField = new JTextFieldDirty();
@@ -820,7 +854,7 @@ public class MMPWindow implements ChangeListener, ActionListener, FocusListener,
 		
 		//PROPVAR - Table
 		propVarTablePanel = new JPanel();
-		propVarTablePanel.setBounds(0, 0, 217, 132);
+		propVarTablePanel.setBounds(0, 0, 217, 162);
 		propVarTablePanel.setLayout(null);
 		propVarTablePanel.setVisible(false);
 		propVarPanel.add(propVarTablePanel);
@@ -1281,6 +1315,14 @@ public class MMPWindow implements ChangeListener, ActionListener, FocusListener,
         	 if(tabbedPane.getSelectedIndex()<3)controller.setIsEditing(true);
 	            else controller.setIsEditing(false);
         }
+        else if (e.getSource().equals(propLabelTabbedPane)){
+        	boolean isAndroid = (propLabelTabbedPane.getSelectedIndex()==1);
+        	for (MMPControl control : controller.documentModel.controlArray) {
+        		if (control instanceof MMPLabel) {
+        			((MMPLabel)control).showAndroidFont(isAndroid);
+        		}
+        	}
+        }
         else if(e.getSource().equals(fakeXSlider)){
         	sendTilts();
         }
@@ -1496,6 +1538,7 @@ public class MMPWindow implements ChangeListener, ActionListener, FocusListener,
         		case 0:controller.documentModel.canvasType = DocumentModel.CanvasType.canvasTypeIPhone3p5Inch; break;
         		case 1:controller.documentModel.canvasType = DocumentModel.CanvasType.canvasTypeIPhone4Inch; break;
         		case 2:controller.documentModel.canvasType = DocumentModel.CanvasType.canvasTypeIPad; break;
+        		case 3:controller.documentModel.canvasType = DocumentModel.CanvasType.canvasTypeAndroid7Inch; break;
         	}
         	controller.dirtyBit=true;
         	updateWindowAndCanvas();
@@ -1620,23 +1663,6 @@ public class MMPWindow implements ChangeListener, ActionListener, FocusListener,
         		MMPLabel currLabel = (MMPLabel)controller.currentSingleSelection;
         		if(currLabel!=null) currLabel.setFontFamilyAndName("Default", "Default");
         	}
-        	/*String currType = "";
-        	if(typeList.size()>0)currType = typeList.get(0);
-        	
-        	MMPLabel currLabel = (MMPLabel)controller.currentSingleSelection;
-        	if(currLabel!=null){
-        		if(currFamilyMap.get("family").equals("Default")){
-        			currLabel.setFontFamilyAndName("Default", "Default");
-        		}
-        		else{
-        			currLabel.setFontFamilyAndName(currFamily, currType );
-        			System.out.print("\nsetting fontfam "+currFamily+" "+currType);
-        			if(!systemHasFontFamily(currFamily)){
-        				//can't make the font...
-        				System.out.print("\nfont can't");
-        			}
-        		}
-        	}*/
         }
         
         else if(cmd.equals("fontType")){
@@ -1648,10 +1674,18 @@ public class MMPWindow implements ChangeListener, ActionListener, FocusListener,
         	if(currLabel!=null){
         		currLabel.setFontFamilyAndName(currFamily, currType );
         		if(!systemHasFontFamily(currFamily)){
-        			System.out.print("\nfonttype can't");
+        			//System.out.print("\nfonttype can't");
         			//can't make the font...
-        			JOptionPane.showMessageDialog(frame, "Cannot find font.\n(Still setting label to this font,\nwill render in this font on device)");
+        			//JOptionPane.showMessageDialog(frame, "Cannot find font.\n(Still setting label to this font,\nwill render in this font on device)");
         		}
+        	}
+        }
+        
+        else if(cmd.equals("androidFontType")) {
+        	String androidFontName = (String)propLabelAndroidFontTypeBox.getSelectedItem();
+        	MMPLabel currLabel = (MMPLabel)controller.currentSingleSelection;
+        	if(currLabel!=null){
+        		currLabel.setAndroidFontName(androidFontName);
         	}
         }
      
@@ -2054,7 +2088,7 @@ public class MMPWindow implements ChangeListener, ActionListener, FocusListener,
 	            [canvasOuterView setFrame:CGRectMake(CANVAS_LEFT,documentView.frame.size.height-320-CANVAS_TOP, 568, 320)];*/
 	        }
 	    }
-	    else{//ipad
+	    else if(controller.documentModel.canvasType==DocumentModel.CanvasType.canvasTypeIPad){//ipad
 	    	frame.setLocation(0,0);
 	    	if(controller.documentModel.isOrientationLandscape==false){//portrait 
 	    		frame.getContentPane().setPreferredSize(new Dimension(CANVAS_LEFT+768+CANVAS_TOP+CANVAS_TOP+scrollPane.getVerticalScrollBar().getWidth(), (int)height-60));//TODO smaller of height and 1024
@@ -2063,13 +2097,7 @@ public class MMPWindow implements ChangeListener, ActionListener, FocusListener,
 	            scrollPane.setSize(new Dimension(CANVAS_LEFT+768+CANVAS_TOP+CANVAS_TOP+scrollPane.getVerticalScrollBar().getWidth(), (int)height-60-menuBar.getHeight()) );
 	            scrollContentPanel.setPreferredSize( new Dimension(CANVAS_LEFT+768+CANVAS_TOP+CANVAS_TOP, 1024+CANVAS_TOP+CANVAS_TOP ) ) ;
 	            
-	           /* [documentWindow setFrame:CGRectMake(0, screenFrame.origin.y, CANVAS_LEFT+768+CANVAS_TOP+10, screenFrame.size.height) display:YES animate:NO];
-	            [documentScrollView setFrame:CGRectMake(0, 0, documentView.frame.size.width, documentView.frame.size.height)];
-	            [documentScrollView.documentView setFrameSize:CGSizeMake(CANVAS_LEFT+768+CANVAS_TOP, 1024+CANVAS_TOP+CANVAS_TOP) ];
-	            
-	            [canvasOuterView setFrame:CGRectMake(CANVAS_LEFT,CANVAS_TOP,  768, 1024)];
-	            [documentScrollView.documentView scrollPoint:CGPointMake(0, [documentScrollView.documentView frame].size.height)];*/
-
+	           
 	        }
 	        else{//landscape
 	        	frame.getContentPane().setPreferredSize(new Dimension(CANVAS_LEFT+1024+CANVAS_TOP, 768+CANVAS_TOP+CANVAS_TOP+menuBar.getHeight()));//TODO smaller of height and 1024
@@ -2077,21 +2105,31 @@ public class MMPWindow implements ChangeListener, ActionListener, FocusListener,
 	            canvasOuterPanel.setBounds(new Rectangle(CANVAS_LEFT,CANVAS_TOP, 1024, 768));
 	            scrollPane.setSize(new Dimension(CANVAS_LEFT+1024+CANVAS_TOP, 768+CANVAS_TOP+CANVAS_TOP) );
 	            scrollContentPanel.setPreferredSize(new Dimension(5, 5 ) );//tigher than ness, will resize...
-	            //System.out.print("\nlandscape content pane set to scroll viewport "+scrollPane.getViewport().getWidth() +" "+ scrollPane.getViewport().getHeight()  );
-	            /*[documentWindow setFrame:CGRectMake(0, screenFrame.origin.y, CANVAS_LEFT+1024+CANVAS_TOP, 768+CANVAS_TOP+CANVAS_TOP+20) display:YES animate:NO];
+	           
+	        }
+	    } else { //android 7 inch
+	    	frame.setLocation(0,0);
+	    	if(controller.documentModel.isOrientationLandscape==false){//portrait 
+	    		frame.getContentPane().setPreferredSize(new Dimension(CANVAS_LEFT+600+CANVAS_TOP+CANVAS_TOP+scrollPane.getVerticalScrollBar().getWidth(), (int)height-60));
+	            frame.pack();
+	            canvasOuterPanel.setBounds(new Rectangle(CANVAS_LEFT,CANVAS_TOP, 600, 912));
+	            scrollPane.setSize(new Dimension(CANVAS_LEFT+600+CANVAS_TOP+CANVAS_TOP+scrollPane.getVerticalScrollBar().getWidth(), (int)height-60-menuBar.getHeight()) );
+	            scrollContentPanel.setPreferredSize( new Dimension(CANVAS_LEFT+600+CANVAS_TOP+CANVAS_TOP, 912+CANVAS_TOP+CANVAS_TOP ) ) ;
 	            
-	            [documentScrollView setFrame:CGRectMake(0, 0, documentView.frame.size.width, documentView.frame.size.height)];
-	            [documentScrollView.documentView setFrameSize:documentScrollView.contentSize];
-	            [canvasOuterView setFrame:CGRectMake(CANVAS_LEFT,documentView.frame.size.height-768-CANVAS_TOP, 1024, 768)];*/
-
+	        }
+	        else{//landscape
+	        	frame.getContentPane().setPreferredSize(new Dimension(CANVAS_LEFT+960+CANVAS_TOP, 552+CANVAS_TOP+CANVAS_TOP+menuBar.getHeight()));//TODO smaller of height and 1024
+	            frame.pack();
+	            canvasOuterPanel.setBounds(new Rectangle(CANVAS_LEFT,CANVAS_TOP, 960, 552));
+	            scrollPane.setSize(new Dimension(CANVAS_LEFT+960+CANVAS_TOP, 552+CANVAS_TOP+CANVAS_TOP) );
+	            scrollContentPanel.setPreferredSize(new Dimension(5, 5 ) );//tigher than ness, will resize...
+	           
 	        }
 	    }
+	    
 	    //this has to be done after setting outerview, it doesn't move with the change of outerview!
 	    canvasPanel.setCanvasType(controller.documentModel.canvasType);
 	    canvasPanel.setIsOrientationLandscape(controller.documentModel.isOrientationLandscape);
-	    	
-		
-		
 		
 	}
 
@@ -2266,10 +2304,7 @@ public void removeUpdate(DocumentEvent arg0) {
 
 	void fillFontPop(){
 		List<Map> fontArray = MMPController.fontArray;
-		
-		
-		
-		
+			
 		for(Map currMap: fontArray){
 			if(currMap.get("family")!=null){
 				String fontName = (String)currMap.get("family");
@@ -2277,9 +2312,11 @@ public void removeUpdate(DocumentEvent arg0) {
 			}
 		}
 		
-		/*ComboBoxRenderer renderer = new ComboBoxRenderer();
-		renderer.setPreferredSize(new Dimension(200, 40));
-		propLabelFontBox.setRenderer(renderer);*/
+		List<String> androidFontNameArray = MMPController.androidFontNameArray;
+		
+		for(String currFontName: androidFontNameArray){
+			propLabelAndroidFontTypeBox.addItem(currFontName);	
+		}
 		
 	}
 	

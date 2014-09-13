@@ -18,6 +18,9 @@ import com.google.gson.JsonParser;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.EventQueue;
+import java.awt.Font;
+import java.awt.FontFormatException;
+import java.awt.GraphicsEnvironment;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.io.*;
@@ -34,6 +37,7 @@ public class MMPController {
 	static ArrayList<MMPController> controllerArrayList;
 	static OSCPortOut sender;
 	static List<Map> fontArray;
+	static List<String> androidFontNameArray;
 	
 	//defines
 	final static int DEFAULT_PORT_NUMBER=54321;
@@ -173,6 +177,36 @@ public class MMPController {
 				catch(FileNotFoundException e){}
 				catch(IOException e){}
 			}
+		if (androidFontNameArray == null) {
+			androidFontNameArray = Arrays.asList(
+					"Roboto-Regular",
+                    "Roboto-Bold",
+                    "Roboto-Italic",
+                    "Roboto-BoldItalic",
+                    "Roboto-Light",
+                    "Roboto-LightItalic",
+                    "Roboto-Thin",
+                    "Roboto-ThinItalic",
+                    "RobotoCondensed-Regular",
+                    "RobotoCondensed-Bold",
+                    "RobotoCondensed-Italic",
+                    "RobotoCondensed-BoldItalic");
+			//install fonts 
+			for (String fontName : androidFontNameArray) {
+				try {
+					InputStream is = this.getClass().getResourceAsStream("/com/iglesiaintermedia/MobmuplatEditor/androidfonts/"+fontName+".ttf");
+					GraphicsEnvironment ge = 
+							GraphicsEnvironment.getLocalGraphicsEnvironment();
+					ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, is));
+				} catch (IOException e) {
+					//Handle exception
+					System.out.print("NO FONT");
+				} catch (FontFormatException e) {
+					System.out.print("NO FONT");
+				}
+			}
+		}
+		
 		
 		System.out.print("\nadd controller instance to arraylist "+ this);
 		MMPController.controllerArrayList.add(this);
@@ -652,12 +686,9 @@ public class MMPController {
 	        	windowDelegate.propLabelFontTypeBox.setSelectedItem(currLabel.fontName);
 	            windowDelegate.propLabelFontTypeBox.addActionListener(windowDelegate);
 	        	
-	            /*[self.propVarView addSubview:self.propLabelView];
-	            [self.propLabelTextField setStringValue:[(MMPLabel*)control stringValue ]];
-	            [self.propLabelSizeTextField setStringValue:[NSString stringWithFormat:@"%d", [(MMPLabel*)control textSize ]]];
-	            [self.propLabelFontPopButton selectItemWithTitle:[(MMPLabel*)control fontFamily]];
-	            [self populateFont];
-	            [self.propLabelFontType selectItemWithTitle:[(MMPLabel*)control fontName]];*/
+	           windowDelegate.propLabelAndroidFontTypeBox.removeActionListener(windowDelegate);
+	            windowDelegate.propLabelAndroidFontTypeBox.setSelectedItem(currLabel.androidFontName);
+	            windowDelegate.propLabelAndroidFontTypeBox.addActionListener(windowDelegate);
 	            
 	        }
 	        else if(control instanceof MMPGrid){

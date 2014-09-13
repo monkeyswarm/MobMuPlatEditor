@@ -1,7 +1,6 @@
 package com.iglesiaintermedia.MobMuPlatEditor.controls;
 
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Container;
 import java.awt.Font;
 import java.awt.Point;
@@ -9,27 +8,25 @@ import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.URL;
+
 import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
-
 
 public class MMPLabel extends MMPControl {
 	static final String DEFAULT_FONT = "HelveticaNeue";
 	static final int PAD = 5;
 	JTextArea textView;
+	JTextArea androidTextView;
 	public int textSize;
 	public String stringValue;
 	public String fontName;
 	public String fontFamily;
+	public String androidFontName;
+	private boolean _showAndroidFont;
 	JPanel overPanel;
 	
 	MMPControl underControl;
@@ -42,6 +39,7 @@ public class MMPLabel extends MMPControl {
 		this.address=otherLabel.address;
 		this.setTextSize(otherLabel.textSize);
 		this.setFontFamilyAndName(otherLabel.fontFamily, otherLabel.fontName);
+		this.setAndroidFontName(otherLabel.androidFontName);
 		this.setStringValue(otherLabel.stringValue);
 		
 		
@@ -52,6 +50,7 @@ public class MMPLabel extends MMPControl {
 		address="/myLabel";
 		fontFamily="Default";
 		fontName = "";
+		androidFontName = "Roboto-Regular";
 		textSize = 16;
 		stringValue = "my text goes here";
 		setLayout(null);
@@ -107,10 +106,13 @@ public class MMPLabel extends MMPControl {
 	public void setTextSize(int inSize){
 		//System.out.print("\nlab setText fam:"+fontFamily);
 		textSize = inSize;
-		if(fontFamily.equals("Default"))textView.setFont(new Font(DEFAULT_FONT, Font.PLAIN, textSize));
-		else textView.setFont(new Font(fontName, Font.PLAIN, textSize));
-		//if([_fontFamily isEqualToString:@"Default"])[textView setFont:[NSFont fontWithName:DEFAULT_FONT size:inInt]];
-		//else [textView setFont:[NSFont fontWithName:_fontName size:inInt]];
+		if (!_showAndroidFont) {
+			if(fontFamily.equals("Default"))textView.setFont(new Font(DEFAULT_FONT, Font.PLAIN, textSize));
+			else textView.setFont(new Font(fontName, Font.PLAIN, textSize));
+		} else { //android
+			textView.setFont(new Font(androidFontName, Font.PLAIN, textSize));
+		}
+		
 	}
 	
 	public void setFontFamilyAndName(String inFontFamily, String inFontName){
@@ -145,6 +147,23 @@ public class MMPLabel extends MMPControl {
 			 */
 			
 		}
+	}
+	
+	
+	
+	public void setAndroidFontName(String fontName) {
+		androidFontName = fontName;
+		if (_showAndroidFont) { //this is called on patch load...
+			Font newFont = new Font(fontName, Font.PLAIN, textSize);
+			textView.setFont(newFont);
+		}
+	}
+	
+	public void showAndroidFont(boolean showAndroidFont) {
+		_showAndroidFont = showAndroidFont;
+		
+		Font newFont = new Font(_showAndroidFont ? androidFontName : fontName, Font.PLAIN, textSize);
+		textView.setFont(newFont);
 	}
 	
 	public void mouseClicked(MouseEvent e) {

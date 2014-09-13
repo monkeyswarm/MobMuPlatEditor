@@ -12,7 +12,7 @@ import java.lang.reflect.Type;
 import com.iglesiaintermedia.MobMuPlatEditor.controls.*;
 public class DocumentModel {
 	public final static float VERSION = 1.5f;
-	public enum CanvasType{ canvasTypeIPhone3p5Inch ,canvasTypeIPhone4Inch , canvasTypeIPad }
+	public enum CanvasType{ canvasTypeIPhone3p5Inch ,canvasTypeIPhone4Inch , canvasTypeIPad , canvasTypeAndroid7Inch}
 	
 	CanvasType canvasType;
 	boolean isOrientationLandscape;
@@ -80,6 +80,7 @@ public class DocumentModel {
 	    if(canvasType==CanvasType.canvasTypeIPhone3p5Inch)topDict.put("canvasType", "iPhone3p5Inch"); //setObject:@"iPhone3p5Inch" forKey:@"canvasType"];
 	    else if(canvasType==CanvasType.canvasTypeIPhone4Inch)topDict.put("canvasType", "iPhone4Inch");
 	    else if(canvasType==CanvasType.canvasTypeIPad)topDict.put("canvasType", "iPad");
+	    else if(canvasType==CanvasType.canvasTypeAndroid7Inch) topDict.put("canvasType", "android7Inch");
 	    
 	    topDict.put("isOrientationLandscape", new Boolean(isOrientationLandscape)); //setObject:[NSNumber numberWithBool:_isOrientationLandscape] forKey:@"isOrientationLandscape"];
 	    topDict.put("isPageScrollShortEnd", new Boolean(isPageScrollShortEnd));
@@ -133,6 +134,8 @@ public class DocumentModel {
 	        	GUIDict.put("textSize", new Integer(currLabel.textSize));
 	        	GUIDict.put("textFontFamily", new String(currLabel.fontFamily));
 	        	GUIDict.put("textFont", new String(currLabel.fontName));
+	        	GUIDict.put("androidFont", new String(currLabel.androidFontName));
+	        	
 	        }
 	        //grid
 	        else if(control instanceof MMPGrid){
@@ -214,6 +217,7 @@ public class DocumentModel {
 		        if((topDict.get("canvasType").getAsString()).equals("iPhone3p5Inch")) model.canvasType=CanvasType.canvasTypeIPhone3p5Inch;// objectForKey:@"canvasType"] isEqualToString:@"iPhone3p5Inch"])[model setCanvasType:canvasTypeIPhone3p5Inch];
 		        if((topDict.get("canvasType").getAsString()).equals("iPhone4Inch")) model.canvasType=CanvasType.canvasTypeIPhone4Inch;
 		        if((topDict.get("canvasType").getAsString()).equals("iPad")) model.canvasType=CanvasType.canvasTypeIPad;
+		        if((topDict.get("canvasType").getAsString()).equals("android7Inch")) model.canvasType=CanvasType.canvasTypeAndroid7Inch;
 		    }
 		        
 		    if(topDict.get("isOrientationLandscape")!=null)
@@ -303,6 +307,8 @@ public class DocumentModel {
 		                    ((MMPLabel)control).setTextSize( guiDict.get("textSize").getAsInt()  );
 		                if(guiDict.get("textFont")!=null && guiDict.get("textFontFamily")!=null) 
 		                    ((MMPLabel)control).setFontFamilyAndName( guiDict.get("textFontFamily").getAsString(), guiDict.get("textFont").getAsString() );
+		                if(guiDict.get("androidFont")!=null) 
+		                    ((MMPLabel)control).setAndroidFontName( guiDict.get("androidFont").getAsString());
 		            }
 		            else if(classString.equals("MMPXYSlider")){
 		                control = new MMPXYSlider(newFrame);
@@ -380,161 +386,6 @@ public class DocumentModel {
 		   }
 		  }
 	    
-	   
-		 
 		return model;
 	}
-	
-	/*+(DocumentModel*)modelFromString:(NSString*)inString{
-	    DocumentModel* model = [[DocumentModel alloc]init];
-	    
-	    NSDictionary* topDict = [inString objectFromJSONString];
-	    
-	    if([topDict objectForKey:@"backgroundColor"]){
-	        NSArray* colorArray = [topDict objectForKey:@"backgroundColor"];
-	        if([colorArray count]==4)
-	            [model setBackgroundColor:[DocumentModel colorFromRGBAArray:colorArray]];
-	        else if ([colorArray count]==3)
-	            [model setBackgroundColor:[DocumentModel colorFromRGBArray:colorArray]];
-	    }
-	    
-	    if([topDict objectForKey:@"pdFile"])
-	        [model setPdFile:[topDict objectForKey:@"pdFile"]];
-	    if([topDict objectForKey:@"canvasType"]){
-	        if([[topDict objectForKey:@"canvasType"] isEqualToString:@"iPhone3p5Inch"])[model setCanvasType:canvasTypeIPhone3p5Inch];
-	         if([[topDict objectForKey:@"canvasType"] isEqualToString:@"iPhone4Inch"])[model setCanvasType:canvasTypeIPhone4Inch];
-	         if([[topDict objectForKey:@"canvasType"] isEqualToString:@"iPad"])[model setCanvasType:canvasTypeIPad];
-	    }
-	        
-	    if([topDict objectForKey:@"isOrientationLandscape"])
-	        [model setIsOrientationLandscape:[[topDict objectForKey:@"isOrientationLandscape"] boolValue] ];
-	    if([topDict objectForKey:@"isPageScrollShortEnd"])
-	        [model setIsPageScrollShortEnd:[[topDict objectForKey:@"setIsPageScrollShortEnd"] boolValue] ];
-	    if([topDict objectForKey:@"pageCount"])
-	        [model setPageCount:[[topDict objectForKey:@"pageCount"] intValue] ];
-	    if([topDict objectForKey:@"startPageIndex"])
-	        [model setStartPageIndex:[[topDict objectForKey:@"startPageIndex"] intValue] ];
-	    if([topDict objectForKey:@"port"])
-	        [model setPort:[[topDict objectForKey:@"port"] intValue] ];
-	    if([topDict objectForKey:@"version"])
-	        [model setVersion:[[topDict objectForKey:@"version"] floatValue] ];
-	    
-	    NSArray* controlDictArray;
-	    
-	    if([topDict objectForKey:@"gui"])
-	       controlDictArray = [topDict objectForKey:@"gui"];//array of dictionaries, one for each gui control
-	       for(NSDictionary* guiDict in controlDictArray){//for each one
-	           
-	           MMPControl* control;
-	            if(![guiDict objectForKey:@"class"])continue;// if doesn't have a class, skip out of loop
-	        
-	            NSString* classString = [guiDict objectForKey:@"class"];
-	           //frame
-	           //default
-	            CGRect newFrame = CGRectMake(0, 0, 100, 100);
-	            if([guiDict objectForKey:@"frame"]){
-	                NSArray* frameRectArray = [guiDict objectForKey:@"frame"];
-	                newFrame = CGRectMake([[frameRectArray objectAtIndex:0] floatValue], [[frameRectArray objectAtIndex:1] floatValue], [[frameRectArray objectAtIndex:2] floatValue], [[frameRectArray objectAtIndex:3] floatValue]);
-	            }
-	            //color
-	            NSColor* color = [NSColor colorWithCalibratedRed:1 green:1 blue:1 alpha:1];
-	            if([guiDict objectForKey:@"color"]){
-	                NSArray* colorArray = [guiDict objectForKey:@"color"];
-	                if([colorArray count]==4)
-	                    color=[DocumentModel colorFromRGBAArray:colorArray];
-	                else if ([colorArray count]==3)
-	                    color=[DocumentModel colorFromRGBArray:colorArray];
-	                
-	            }//highlight color
-	            NSColor* highlightColor = [NSColor grayColor];
-	            if([guiDict objectForKey:@"highlightColor"]){
-	                NSArray* highlightColorArray = [guiDict objectForKey:@"highlightColor"];
-	                if([highlightColorArray count]==4)
-	                   highlightColor=[DocumentModel colorFromRGBAArray:highlightColorArray];
-	                else if ([highlightColorArray count]==3)
-	                    highlightColor=[DocumentModel colorFromRGBArray:highlightColorArray];
-	                
-	            }
-	            //check by MMPControl subclass, and alloc/init object
-	            if([classString isEqualToString:@"MMPSlider"]){
-	                control = [[MMPSlider alloc] initWithFrame:newFrame];
-	                if([guiDict objectForKey:@"isHorizontal"])
-	                    [(MMPSlider*)control setIsHorizontal:[[guiDict objectForKey:@"isHorizontal"] boolValue] ];
-	                if([guiDict objectForKey:@"range"])
-	                    [(MMPSlider*)control setRange:[[guiDict objectForKey:@"range"] intValue] ];
-	            }
-	            else if([classString isEqualToString:@"MMPKnob"]){
-	                control = [[MMPKnob alloc] initWithFrame:newFrame];
-	                NSColor* indicatorColor = [NSColor colorWithCalibratedRed:1 green:1 blue:1 alpha:1];
-	                if([guiDict objectForKey:@"indicatorColor"])
-	                    indicatorColor = [DocumentModel colorFromRGBAArray:[guiDict objectForKey:@"indicatorColor"]];
-	                [(MMPKnob*)control setIndicatorColor:indicatorColor];
-	                if([guiDict objectForKey:@"range"])
-	                    [(MMPKnob*)control setRange:[[guiDict objectForKey:@"range"] intValue] ];
-	            }
-	            else if([classString isEqualToString:@"MMPButton"]){
-	                control = [[MMPButton alloc] initWithFrame:newFrame];
-	            }
-	            else if([classString isEqualToString:@"MMPToggle"]){
-	                control = [[MMPToggle alloc] initWithFrame:newFrame];
-	                if([guiDict objectForKey:@"borderThickness"])
-	                    [(MMPToggle*)control setBorderThickness:[[guiDict objectForKey:@"borderThickness"] intValue] ];
-	            }
-	            else if([classString isEqualToString:@"MMPLabel"]){
-	                control = [[MMPLabel alloc] initWithFrame:newFrame];
-	                if([guiDict objectForKey:@"text"])
-	                    [(MMPLabel*)control setStringValue:[guiDict objectForKey:@"text"]];
-	                if([guiDict objectForKey:@"textSize"])
-	                    [(MMPLabel*)control setTextSize:[[guiDict objectForKey:@"textSize"] intValue]];
-	                if([guiDict objectForKey:@"textFont"] && [guiDict objectForKey:@"textFontFamily"])
-	                    [(MMPLabel*)control setFontFamily:[guiDict objectForKey:@"textFontFamily"] fontName:[guiDict objectForKey:@"textFont"]];
-	            }
-	            else if([classString isEqualToString:@"MMPXYSlider"]){
-	                control = [[MMPXYSlider alloc] initWithFrame:newFrame];
-	            }
-	            else if([classString isEqualToString:@"MMPGrid"]){
-	                control = [[MMPGrid alloc] initWithFrame:newFrame];
-	                if([guiDict objectForKey:@"dim"]){
-	                    NSArray* dim = [guiDict objectForKey:@"dim"];
-	                    [(MMPGrid*)control setDimX:[[dim objectAtIndex:0]intValue ]];
-	                    [(MMPGrid*)control setDimY:[[dim objectAtIndex:1]intValue ]];
-	                }
-	                if([guiDict objectForKey:@"borderThickness"])
-	                    [(MMPGrid*)control setBorderThickness:[[guiDict objectForKey:@"borderThickness"] intValue] ];
-	                if([guiDict objectForKey:@"cellPadding"])
-	                    [(MMPGrid*)control setCellPadding:[[guiDict objectForKey:@"cellPadding"] intValue] ];
-
-	            }
-	            else if([classString isEqualToString:@"MMPPanel"]){
-	                control = [[MMPPanel alloc] initWithFrame:newFrame];
-	                if([guiDict objectForKey:@"imagePath"])[(MMPPanel*)control setImagePath:[guiDict objectForKey:@"imagePath"]];
-	                    
-	            }
-	            else if([classString isEqualToString:@"MMPMultiSlider"]){
-	                control = [[MMPMultiSlider alloc] initWithFrame:newFrame];
-	                if([guiDict objectForKey:@"range"])
-	                    [(MMPMultiSlider*)control setRange:[[guiDict objectForKey:@"range"] intValue] ];
-	            }
-
-	            else continue;//had a class, but something other than the above
-	        
-	                        
-	        //set color
-	            if([control respondsToSelector:@selector(setColor:)]){//in theory all mecontrol respond to these
-	                [control setColor:color];
-	            }
-	            if([control respondsToSelector:@selector(setHighlightColor:)]){
-	                    [control setHighlightColor:highlightColor];
-	            }
-	        //address
-	            if([guiDict objectForKey:@"address"])
-	                [control setAddress:[guiDict objectForKey:@"address"]];
-	        
-	            [[model controlArray] addObject:control];
-	        }
-	    
-	    return model;
-	}
-	*/
-	
 }

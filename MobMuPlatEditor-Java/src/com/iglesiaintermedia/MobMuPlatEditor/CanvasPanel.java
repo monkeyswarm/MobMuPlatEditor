@@ -73,17 +73,13 @@ public class CanvasPanel extends JPanel implements MouseListener{
 	        case canvasTypeIPad:
 	            offset = (isOrientationLandscape ? 1024:768);
 	            break;
+	        case canvasTypeAndroid7Inch:
+	            offset = (isOrientationLandscape ? 900:600);
+	            break;
 	    }
-	    //slide to new offset to show the page of controls
-	   // [NSAnimationContext beginGrouping];
-	   // [[NSAnimationContext currentContext] setDuration:0.3f]; // However long you want the slide to take
-	    
-	   // [[self animator] setFrameOrigin:CGPointMake(-1.0*offset*_pageViewIndex, 0)];
+	  
 	    this.setLocation(new Point((int)(-1.0*offset*pageViewIndex),0));
-	    //[NSAnimationContext endGrouping];
-/*	    timerCount=0;
-	    oldX=getX();
-	    animateTimer.start();*/
+	    
 	    
 	}
 
@@ -106,6 +102,11 @@ public class CanvasPanel extends JPanel implements MouseListener{
 	    		 buttonBlankLabel.setIcon(new ImageIcon( resizedImage ));
 	    		buttonBlankLabel.setBounds(20,20,40,40);
 	    		break;
+	        case canvasTypeAndroid7Inch:
+	        	 resizedImage =  iconImage.getScaledInstance(40,40, Image.SCALE_SMOOTH);
+	    		 buttonBlankLabel.setIcon(new ImageIcon( resizedImage ));
+	    		buttonBlankLabel.setBounds(20,20,40,40);
+	    		break;
 		 }
 	}
 	
@@ -115,20 +116,20 @@ public class CanvasPanel extends JPanel implements MouseListener{
 	        case canvasTypeIPhone3p5Inch:
 	            width = (isOrientationLandscape ? 480:320);
 	            height = (isOrientationLandscape ? 320:480);
-	            
-	            
-	//            [buttonBlankView setFrame:CGRectMake(10, 10, 30, 30)];
 	            break;
 	        case canvasTypeIPhone4Inch:
 	            width = (isOrientationLandscape ? 568:320);
 	            height = (isOrientationLandscape ? 320:568);
-	//             [buttonBlankView setFrame:CGRectMake(10, 10, 30, 30)];
 	            break;
 	        case canvasTypeIPad:
 	            width = (isOrientationLandscape ? 1024:768);
 	            height = (isOrientationLandscape ? 768:1024);
-	//             [buttonBlankView setFrame:CGRectMake(20, 20, 40, 40)];
 	            break;
+	        case canvasTypeAndroid7Inch:
+	            width = (isOrientationLandscape ? 960:600);
+	            height = (isOrientationLandscape ? 552:912);
+	            break;
+	        	
 	    }
 	    this.setBounds(new Rectangle(0,0,width*pageCount, height));//[self setFrame:CGRectMake(0, 0, width*_pageCount, height)];
 	    this.setPageViewIndex(pageViewIndex);//[self setPageViewIndex:_pageViewIndex];

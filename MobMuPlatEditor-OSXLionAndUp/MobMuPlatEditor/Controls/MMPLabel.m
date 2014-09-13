@@ -31,7 +31,7 @@
         
         [textView setEditable:NO];
         [textView setTextColor:self.color];
-
+        //TODO just use one text view and swap the font...geez.
         androidTextView = [[NSTextView alloc]initWithFrame:CGRectMake(0, 0, frame.size.width, frame.size.height)];
         androidTextView.backgroundColor=[NSColor clearColor];
         androidTextView.hidden = YES;
