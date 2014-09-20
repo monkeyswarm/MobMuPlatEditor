@@ -106,7 +106,7 @@
   if(![_editingDelegate guidesEnabled]) return;
   NSBezierPath *line = [NSBezierPath bezierPath];
   [line setLineWidth:1.0];
-  NSColor * white = [NSColor colorWithWhite:0 alpha:.2];
+  NSColor * white = [NSColor colorWithCalibratedRed:0 green:0 blue:0 alpha:.2];
   [white set];
 
   for (int i = 0; i <self.frame.size.width; i+=[_editingDelegate guidesX]) {

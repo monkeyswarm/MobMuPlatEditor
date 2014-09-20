@@ -13,6 +13,8 @@
 		DC8146B51732C43E0041F394 /* infoicon_100x100.png in Resources */ = {isa = PBXBuildFile; fileRef = DCE2F0371732BD86002B897C /* infoicon_100x100.png */; };
 		DC8146BC1732C4E10041F394 /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = DC8146B81732C4E10041F394 /* Credits.rtf */; };
 		DC8146BD1732C4E10041F394 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = DC8146BA1732C4E10041F394 /* InfoPlist.strings */; };
+		DCA65A7A19CD56FD00382000 /* VVBasics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F9A72B3C191B0102000A386C /* VVBasics.framework */; };
+		DCA65A7B19CD56FD00382000 /* VVOSC.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F9A72B3D191B0102000A386C /* VVOSC.framework */; };
 		DCE2F00D1732BAA6002B897C /* MMPButton.m in Sources */ = {isa = PBXBuildFile; fileRef = DCE2EFFA1732BAA6002B897C /* MMPButton.m */; };
 		DCE2F00E1732BAA6002B897C /* MMPControl.m in Sources */ = {isa = PBXBuildFile; fileRef = DCE2EFFC1732BAA6002B897C /* MMPControl.m */; };
 		DCE2F00F1732BAA6002B897C /* MMPGrid.m in Sources */ = {isa = PBXBuildFile; fileRef = DCE2EFFE1732BAA6002B897C /* MMPGrid.m */; };
@@ -54,8 +56,6 @@
 		F94B40CE19CA65EC005B4540 /* RobotoCondensed-LightItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F94B40BB19CA65EC005B4540 /* RobotoCondensed-LightItalic.ttf */; };
 		F94B40CF19CA65EC005B4540 /* RobotoCondensed-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F94B40BC19CA65EC005B4540 /* RobotoCondensed-Regular.ttf */; };
 		F94FB53C18F5A045003BFB18 /* MMPMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = F94FB53B18F5A045003BFB18 /* MMPMenu.m */; };
-		F9A72B26191AF9F5000A386C /* VVOSC.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F9A72B24191AF9F5000A386C /* VVOSC.framework */; };
-		F9A72B27191AF9F5000A386C /* VVBasics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F9A72B25191AF9F5000A386C /* VVBasics.framework */; };
 		F9A72B3E191B0102000A386C /* VVBasics.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = F9A72B3C191B0102000A386C /* VVBasics.framework */; };
 		F9A72B3F191B0102000A386C /* VVOSC.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = F9A72B3D191B0102000A386C /* VVOSC.framework */; };
 		F9F44F3918BC2A3200101132 /* MMPMultiTouch.m in Sources */ = {isa = PBXBuildFile; fileRef = F9F44F3818BC2A3200101132 /* MMPMultiTouch.m */; };
@@ -158,10 +158,8 @@
 		F94B40BC19CA65EC005B4540 /* RobotoCondensed-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "RobotoCondensed-Regular.ttf"; sourceTree = "<group>"; };
 		F94FB53A18F5A045003BFB18 /* MMPMenu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MMPMenu.h; path = MobMuPlatEditor/Controls/MMPMenu.h; sourceTree = SOURCE_ROOT; };
 		F94FB53B18F5A045003BFB18 /* MMPMenu.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MMPMenu.m; path = MobMuPlatEditor/Controls/MMPMenu.m; sourceTree = SOURCE_ROOT; };
-		F9A72B24191AF9F5000A386C /* VVOSC.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = VVOSC.framework; path = "../../../Documents/vvopensource-master/build@rpath/VVOSC.framework"; sourceTree = "<group>"; };
-		F9A72B25191AF9F5000A386C /* VVBasics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = VVBasics.framework; path = "../../../Documents/vvopensource-master/build@rpath/VVBasics.framework"; sourceTree = "<group>"; };
-		F9A72B3C191B0102000A386C /* VVBasics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = VVBasics.framework; path = ../../../builds/Products/Release/VVBasics.framework; sourceTree = "<group>"; };
-		F9A72B3D191B0102000A386C /* VVOSC.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = VVOSC.framework; path = ../../../builds/Products/Release/VVOSC.framework; sourceTree = "<group>"; };
+		F9A72B3C191B0102000A386C /* VVBasics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = VVBasics.framework; path = MobMuPlatEditor/VVBasics.framework; sourceTree = "<group>"; };
+		F9A72B3D191B0102000A386C /* VVOSC.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = VVOSC.framework; path = MobMuPlatEditor/VVOSC.framework; sourceTree = "<group>"; };
 		F9F44F3718BC2A3200101132 /* MMPMultiTouch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MMPMultiTouch.h; path = MobMuPlatEditor/MMPMultiTouch.h; sourceTree = SOURCE_ROOT; };
 		F9F44F3818BC2A3200101132 /* MMPMultiTouch.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MMPMultiTouch.m; path = MobMuPlatEditor/MMPMultiTouch.m; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
@@ -171,8 +169,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F9A72B26191AF9F5000A386C /* VVOSC.framework in Frameworks */,
-				F9A72B27191AF9F5000A386C /* VVBasics.framework in Frameworks */,
+				DCA65A7A19CD56FD00382000 /* VVBasics.framework in Frameworks */,
+				DCA65A7B19CD56FD00382000 /* VVOSC.framework in Frameworks */,
 				DC34E248168BB79800648C2F /* Cocoa.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -183,8 +181,6 @@
 		DC34E238168BB79800648C2F = {
 			isa = PBXGroup;
 			children = (
-				F9A72B3C191B0102000A386C /* VVBasics.framework */,
-				F9A72B3D191B0102000A386C /* VVOSC.framework */,
 				DC34E24D168BB79800648C2F /* MobMuPlatEd */,
 				DC34E246168BB79800648C2F /* Frameworks */,
 				DC34E244168BB79800648C2F /* Products */,
@@ -202,8 +198,8 @@
 		DC34E246168BB79800648C2F /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				F9A72B24191AF9F5000A386C /* VVOSC.framework */,
-				F9A72B25191AF9F5000A386C /* VVBasics.framework */,
+				F9A72B3C191B0102000A386C /* VVBasics.framework */,
+				F9A72B3D191B0102000A386C /* VVOSC.framework */,
 				DC084BA9168E13B100664E0E /* QuartzCore.framework */,
 				DC34E247168BB79800648C2F /* Cocoa.framework */,
 				DC34E249168BB79800648C2F /* Other Frameworks */,
@@ -535,7 +531,7 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"/Users/diglesia/Documents/vvopensource-master/build@rpath",
+					"$(PROJECT_DIR)/MobMuPlatEditor",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "MobMuPlatEditor/MobMuPlatEditor-Prefix.pch";
@@ -555,7 +551,7 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"/Users/diglesia/Documents/vvopensource-master/build@rpath",
+					"$(PROJECT_DIR)/MobMuPlatEditor",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "MobMuPlatEditor/MobMuPlatEditor-Prefix.pch";
