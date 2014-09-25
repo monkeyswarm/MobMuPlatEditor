@@ -102,6 +102,7 @@
     if([_fontFamily isEqualToString:@"Default"])[textView setFont:[NSFont fontWithName:DEFAULT_FONT size:inInt]];
     else [textView setFont:[NSFont fontWithName:_fontName size:inInt]];
   //Android
+  if ([NSFont fontWithName:_androidFontName size:inInt]) 
     [androidTextView setFont:[NSFont fontWithName:_androidFontName size:inInt]];
 }
 
@@ -121,6 +122,8 @@
 -(void)setAndroidFontName:(NSString *)fontName{
     _androidFontName = fontName;
     NSFont *test = [NSFont fontWithName:fontName size:12];
+  NSLog(@"%@",[[[NSFontManager sharedFontManager] availableFontFamilies] description]);
+  if (test)
     [androidTextView setFont:[NSFont fontWithName:fontName size:_textSize]];
 }
 

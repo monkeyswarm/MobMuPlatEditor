@@ -8,7 +8,6 @@ import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
-
 import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
@@ -16,15 +15,17 @@ import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
 
+import com.iglesiaintermedia.MobMuPlatEditor.MMPController;
+
 public class MMPLabel extends MMPControl {
 	static final String DEFAULT_FONT = "HelveticaNeue";
 	static final int PAD = 5;
 	JTextArea textView;
-	JTextArea androidTextView;
 	public int textSize;
 	public String stringValue;
 	public String fontName;
 	public String fontFamily;
+	public String androidFontFileName; //keep track of both the file name ("Roboto-Regular") and the possibly-different font name ("Roboto-Regular"from eclipse, "Roberto REgular" from jar!)
 	public String androidFontName;
 	private boolean _showAndroidFont;
 	JPanel overPanel;
@@ -39,7 +40,7 @@ public class MMPLabel extends MMPControl {
 		this.address=otherLabel.address;
 		this.setTextSize(otherLabel.textSize);
 		this.setFontFamilyAndName(otherLabel.fontFamily, otherLabel.fontName);
-		this.setAndroidFontName(otherLabel.androidFontName);
+		this.setAndroidFontFileName(otherLabel.androidFontFileName);
 		this.setStringValue(otherLabel.stringValue);
 		
 		
@@ -50,7 +51,8 @@ public class MMPLabel extends MMPControl {
 		address="/myLabel";
 		fontFamily="Default";
 		fontName = "";
-		androidFontName = "Roboto-Regular";
+		androidFontFileName = "Roboto-Regular";
+		androidFontName = MMPController.androidFontFileToNameMap.get(androidFontFileName);//get font name, which can be different than file name
 		textSize = 16;
 		stringValue = "my text goes here";
 		setLayout(null);
@@ -151,10 +153,11 @@ public class MMPLabel extends MMPControl {
 	
 	
 	
-	public void setAndroidFontName(String fontName) {
-		androidFontName = fontName;
-		if (_showAndroidFont) { //this is called on patch load...
-			Font newFont = new Font(fontName, Font.PLAIN, textSize);
+	public void setAndroidFontFileName(String fontFileName) {
+		androidFontFileName = fontFileName;
+		androidFontName = MMPController.androidFontFileToNameMap.get(fontFileName);
+		if (_showAndroidFont) { //this is called on patch load...?
+			Font newFont = new Font(androidFontName, Font.PLAIN, textSize);
 			textView.setFont(newFont);
 		}
 	}

@@ -134,7 +134,7 @@ public class DocumentModel {
 	        	GUIDict.put("textSize", new Integer(currLabel.textSize));
 	        	GUIDict.put("textFontFamily", new String(currLabel.fontFamily));
 	        	GUIDict.put("textFont", new String(currLabel.fontName));
-	        	GUIDict.put("androidFont", new String(currLabel.androidFontName));
+	        	GUIDict.put("androidFont", new String(currLabel.androidFontFileName));
 	        	
 	        }
 	        //grid
@@ -308,7 +308,7 @@ public class DocumentModel {
 		                if(guiDict.get("textFont")!=null && guiDict.get("textFontFamily")!=null) 
 		                    ((MMPLabel)control).setFontFamilyAndName( guiDict.get("textFontFamily").getAsString(), guiDict.get("textFont").getAsString() );
 		                if(guiDict.get("androidFont")!=null) 
-		                    ((MMPLabel)control).setAndroidFontName( guiDict.get("androidFont").getAsString());
+		                    ((MMPLabel)control).setAndroidFontFileName( guiDict.get("androidFont").getAsString());
 		            }
 		            else if(classString.equals("MMPXYSlider")){
 		                control = new MMPXYSlider(newFrame);

@@ -2312,10 +2312,10 @@ public void removeUpdate(DocumentEvent arg0) {
 			}
 		}
 		
-		List<String> androidFontNameArray = MMPController.androidFontNameArray;
+		List<String> androidFontFileNameArray = MMPController.androidFontFileArray;
 		
-		for(String currFontName: androidFontNameArray){
-			propLabelAndroidFontTypeBox.addItem(currFontName);	
+		for(String currFontFileName: androidFontFileNameArray){
+			propLabelAndroidFontTypeBox.addItem(currFontFileName);	
 		}
 		
 	}

@@ -37,7 +37,8 @@ public class MMPController {
 	static ArrayList<MMPController> controllerArrayList;
 	static OSCPortOut sender;
 	static List<Map> fontArray;
-	static List<String> androidFontNameArray;
+	static List<String> androidFontFileArray;
+	public static Map<String, String> androidFontFileToNameMap;
 	
 	//defines
 	final static int DEFAULT_PORT_NUMBER=54321;
@@ -177,8 +178,11 @@ public class MMPController {
 				catch(FileNotFoundException e){}
 				catch(IOException e){}
 			}
-		if (androidFontNameArray == null) {
-			androidFontNameArray = Arrays.asList(
+		if (androidFontFileArray == null) {
+			//totally whack, when reading fonts from a jar, versus from file (in eclipse), the font names are different!!!
+			// from eclipse it is "Roboto-Regular", from jar it is "Roboto Regular".
+			// So we derive the font name on font creation from file name. ugh.
+			androidFontFileArray = Arrays.asList(
 					"Roboto-Regular",
                     "Roboto-Bold",
                     "Roboto-Italic",
@@ -192,12 +196,17 @@ public class MMPController {
                     "RobotoCondensed-Italic",
                     "RobotoCondensed-BoldItalic");
 			//install fonts 
-			for (String fontName : androidFontNameArray) {
+			//androidFontNameArray = new ArrayList<String>();
+			androidFontFileToNameMap = new HashMap<String, String>();
+			for (String fontFilename : androidFontFileArray) {
 				try {
-					InputStream is = this.getClass().getResourceAsStream("/com/iglesiaintermedia/MobmuplatEditor/androidfonts/"+fontName+".ttf");
+					InputStream is = this.getClass().getResourceAsStream("androidfonts/"+fontFilename+".ttf");
 					GraphicsEnvironment ge = 
 							GraphicsEnvironment.getLocalGraphicsEnvironment();
-					ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, is));
+					Font f = Font.createFont(Font.TRUETYPE_FONT, is);
+					ge.registerFont(f);
+					String fontName = f.getName();
+					androidFontFileToNameMap.put(fontFilename, fontName);
 				} catch (IOException e) {
 					//Handle exception
 					System.out.print("NO FONT");
@@ -687,7 +696,7 @@ public class MMPController {
 	            windowDelegate.propLabelFontTypeBox.addActionListener(windowDelegate);
 	        	
 	           windowDelegate.propLabelAndroidFontTypeBox.removeActionListener(windowDelegate);
-	            windowDelegate.propLabelAndroidFontTypeBox.setSelectedItem(currLabel.androidFontName);
+	            windowDelegate.propLabelAndroidFontTypeBox.setSelectedItem(currLabel.androidFontFileName);
 	            windowDelegate.propLabelAndroidFontTypeBox.addActionListener(windowDelegate);
 	            
 	        }
