@@ -18,6 +18,7 @@
 -(id)init{
     self = [super init];
     _controlArray = [[NSMutableArray alloc]init];
+    _watchControlDupleArray = [[NSMutableArray alloc]init];
     //[_pageArray addObject:[[NSMutableArray alloc]init]];//single page - add in init or new
     
     //defaults
@@ -28,8 +29,10 @@
     _port=54321;
     
     _version=[[[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"] floatValue ];
-    
-    
+
+    // watch
+    _watchPageCount = 0;
+
     return self;
 }
 
@@ -121,6 +124,7 @@
         //multislider
         else if([control isKindOfClass:[MMPMultiSlider class]]){
             [GUIDict setObject:[NSNumber numberWithInt:[(MMPMultiSlider*)control range]] forKey:@"range"] ;
+            [GUIDict setObject:[NSNumber numberWithInteger:((MMPMultiSlider*)control).touchMode] forKey:@"touchMode"] ;
         }
         //Toggle
         else if([control isKindOfClass:[MMPToggle class]]){
@@ -132,6 +136,10 @@
         else if([control isKindOfClass:[MMPTable class]]){
           [GUIDict setObject:[DocumentModel RGBAArrayfromColor:[(MMPTable*)control selectionColor]] forKey:@"selectionColor"] ;
           [GUIDict setObject:[NSNumber numberWithInt:[(MMPTable*)control mode]] forKey:@"mode"] ;
+          [GUIDict setObject:[NSNumber numberWithInteger:((MMPTable *)control).displayMode] forKey:@"displayMode"] ;
+          //[GUIDict setObject:[NSNumber numberWithInteger:((MMPTable *)control).displayRange] forKey:@"displayRange"] ;
+          [GUIDict setObject:[NSNumber numberWithFloat:((MMPTable *)control).displayRangeLo] forKey:@"displayRangeLo"] ;
+          [GUIDict setObject:[NSNumber numberWithFloat:((MMPTable *)control).displayRangeHi] forKey:@"displayRangeHi"] ;
         }
         //LCD and Button have no properties
         //pass along original bad class
@@ -147,8 +155,52 @@
     }
     
     [topDict setObject:jsonControlDictArray forKey:@"gui"];//add this array of dictionaries to the top level dictionary
-    
-    //return [topDict JSONString];//convert to string
+
+    // watch
+    NSMutableArray* jsonWatchPageDictArray = [[NSMutableArray alloc]init];//array of dictionaries
+    for(NSArray* controlDuple in  _watchControlDupleArray){
+      NSMutableDictionary* watchPageDict = [[NSMutableDictionary alloc]init];
+      NSMutableDictionary* watchPageGUIDict = [[NSMutableDictionary alloc]init];
+      // watch controls
+      MMPControl *control = controlDuple[1];
+      //common to all MMPControlsublcasses
+        [watchPageGUIDict setObject:NSStringFromClass([control class]) forKey:@"class"];
+        [watchPageGUIDict setObject:[DocumentModel RGBAArrayfromColor:[control color]] forKey:@"color"];
+        [watchPageGUIDict setObject:[DocumentModel RGBAArrayfromColor:[control highlightColor]] forKey:@"highlightColor"];
+        [watchPageGUIDict setObject:[control address] forKey:@"address"];
+      //grid
+      if([control isKindOfClass:[MMPGrid class]]){
+        [watchPageGUIDict setObject:[NSArray arrayWithObjects:[NSNumber numberWithInt:[(MMPGrid*)control dimX]], [NSNumber numberWithInt:[(MMPGrid*)control dimY]],nil] forKey:@"dim"] ;
+        [watchPageGUIDict setObject:[NSNumber numberWithInt:[(MMPGrid*)control cellPadding]] forKey:@"cellPadding"];
+        [watchPageGUIDict setObject:[NSNumber numberWithInt:[(MMPGrid*)control borderThickness]] forKey:@"borderThickness"];
+        [watchPageGUIDict setObject:[NSNumber numberWithInt:[(MMPGrid*)control mode]] forKey:@"mode"];
+      }
+      //multislider
+      else if([control isKindOfClass:[MMPMultiSlider class]]){
+        [watchPageGUIDict setObject:[NSNumber numberWithInt:[(MMPMultiSlider*)control range]] forKey:@"range"] ;
+        [watchPageGUIDict setObject:[NSNumber numberWithInteger:((MMPMultiSlider*)control).touchMode] forKey:@"touchMode"] ;
+      }
+      // XYSlider has no additional properties
+      //Label
+      else if([control isKindOfClass:[MMPLabel class]]){
+        [watchPageGUIDict setObject:[(MMPLabel*)control stringValue] forKey:@"text"] ;
+        [watchPageGUIDict setObject:[NSNumber numberWithInt:[(MMPLabel*)control textSize]] forKey:@"textSize"] ;
+        [watchPageGUIDict setObject:[(MMPLabel*)control fontFamily] forKey:@"textFontFamily"] ;
+        [watchPageGUIDict setObject:[(MMPLabel*)control fontName] forKey:@"textFont"] ;
+        [watchPageGUIDict setObject:[(MMPLabel*)control androidFontName] forKey:@"androidFont"] ;
+      }
+
+      // title label
+      NSTextView *titleTextView = controlDuple[0];
+      NSString *title = titleTextView.string;
+      [watchPageDict setObject:title forKey:@"title"];
+      [watchPageDict setObject:watchPageGUIDict forKey:@"pageGui"];
+
+      //
+      [jsonWatchPageDictArray addObject:watchPageDict];
+    }
+    [topDict setObject:jsonWatchPageDictArray forKey:@"wearGui"];
+
     NSData *jsonData = [NSJSONSerialization dataWithJSONObject:topDict
                                                      options:0
                                                        error:nil];
@@ -295,6 +347,8 @@
                 control = [[MMPMultiSlider alloc] initWithFrame:newFrame];
                 if([guiDict objectForKey:@"range"])
                     [(MMPMultiSlider*)control setRange:[[guiDict objectForKey:@"range"] intValue] ];
+                if([guiDict objectForKey:@"touchMode"])
+                    ((MMPMultiSlider*)control).touchMode = [[guiDict objectForKey:@"touchMode"] integerValue];
             }
             else if([classString isEqualToString:@"MMPLCD"]){
                 control = [[MMPLCD alloc] initWithFrame:newFrame];
@@ -313,6 +367,16 @@
                 [(MMPTable*)control setSelectionColor:[DocumentModel colorFromRGBAArray:[guiDict objectForKey:@"selectionColor"]]];
               if([guiDict objectForKey:@"mode"])
                 [(MMPTable*)control setMode:[[guiDict objectForKey:@"mode"] intValue]];
+              /*if([guiDict objectForKey:@"displayRange"])
+                [(MMPTable*)control setDisplayRange:[[guiDict objectForKey:@"displayRange"] integerValue]];*/
+              if([guiDict objectForKey:@"displayRangeLo"]) {
+                [(MMPTable*)control setDisplayRangeLo:[[guiDict objectForKey:@"displayRangeLo"] floatValue]];
+              }
+              if([guiDict objectForKey:@"displayRangeHi"]) {
+                [(MMPTable*)control setDisplayRangeHi:[[guiDict objectForKey:@"displayRangeHi"] floatValue]];
+              }
+              if([guiDict objectForKey:@"displayMode"])
+                [(MMPTable*)control setDisplayMode:[[guiDict objectForKey:@"displayMode"] integerValue]];
             }
             else{//unknown
                 control = [[MMPUnknown alloc] initWithFrame:newFrame];
@@ -333,7 +397,105 @@
         
             [[model controlArray] addObject:control];
         }
-    
+// WATCH
+  NSArray* watchControlPageDictArray;
+
+  if([topDict objectForKey:@"wearGui"]) {
+    watchControlPageDictArray = [topDict objectForKey:@"wearGui"];//array of dictionaries, one for each page (with title and control)
+    for(NSDictionary* pageDict in watchControlPageDictArray){//for each page dict
+      NSUInteger index = [watchControlPageDictArray indexOfObject:pageDict];
+      NSString *title = [pageDict objectForKey:@"title"];
+      NSDictionary *pageGuiDict = [pageDict objectForKey:@"pageGui"];
+
+      MMPControl* control;
+      if(![pageGuiDict objectForKey:@"class"])continue;// if doesn't have a class, skip out of loop
+        
+      NSString* classString = [pageGuiDict objectForKey:@"class"];
+      //color
+      NSColor* color = [NSColor colorWithCalibratedRed:1 green:1 blue:1 alpha:1];
+      if([pageGuiDict objectForKey:@"color"]){
+          NSArray* colorArray = [pageGuiDict objectForKey:@"color"];
+            if([colorArray count]==4)
+              color=[DocumentModel colorFromRGBAArray:colorArray];
+          else if ([colorArray count]==3)
+              color=[DocumentModel colorFromRGBArray:colorArray];
+                
+      }//highlight color
+      NSColor* highlightColor = [NSColor grayColor];
+      if([pageGuiDict objectForKey:@"highlightColor"]){
+          NSArray* highlightColorArray = [pageGuiDict objectForKey:@"highlightColor"];
+          if([highlightColorArray count]==4)
+              highlightColor=[DocumentModel colorFromRGBAArray:highlightColorArray];
+      }
+      // default frame on canvas - mimic layout in watch (margin 10, title height 60), divided by 2
+      CGRect newFrame = CGRectMake(index * 140 + 5, 35, 130, 100);
+
+      //check by MMPControl subclass, and alloc/init object
+      if([classString isEqualToString:@"MMPXYSlider"]){
+        control = [[MMPXYSlider alloc] initWithFrame:newFrame];
+      }
+      else if([classString isEqualToString:@"MMPGrid"]){
+        control = [[MMPGrid alloc] initWithFrame:newFrame];
+        if([pageGuiDict objectForKey:@"dim"]){
+          NSArray* dim = [pageGuiDict objectForKey:@"dim"];
+          [(MMPGrid*)control setDimX:[[dim objectAtIndex:0]intValue ]];
+          [(MMPGrid*)control setDimY:[[dim objectAtIndex:1]intValue ]];
+        }
+        if([pageGuiDict objectForKey:@"borderThickness"])
+          [(MMPGrid*)control setBorderThickness:[[pageGuiDict objectForKey:@"borderThickness"] intValue] ];
+        if([pageGuiDict objectForKey:@"cellPadding"])
+          [(MMPGrid*)control setCellPadding:[[pageGuiDict objectForKey:@"cellPadding"] intValue] ];
+        if([pageGuiDict objectForKey:@"mode"])
+          [(MMPGrid*)control setMode:[[pageGuiDict objectForKey:@"mode"] intValue] ];
+
+      }
+      else if([classString isEqualToString:@"MMPMultiSlider"]){
+        control = [[MMPMultiSlider alloc] initWithFrame:newFrame];
+        if([pageGuiDict objectForKey:@"range"])
+          [(MMPMultiSlider*)control setRange:[[pageGuiDict objectForKey:@"range"] intValue] ];
+        if([pageGuiDict objectForKey:@"touchMode"])
+          ((MMPMultiSlider*)control).touchMode = [[pageGuiDict objectForKey:@"touchMode"] integerValue];
+      }
+      else if([classString isEqualToString:@"MMPLabel"]){
+        control = [[MMPLabel alloc] initWithFrame:newFrame];
+        if([pageGuiDict objectForKey:@"text"])
+          [(MMPLabel*)control setStringValue:[pageGuiDict objectForKey:@"text"]];
+        if([pageGuiDict objectForKey:@"textSize"])
+          [(MMPLabel*)control setTextSize:[[pageGuiDict objectForKey:@"textSize"] intValue]];
+        if([pageGuiDict objectForKey:@"textFont"] && [pageGuiDict objectForKey:@"textFontFamily"])
+          [(MMPLabel*)control setFontFamily:[pageGuiDict objectForKey:@"textFontFamily"] fontName:[pageGuiDict objectForKey:@"textFont"]];
+        if([pageGuiDict objectForKey:@"androidFont"]) {
+          [(MMPLabel*)control setAndroidFontName:[pageGuiDict objectForKey:@"androidFont"]];
+        }
+      }
+      //color, address
+      if([control respondsToSelector:@selector(setColor:)]){//in theory all mecontrol respond to these
+        [control setColor:color];
+      }
+      if([control respondsToSelector:@selector(setHighlightColor:)]){
+        [control setHighlightColor:highlightColor];
+      }
+      //address
+      if([pageGuiDict objectForKey:@"address"])
+        [control setAddress:[pageGuiDict objectForKey:@"address"]];
+
+      // Make title label
+      NSTextView *titleTextView = [[NSTextView alloc] init];
+      titleTextView.frame = CGRectMake(index*140, 5, 140,30);
+      titleTextView.alignment = NSCenterTextAlignment;
+      titleTextView.textColor = color;
+      titleTextView.backgroundColor = [NSColor clearColor];
+      [titleTextView setString:title];
+      titleTextView.editable = NO;
+      //[titleTextView setFont:[NSFont fontWithName:DEFAULT_FONT size:inInt]];
+      [titleTextView setFont:[NSFont fontWithName:@"Roboto-Regular" size:12]]; //CHECK SIZE
+      [model.watchControlDupleArray addObject:
+           [NSMutableArray arrayWithObjects:titleTextView, control,nil]];
+
+    }
+    model.watchPageCount = [watchControlPageDictArray count]; //make dynamic
+
+  }
     return model;
 }
 

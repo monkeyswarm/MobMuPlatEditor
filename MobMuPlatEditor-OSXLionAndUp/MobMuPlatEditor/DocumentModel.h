@@ -28,7 +28,8 @@ typedef enum{
     canvasTypeIPhone3p5Inch = 0,
     canvasTypeIPhone4Inch = 1,
     canvasTypeIPad = 2,
-    canvasTypeAndroid7Inch = 3
+    canvasTypeAndroid7Inch = 3,
+    canvasTypeWatch
 } canvasType;
 
 @interface DocumentModel : NSObject
@@ -39,11 +40,14 @@ typedef enum{
 @property NSColor* backgroundColor;
 @property NSString* pdFile;
 @property int pageCount;//def 1
+@property NSUInteger watchPageCount;
 @property int startPageIndex;//def 0
 @property int port;
 @property float version;
 
 @property NSMutableArray* controlArray; //of type MMPControl
+@property NSMutableArray* watchControlDupleArray; //of duple title label, control
+
 
 -(NSString*)modelToString;
 +(DocumentModel*)modelFromString:(NSString*)jsonString;

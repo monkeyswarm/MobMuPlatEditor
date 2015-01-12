@@ -19,9 +19,9 @@
         [self setWantsLayer:YES];
         [self setBgColor:[NSColor colorWithCalibratedRed:.5 green:.5 blue:.5 alpha:1]];
         
-        buttonBlankView = [[NSImageView alloc]initWithFrame:CGRectMake(10, 10, 30, 30)];
-        [buttonBlankView setImage:[[NSImage alloc] initWithContentsOfFile:[[NSBundle mainBundle] pathForImageResource:@"infoicon_100x100.png"]]];
-        [self addSubview:buttonBlankView];
+        _buttonBlankView = [[NSImageView alloc]initWithFrame:CGRectMake(10, 10, 30, 30)];
+        [_buttonBlankView setImage:[[NSImage alloc] initWithContentsOfFile:[[NSBundle mainBundle] pathForImageResource:@"infoicon_100x100.png"]]];
+        [self addSubview:_buttonBlankView];
     }
     
     return self;
@@ -58,6 +58,9 @@
         case (canvasTypeAndroid7Inch):
             offset = (_isOrientationLandscape ? 960:600); //different
             break;
+        case(canvasTypeWatch):
+          offset = 140;
+          break;
     }
     //slide to new offset to show the page of controls
     [NSAnimationContext beginGrouping];
@@ -76,22 +79,26 @@
         case (canvasTypeIPhone3p5Inch):
             width = (_isOrientationLandscape ? 480:320);
             height = (_isOrientationLandscape ? 320:480);
-            [buttonBlankView setFrame:CGRectMake(10, 10, 30, 30)];
+            [_buttonBlankView setFrame:CGRectMake(10, 10, 30, 30)];
             break;
         case (canvasTypeIPhone4Inch):
             width = (_isOrientationLandscape ? 568:320);
             height = (_isOrientationLandscape ? 320:568);
-             [buttonBlankView setFrame:CGRectMake(10, 10, 30, 30)];
+             [_buttonBlankView setFrame:CGRectMake(10, 10, 30, 30)];
             break;
         case (canvasTypeIPad):
             width = (_isOrientationLandscape ? 1024:768);
             height = (_isOrientationLandscape ? 768:1024);
-             [buttonBlankView setFrame:CGRectMake(20, 20, 40, 40)];
+             [_buttonBlankView setFrame:CGRectMake(20, 20, 40, 40)];
             break;
       case (canvasTypeAndroid7Inch):
         width = (_isOrientationLandscape ? 960:600);
         height = (_isOrientationLandscape ? 552:912);
-        [buttonBlankView setFrame:CGRectMake(20, 20, 40, 40)];
+        [_buttonBlankView setFrame:CGRectMake(20, 20, 40, 40)];
+        break;
+      case (canvasTypeWatch):
+        width = 140;
+        height = 140;
         break;
     }
     [self setFrame:CGRectMake(0, 0, width*_pageCount, height)];

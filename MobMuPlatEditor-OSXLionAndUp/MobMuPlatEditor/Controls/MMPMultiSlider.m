@@ -92,6 +92,16 @@
     [self bringUpHandle];
 }
 
+-(void)setTouchModeUndoable:(NSNumber*)inVal{
+  [[self undoManager] registerUndoWithTarget:self selector:@selector(setTouchModeUndoable:) object:[NSNumber numberWithInteger:_touchMode]];
+  [self setTouchMode:[inVal integerValue]];
+}
+
+- (void)sendSliderIndex:(int)index value:(float)value {
+  NSArray* msgArray = [NSArray arrayWithObjects:self.address, @(index), @(value), nil];
+  [self.editingDelegate sendFormattedMessageArray:msgArray];
+}
+
 //send out OSC message of all values as a list
 -(void)sendValue{
     NSMutableArray* formattedMessageArray = [[NSMutableArray alloc]init];
@@ -114,8 +124,12 @@
         float clippedPointY = MAX(MIN(point.y, self.frame.size.height-SLIDER_HEIGHT/2), SLIDER_HEIGHT/2);
         float headVal = 1.0-( (clippedPointY-SLIDER_HEIGHT/2) / (self.frame.size.height - SLIDER_HEIGHT) );
         [_valueArray setObject:[NSNumber numberWithFloat:headVal] atIndexedSubscript:headIndex];
-        [self sendValue];
-        
+        // send out
+        if (_touchMode == 1) {
+          [self sendSliderIndex:headIndex value:headVal];
+        } else  {
+          [self sendValue];
+        }
         //update position
         NSView* currHead = [headViewArray objectAtIndex:headIndex];
         CGRect newFrame = CGRectMake(headIndex*headWidth, clippedPointY-SLIDER_HEIGHT/2, headWidth, SLIDER_HEIGHT);
@@ -137,7 +151,7 @@
         float clippedPointY = MAX(MIN(point.y, self.frame.size.height-SLIDER_HEIGHT/2), SLIDER_HEIGHT/2);
         float headVal = 1.0-( (clippedPointY-SLIDER_HEIGHT/2) / (self.frame.size.height - SLIDER_HEIGHT) );
         [_valueArray setObject:[NSNumber numberWithFloat:headVal] atIndexedSubscript:headIndex];
-        [self sendValue];
+
         NSView* currHead = [headViewArray objectAtIndex:headIndex];
         CGRect newFrame = CGRectMake(headIndex*headWidth, clippedPointY-SLIDER_HEIGHT/2, headWidth, SLIDER_HEIGHT);
         currHead.frame=newFrame;
@@ -155,11 +169,20 @@
           float interpVal = (maxTouchedValue - minTouchedValue) * percent  + minTouchedValue ;
           //NSLog(@"%d %.2f %.2f", i, percent, interpVal);
           [_valueArray setObject:[NSNumber numberWithFloat:interpVal] atIndexedSubscript:i];
+          if(_touchMode==1) {
+            [self sendSliderIndex:i value:interpVal];
+          }
         }
         [self updateThumbsFrom:minTouchIndex+1 to:maxTouchIndex-1];
       }
 
-        
+      // send out
+      if (_touchMode == 1) {
+        [self sendSliderIndex:headIndex value:headVal];
+      } else  {
+        [self sendValue];
+      }
+
         if(headIndex!=currHeadIndex){//dragged to new head
             NSView* prevHead = [headViewArray objectAtIndex:currHeadIndex];
             prevHead.layer.backgroundColor=self.color.CGColor;//change prev head back

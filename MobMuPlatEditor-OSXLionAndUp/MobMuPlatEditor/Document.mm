@@ -81,7 +81,12 @@
     [[self orientationPopButton] synchronizeTitleAndSelectedItem];
     
     [self fillFontPop];//fill the drop-down list of fonts, gotten from the document controller, as defined in uifontlist.txt
-    
+
+    // watch
+    _watchCanvasView.buttonBlankView.hidden = YES;
+    _watchCanvasView.canvasType = canvasTypeWatch;
+
+    // load
     [self loadFromModel];
     
     //default values
@@ -91,6 +96,8 @@
     [self.tabView selectFirstTabViewItem:nil];
     [self setIsEditing:YES];
 
+    _watchWidgetHighlightColorWell.color = [NSColor redColor];
+    [self refreshWatchEditorElements];
 }
 
 + (BOOL)autosavesInPlace{
@@ -115,11 +122,20 @@
 
 -(void)loadFromModel{
     
-    for(MMPControl* control in [documentModel controlArray]){
-        control.editingDelegate=self;
-        [canvasView addSubview:control];
-    }
-  
+  for(MMPControl* control in [documentModel controlArray]){
+      control.editingDelegate=self;
+      [canvasView addSubview:control];
+  }
+
+  for(NSArray* watchControlDuple in [documentModel watchControlDupleArray]){
+    MMPControl* control = watchControlDuple[1];
+    control.editingDelegate=self;
+    [_watchCanvasView addSubview:control];
+
+    NSTextView *controlTitleTextView = watchControlDuple[0];
+    [_watchCanvasView addSubview:controlTitleTextView];
+  }
+
   NSMutableSet* addedTableNamesSet = [[NSMutableSet alloc] init];
     //LOAD EXTERNAL FILES within docmodel ( panels) that may require a local path name
     for(MMPControl* control in [documentModel controlArray]){
@@ -166,9 +182,13 @@
     //port
     [[self.docPortField formatter] setGroupingSeparator:@""];
     [self.docPortField setIntValue:[documentModel port]];
-    
-    
-    
+
+    //watch
+    [_watchCanvasView setBgColor:[documentModel backgroundColor]];
+    [_watchCanvasView setPageCount:[documentModel watchPageCount]];
+    [_watchPageCountPopButton selectItemAtIndex:[[documentModel watchControlDupleArray] count]];
+
+
 }
 
 -(void)pruneControls{
@@ -186,10 +206,25 @@
         [control removeFromSuperview];
         [[documentModel controlArray] removeObject:control];
     }
-        
-    
 }
 
+- (void)pruneWatchControls {
+  //check for controls that are out of bounds, add them to this array
+  NSMutableArray* toDeleteDupleArray = [[NSMutableArray alloc]init];
+  NSUInteger pageCount = documentModel.watchPageCount;
+
+  // remove duples (of index >=pageCount) from control array
+  for(NSUInteger i = pageCount;i<[documentModel.watchControlDupleArray count];i++){
+    [toDeleteDupleArray addObject:documentModel.watchControlDupleArray[i]];
+  }
+  //and now delete them from view and from control array
+  for(NSArray* controlDuple in toDeleteDupleArray){
+    printf("\npruned watch control");
+    [controlDuple[0] removeFromSuperview];// title text view
+    [controlDuple[1] removeFromSuperview];// control
+    [documentModel.watchControlDupleArray removeObject:controlDuple];
+  }
+}
 
 //called after whenever we change the type of canvas (iphone vs ipad vs iphone 5) or orientation (portrait vs landscape)
 // compute new frames for window and scrollviews
@@ -317,6 +352,7 @@
     NSColor* noAlphaColor = [[sender color] colorWithAlphaComponent:1];//don't allow transulcency, even if the color picker sends it
     [documentModel setBackgroundColor:noAlphaColor];
     [canvasView setBgColor:noAlphaColor];
+    [_watchCanvasView setBgColor:noAlphaColor];
 }
 
 - (IBAction)docPageCountChanged:(NSTextField *)sender {
@@ -666,6 +702,7 @@
         else if([control isKindOfClass:[MMPMultiSlider class]]){
             [self.propVarView addSubview:self.propMultiSliderView];
             [self.propMultiSliderRangeField setIntegerValue:[(MMPMultiSlider*)control range]];
+            [_propMultiSliderTouchModePopButton selectItemAtIndex:((MMPMultiSlider*)control).touchMode];
         }
         else if([control isKindOfClass:[MMPToggle class]]){
             [self.propVarView addSubview:self.propToggleView];
@@ -676,9 +713,12 @@
           [self.propMenuTitleTextField setStringValue:[(MMPMenu*)control titleString]];
         }
         else if([control isKindOfClass:[MMPTable class]]){
+          MMPTable *table = (MMPTable*)control;
           [self.propVarView addSubview:self.propTableView];
-          [self.propTableSelectionColorWell setColor:[(MMPTable*)control selectionColor]];
-          [self.propTableModePopButton selectItemAtIndex:[(MMPTable*)control mode]];
+          [self.propTableSelectionColorWell setColor:table.selectionColor];
+          [self.propTableModePopButton selectItemAtIndex:table.mode];
+          [_propTableDisplayModePopButton selectItemAtIndex:table.displayMode];
+          [_propTableDisplayRangePopButton selectItemAtIndex:table.displayRangeConstant];
         }
       
         currentSingleSelection=control;
@@ -735,10 +775,10 @@
     [self propDelete:nil];
 }
 
-//based on which of the 4 tabs are open, turn editing on/off
+//based on which of the 5 tabs are open, turn editing on/off
 -(void)tabView:(NSTabView*)tabView didSelectTabViewItem:(NSTabViewItem *)tabViewItem{
   if(tabView == _tabView) {
-    if([tabView indexOfTabViewItem:tabViewItem]==3){//lock
+    if([tabView indexOfTabViewItem:tabViewItem]>=3){//lock
         [self setIsEditing:NO];
     }
     else [self setIsEditing:YES];
@@ -933,6 +973,34 @@
   [[self undoManager] registerUndoWithTarget:currTable selector:@selector(setModeObjectUndoable:) object:[NSNumber numberWithInt:[currTable mode]]];
   
   [currTable setMode:(int)[self.propTableModePopButton indexOfSelectedItem] ];
+}
+
+//just for proper undo/redo
+-(void)setPropTableDisplayMode:(NSNumber*)inNumber{
+  [[self undoManager] registerUndoWithTarget:self selector:@selector(setPropTableDisplayMode:) object:[NSNumber numberWithInteger:[_propTableDisplayModePopButton indexOfSelectedItem] ]];
+  [_propTableDisplayModePopButton selectItemAtIndex:[inNumber intValue]];
+}
+
+- (IBAction)propTableDisplayModeChanged:(NSPopUpButton *)sender {
+  MMPTable *currTable = (MMPTable*)currentSingleSelection;
+  [[self undoManager] registerUndoWithTarget:self selector:@selector(setPropTableDisplayMode:) object:[NSNumber numberWithInteger:currTable.displayMode]];
+  [[self undoManager] registerUndoWithTarget:currTable selector:@selector(setDisplayModeUndoable:) object:[NSNumber numberWithInteger:currTable.displayMode]];
+
+  [currTable setDisplayMode:[_propTableDisplayModePopButton indexOfSelectedItem] ];
+}
+
+//just for proper undo/redo
+-(void)setPropTableDisplayRange:(NSNumber*)inNumber{
+  [[self undoManager] registerUndoWithTarget:self selector:@selector(setPropTableDisplayRange:) object:[NSNumber numberWithInteger:[_propTableDisplayRangePopButton indexOfSelectedItem] ]];
+  [_propTableDisplayRangePopButton selectItemAtIndex:[inNumber intValue]];
+}
+
+- (IBAction)propTableDisplayRangeChanged:(NSPopUpButton *)sender {
+  MMPTable *currTable = (MMPTable*)currentSingleSelection;
+  [[self undoManager] registerUndoWithTarget:self selector:@selector(setPropTableDisplayRange:) object:[NSNumber numberWithInteger:currTable.displayRangeConstant]];
+  [[self undoManager] registerUndoWithTarget:currTable selector:@selector(setDisplayRangeUndoable:) object:[NSNumber numberWithInteger:currTable.displayRangeConstant]];
+
+  [currTable setDisplayRangeConstant:[_propTableDisplayRangePopButton indexOfSelectedItem] ];
 }
 
 //just for proper undo/redo
@@ -1168,6 +1236,21 @@
     [currMultiSlider setRange:(int)val];
 }
 
+//just for proper undo/redo
+-(void)setPropMultiSliderTouchMode:(NSNumber*)inNum{
+  [[self undoManager] registerUndoWithTarget:self selector:@selector(setPropMultiSliderTouchMode:) object:[NSNumber numberWithInteger:[_propMultiSliderTouchModePopButton indexOfSelectedItem]]];
+  [_propMultiSliderTouchModePopButton selectItemAtIndex:[inNum intValue]];
+}
+
+- (IBAction)propMultiSliderTouchModeChanged:(NSPopUpButton *)sender {
+  MMPMultiSlider* currMultiSlider = (MMPMultiSlider*)currentSingleSelection;
+
+  [[self undoManager] registerUndoWithTarget:currMultiSlider selector:@selector(setTouchModeUndoable:) object:[NSNumber numberWithInteger:currMultiSlider.touchMode]];
+  [[self undoManager] registerUndoWithTarget:self selector:@selector(setPropMultiSliderTouchMode:) object:[NSNumber numberWithInteger:currMultiSlider.touchMode]];
+
+  [currMultiSlider setTouchMode:[sender indexOfSelectedItem]];
+}
+
 - (IBAction)lockClearButtonHit:(NSButton *)sender {
     [textLineArray removeAllObjects];
     [self.lockTextView setString:@""];
@@ -1194,6 +1277,352 @@
 
 - (IBAction)pageUpHit:(NSButton *)sender {
     if(currentPageIndex<[documentModel pageCount]-1)[self setCurrentPage:currentPageIndex+1];
+}
+
+#pragma mark - Watch Editor
+
+- (IBAction)watchPageCountChanged:(NSPopUpButton *)sender {
+  NSUInteger oldPageCount = [documentModel watchPageCount];
+  NSUInteger newPageCount = [sender indexOfSelectedItem ];
+  //printf("\npre count %d, intended page ount %d",oldPageCount , newPageCount);
+
+  if(newPageCount>oldPageCount) {//add new pages
+    // add new control duple for each new page
+    for (NSUInteger i=oldPageCount;i<newPageCount;i++) {
+      NSString *title = @"page title goes here";
+      NSTextView *titleTextView = [[NSTextView alloc] init];
+      titleTextView.frame = CGRectMake(i*140, 5, 140,30);
+      titleTextView.alignment = NSCenterTextAlignment;
+      titleTextView.textColor = _watchWidgetColorWell.color;
+      titleTextView.backgroundColor = [NSColor clearColor];
+      [titleTextView setString:title];
+      [titleTextView setFont:[NSFont fontWithName:@"Roboto-Regular" size:12]];
+      // default is grid
+      // default frame on canvas - mimic layout in watch (margin 10, title height 60), divided by 2
+      CGRect newFrame = CGRectMake(i * 140 + 5, 35, 130, 100);
+      MMPGrid* grid = [[MMPGrid alloc] initWithFrame:newFrame];
+      grid.color = _watchWidgetColorWell.color;
+      grid.highlightColor = _watchWidgetHighlightColorWell.color;
+      grid.dimX = 2;
+      grid.dimY = 2;
+      grid.borderThickness = 2;
+      grid.cellPadding = 2;
+      grid.editingDelegate = self;
+      grid.address = @"/myWatchGrid";
+
+      [documentModel.watchControlDupleArray addObject:
+           [NSMutableArray arrayWithObjects: titleTextView, grid, nil]];
+      [_watchCanvasView addSubview:titleTextView];
+      [_watchCanvasView addSubview:grid];
+    }
+    //increment watch page count
+      documentModel.watchPageCount = newPageCount;
+    // if showing initial nothingness and added pages, refresh
+    if (oldPageCount==0) [self refreshWatchEditorElements];
+  }
+
+  else if (newPageCount<oldPageCount){//subtract old pages
+
+    NSAlert *alert = [[NSAlert alloc] init];
+    [alert addButtonWithTitle:@"OK"];
+    [alert addButtonWithTitle:@"Cancel"];
+    [alert setMessageText:@"Delete page(s)?"];
+    [alert setAlertStyle:NSWarningAlertStyle];
+
+    if ([alert runModal] == NSAlertFirstButtonReturn) {
+      documentModel.watchPageCount = newPageCount;
+      //do we have to change current page?
+      if(currentWatchPageIndex >= newPageCount) {
+        [self setCurrentWatchPage:newPageCount-1];
+        [self refreshWatchEditorElements];
+      }
+      [self pruneWatchControls];
+    }
+    else{//user hit cancel button
+      //[self.docPageCountField setIntValue:oldPageCount];
+    }
+
+
+  }
+  //printf("\ndoc page array size %d", [documentModel pageCount]);
+  [_watchCanvasView setPageCount:documentModel.watchPageCount];
+  [_watchPageIndexLabel setStringValue:[NSString stringWithFormat:@"Page %d/%d", currentWatchPageIndex+1, [documentModel watchPageCount]]];
+}
+
+- (IBAction)watchPageUpHit:(NSButton *)sender {
+  if(currentWatchPageIndex<documentModel.watchPageCount-1) {
+    [documentWindow makeFirstResponder:_watchCanvasView]; //make gui edit elements lose focus, triggereing edit change
+    [self setCurrentWatchPage:currentWatchPageIndex+1];
+    [self refreshWatchEditorElements];
+  }
+}
+
+- (IBAction)watchPageDownHit:(NSButton *)sender {
+  if(currentWatchPageIndex>0) {
+    [documentWindow makeFirstResponder:_watchCanvasView]; //make gui edit elements lose focus, triggering edit change
+    [self setCurrentWatchPage:currentWatchPageIndex-1];
+    [self refreshWatchEditorElements];
+  }
+}
+
+- (void)refreshWatchEditorElements {
+  if (documentModel.watchControlDupleArray.count == 0)return;
+
+  NSArray *currentWatchControlTuple = documentModel.watchControlDupleArray[currentWatchPageIndex];
+  NSTextView *currentTextView = ((NSTextView *)currentWatchControlTuple[0]);
+  MMPControl *currentControl = ((MMPControl *)currentWatchControlTuple[1]);
+  _watchWidgetAddressField.stringValue = currentControl.address;
+  _watchWidgetTitleField.stringValue = currentTextView.string;
+  _watchWidgetColorWell.color = currentControl.color;
+  _watchWidgetHighlightColorWell.color = currentControl.highlightColor;
+
+  [_watchPropVarView setSubviews:[NSArray array]];
+  //watch propvarview
+  if ([currentControl isKindOfClass:[MMPGrid class]]) {
+    [_watchWidgetTypePopButton selectItemAtIndex:0];//make constant
+    [_watchPropVarView addSubview:_watchPropGridView];
+    MMPGrid *currGrid = (MMPGrid *)currentControl;
+    [_watchPropGridDimXField setStringValue:[NSString stringWithFormat:@"%d", currGrid.dimX]];
+    [_watchPropGridDimYField setStringValue:[NSString stringWithFormat:@"%d", currGrid.dimY]];
+    [_watchPropGridBorderThicknessField setStringValue:
+         [NSString stringWithFormat:@"%d", currGrid.borderThickness]];
+     [_watchPropGridPaddingField setStringValue:
+          [NSString stringWithFormat:@"%d", currGrid.cellPadding]];
+     [self.propGridModePopButton selectItemAtIndex:currGrid.mode];
+  } else if ([currentControl isKindOfClass:[MMPMultiSlider class]]) {
+    [_watchWidgetTypePopButton selectItemAtIndex:1];//make constant
+    [_watchPropVarView addSubview:_watchPropMultiSliderView];
+    [_watchPropMultiSliderRangeField setIntegerValue:[(MMPMultiSlider*)currentControl range]];
+    [_watchPropMultiSliderTouchModePopButton selectItemAtIndex:((MMPMultiSlider*)currentControl).touchMode];
+  } else if ([currentControl isKindOfClass:[MMPXYSlider class]]) {
+    [_watchWidgetTypePopButton selectItemAtIndex:2];//make constant
+  } else if ([currentControl isKindOfClass:[MMPLabel class]]) {
+    [_watchWidgetTypePopButton selectItemAtIndex:3];//make constant
+    [_watchPropVarView addSubview:_watchPropLabelView];
+    [_watchPropLabelTextField setStringValue:[(MMPLabel*)currentControl stringValue ]];
+    [_watchPropLabelSizeTextField setStringValue:[NSString stringWithFormat:@"%d", [(MMPLabel*)currentControl textSize ]]];
+  }
+}
+
+//just for proper undo/redo
+-(void)setWatchWidgetColorWellColor:(NSColor*)inColor{
+  [[self undoManager] registerUndoWithTarget:self
+                                    selector:@selector(setWatchWidgetColorWellColor:)
+                                      object:_watchWidgetColorWell.color];
+  _watchWidgetColorWell.color = inColor;
+}
+
+- (IBAction)watchWidgetColorWellChanged:(NSColorWell *)sender {
+  NSArray *currentWatchControlTuple = documentModel.watchControlDupleArray[currentWatchPageIndex];
+  MMPControl *currControl = currentWatchControlTuple[1];
+  NSTextView *currTextView = currentWatchControlTuple[0];
+
+  [[self undoManager] registerUndoWithTarget:currControl
+                                    selector:@selector(setColorUndoable:)
+                                      object:currControl.color];
+  [[self undoManager] registerUndoWithTarget:self
+                                    selector:@selector(setWatchWidgetColorWellColor:)
+                                      object:currControl.color];
+  [[self undoManager] registerUndoWithTarget:currTextView
+                                    selector:@selector(setTextColor:)
+                                      object:currControl.color];
+  NSColor *color = sender.color;
+  currTextView.textColor = color;
+  currControl.color = color;
+}
+
+//just for proper undo/redo
+-(void)setWatchWidgetHighlightColorWellColor:(NSColor*)inColor{
+  [[self undoManager] registerUndoWithTarget:self
+                                    selector:@selector(setWatchWidgetHighlightColorWellColor:)
+                                      object:_watchWidgetHighlightColorWell.color];
+  _watchWidgetHighlightColorWell.color = inColor;
+}
+
+- (IBAction)watchWidgetHighlightColorWellChanged:(NSColorWell *)sender {
+  NSArray *currentWatchControlTuple = documentModel.watchControlDupleArray[currentWatchPageIndex];
+  MMPControl *currControl = currentWatchControlTuple[1];
+
+  [[self undoManager] registerUndoWithTarget:currControl
+                                    selector:@selector(setHighlightColorUndoable:)
+                                      object:currControl.highlightColor];
+  [[self undoManager] registerUndoWithTarget:self
+                                    selector:@selector(setWatchWidgetHighlightColorWellColor:)
+                                      object:currControl.highlightColor];
+  NSColor *color = sender.color;
+  currControl.highlightColor = color;
+}
+
+//just for proper undo/redo
+-(void)setWatchWidgetAddress:(NSString*)inString{
+  [[self undoManager] registerUndoWithTarget:self
+                                    selector:@selector(setWatchWidgetAddress:)
+                                      object:_watchWidgetAddressField.stringValue];
+  _watchWidgetAddressField.stringValue = inString;
+}
+
+- (IBAction)watchWidgetAddressChanged:(NSTextField *)sender {
+  NSArray *currentWatchControlTuple = documentModel.watchControlDupleArray[currentWatchPageIndex];
+  MMPControl *currControl = currentWatchControlTuple[1];
+
+  [[self undoManager] registerUndoWithTarget:currControl
+                                    selector:@selector(setAddressUndoable:)
+                                      object:currControl.address];
+  [[self undoManager] registerUndoWithTarget:self
+                                    selector:@selector(setWatchWidgetAddress:)
+                                      object:currControl.address];
+
+  currControl.address = sender.stringValue;
+}
+
+//just for proper undo/redo
+-(void)setWatchWidgetTitle:(NSString*)inString{
+  [[self undoManager] registerUndoWithTarget:self
+                                    selector:@selector(setWatchWidgetTitle:)
+                                      object:_watchWidgetTitleField.stringValue];
+  _watchWidgetTitleField.stringValue = inString;
+}
+
+- (IBAction)watchWidgetTitleChanged:(NSTextField *)sender {
+  NSArray *currentWatchControlTuple = documentModel.watchControlDupleArray[currentWatchPageIndex];
+  NSTextView *currTextView = currentWatchControlTuple[0];
+
+  [[self undoManager] registerUndoWithTarget:currTextView
+                                    selector:@selector(setString:)
+                                      object:currTextView.string];
+  [[self undoManager] registerUndoWithTarget:self
+                                    selector:@selector(setWatchWidgetTitle:)
+                                      object:currTextView.string];
+
+  currTextView.string = sender.stringValue;
+}
+
+// not undoable
+- (IBAction)watchWidgetTypeChanged:(NSPopUpButton *)sender {
+
+  [documentWindow makeFirstResponder:_watchCanvasView]; //make gui edit elements lose focus, triggering edit change
+
+  NSUInteger popIndex = [_watchWidgetTypePopButton indexOfSelectedItem];
+  //fill in property tab fields (address, class-specific, etc)
+  //[_watchWidgetAddressField setEnabled:YES]; //necc??
+  //[_watchWidgetAddressField setStringValue:[control address]];
+
+  // for replacemnt
+  NSMutableArray *currentWatchControlDuple =
+      documentModel.watchControlDupleArray[currentWatchPageIndex];
+  CGRect newFrame = CGRectMake(currentWatchPageIndex * 140 + 5, 35, 130, 100);
+
+  // show default values
+ if(popIndex == 0){ //Grid
+   [currentWatchControlDuple[1] removeFromSuperview];
+
+   MMPGrid* grid = [[MMPGrid alloc] initWithFrame:newFrame];
+   grid.color = _watchWidgetColorWell.color;
+   grid.highlightColor = _watchWidgetHighlightColorWell.color;
+   grid.dimX = 2;
+   grid.dimY = 2;
+   grid.borderThickness = 2;
+   grid.cellPadding = 2;
+   grid.address = @"/myWatchGrid";
+   grid.editingDelegate = self;
+   currentWatchControlDuple[1] = grid;
+   [_watchCanvasView addSubview:grid];
+
+   [self refreshWatchEditorElements];
+  }
+  else if(popIndex == 1){ //MultiSlider
+    [currentWatchControlDuple[1] removeFromSuperview];
+
+    MMPMultiSlider* multiSlider = [[MMPMultiSlider alloc] initWithFrame:newFrame];
+    multiSlider.color = _watchWidgetColorWell.color;
+    multiSlider.highlightColor = _watchWidgetHighlightColorWell.color;
+    multiSlider.range = 8;
+    multiSlider.address = @"/myWatchMultiSlider";
+    multiSlider.editingDelegate = self;
+    currentWatchControlDuple[1] = multiSlider;
+    [_watchCanvasView addSubview:multiSlider];
+
+    [self refreshWatchEditorElements];
+  }
+  else if(popIndex == 2){ //XY
+    [currentWatchControlDuple[1] removeFromSuperview];
+
+    MMPXYSlider* xySlider = [[MMPXYSlider alloc] initWithFrame:newFrame];
+    xySlider.color = _watchWidgetColorWell.color;
+    xySlider.highlightColor = _watchWidgetHighlightColorWell.color;
+    xySlider.address = @"/myWatchXYSlider";
+    xySlider.editingDelegate = self;
+    currentWatchControlDuple[1] = xySlider;
+    [_watchCanvasView addSubview:xySlider];
+
+    [self refreshWatchEditorElements];
+  }
+  else if(popIndex == 3){ //Label
+    [currentWatchControlDuple[1] removeFromSuperview];
+
+    MMPLabel* label = [[MMPLabel alloc] initWithFrame:newFrame];
+    label.color = _watchWidgetColorWell.color;
+    label.highlightColor = _watchWidgetHighlightColorWell.color;
+    label.address = @"/myWatchLabel";
+    label.editingDelegate = self;
+    currentWatchControlDuple[1] = label;
+    [_watchCanvasView addSubview:label];
+
+    [self refreshWatchEditorElements];
+  }
+}
+
+// TODO MORE UNDO!!!
+- (IBAction)watchPropLabelTextChanged:(NSTextField *)sender {
+  NSArray *currentWatchControlDuple = documentModel.watchControlDupleArray[currentWatchPageIndex];
+  ((MMPLabel *)currentWatchControlDuple[1]).stringValue = [sender stringValue];
+}
+
+- (IBAction)watchPropLabelTextSizeChanged:(NSTextField *)sender {
+  NSArray *currentWatchControlDuple = documentModel.watchControlDupleArray[currentWatchPageIndex];
+  ((MMPLabel *)currentWatchControlDuple[1]).textSize= [sender intValue];
+}
+
+- (IBAction)watchPropGridDimXChanged:(NSTextField *)sender {
+  NSArray *currentWatchControlDuple = documentModel.watchControlDupleArray[currentWatchPageIndex];
+  ((MMPGrid *)currentWatchControlDuple[1]).dimX= [sender intValue];
+}
+
+- (IBAction)watchPropGridDimYChanged:(NSTextField *)sender {
+  NSArray *currentWatchControlDuple = documentModel.watchControlDupleArray[currentWatchPageIndex];
+  ((MMPGrid *)currentWatchControlDuple[1]).dimY= [sender intValue];
+}
+
+- (IBAction)watchPropGridBorderThicknessChanged:(NSTextField *)sender {
+  NSArray *currentWatchControlDuple = documentModel.watchControlDupleArray[currentWatchPageIndex];
+  ((MMPGrid *)currentWatchControlDuple[1]).borderThickness= [sender intValue];
+}
+
+- (IBAction)watchPropGridCellPaddingChanged:(NSTextField *)sender {
+  NSArray *currentWatchControlDuple = documentModel.watchControlDupleArray[currentWatchPageIndex];
+  ((MMPGrid *)currentWatchControlDuple[1]).cellPadding= [sender intValue];
+}
+
+- (IBAction)watchPropGridModeChanged:(NSPopUpButton *)sender {
+  NSArray *currentWatchControlDuple = documentModel.watchControlDupleArray[currentWatchPageIndex];
+  ((MMPGrid *)currentWatchControlDuple[1]).mode= [sender intValue];
+}
+
+- (IBAction)watchPropMultiSliderRangeChanged:(NSTextField *)sender {
+  NSArray *currentWatchControlDuple = documentModel.watchControlDupleArray[currentWatchPageIndex];
+  ((MMPMultiSlider *)currentWatchControlDuple[1]).range= [sender intValue];
+}
+
+- (IBAction)watchPropMultiSliderTouchModeChanged:(NSPopUpButton *)sender {
+  NSArray *currentWatchControlDuple = documentModel.watchControlDupleArray[currentWatchPageIndex];
+  ((MMPMultiSlider *)currentWatchControlDuple[1]).touchMode = [sender indexOfSelectedItem];
+}
+
+// watch action methods
+-(void)setCurrentWatchPage:(int)newIndex{
+  currentWatchPageIndex = newIndex;
+  [ _watchCanvasView setPageViewIndex:currentWatchPageIndex];
+  self.watchPageIndexLabel.stringValue = [NSString stringWithFormat:@"Page %d/%d", currentWatchPageIndex+1, documentModel.watchPageCount];
 }
 
 //====end of list of Nib's IBAction methods

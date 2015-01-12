@@ -12,6 +12,10 @@
 //@property (nonatomic, copy) NSString *tableName;
 @property (nonatomic, strong) NSColor *selectionColor;
 @property (nonatomic) int mode;
+@property (nonatomic) NSUInteger displayMode;//0=line, 1=fill
+@property (nonatomic) CGFloat displayRangeLo;
+@property (nonatomic) CGFloat displayRangeHi;
+@property (nonatomic) NSUInteger displayRangeConstant;
 
 -(void)loadTable;
 @end

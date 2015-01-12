@@ -30,8 +30,8 @@
 #X obj 98 67 inlet;
 #N canvas 907 552 450 300 \$0-patch-space 0;
 #X obj 20 20 udpreceive 54321;
-#X obj 20 50 send 1003-to.out1;
-#X obj 150 50 send 1003-to.out2;
+#X obj 20 50 send 1011-to.out1;
+#X obj 150 50 send 1011-to.out2;
 #X connect 0 0 1 0;
 #X connect 0 1 2 0;
 #X restore 102 263 pd \$0-patch-space;

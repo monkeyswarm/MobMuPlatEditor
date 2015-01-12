@@ -10,6 +10,7 @@
 #define DEFAULT_FONT @"HelveticaNeue"
 #define DEFAULT_FONTSIZE 16
 @implementation MMPLabel
+@synthesize stringValue = _stringValue;
 
 
 + (BOOL)numberIsFloat:(NSNumber*)num {

@@ -73,8 +73,8 @@
 -(void)setFrame:(NSRect)frameRect{
     [super setFrame:frameRect];
     
-    float buttonWidth = self.frame.size.width/_dimX;
-    float buttonHeight = self.frame.size.height/_dimY;
+    float buttonWidth = (self.frame.size.width + _cellPadding)/_dimX;
+    float buttonHeight = (self.frame.size.height + _cellPadding)/_dimY;
     
     for(int j=0;j<_dimY;j++){
         for(int i=0;i<_dimX;i++){
@@ -109,8 +109,8 @@
 //whenever dim x or y has changed, redraw everything
 -(void)redrawDim{
     
-    float buttonWidth = self.frame.size.width/_dimX;
-    float buttonHeight = self.frame.size.height/_dimY;
+    float buttonWidth = (self.frame.size.width + _cellPadding)/_dimX;
+    float buttonHeight = (self.frame.size.height + _cellPadding)/_dimY;
     
     for(NSControl* button in gridButtons){
         [button removeFromSuperview];

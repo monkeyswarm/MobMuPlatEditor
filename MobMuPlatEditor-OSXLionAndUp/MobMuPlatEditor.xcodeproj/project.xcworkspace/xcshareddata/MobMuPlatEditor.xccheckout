@@ -10,29 +10,29 @@
 	<string>MobMuPlatEditor</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
-		<key>32B71DD2-C939-4109-8B65-896840174ED9</key>
+		<key>C77B5B8590AE848AEF391DF05A99D14B3BEBA989</key>
 		<string>https://github.com/monkeyswarm/MobMuPlatEditor.git</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
-	<string>MobMuPlatEditor.xcodeproj/project.xcworkspace</string>
+	<string>MobMuPlatEditor-OSXLionAndUp/MobMuPlatEditor.xcodeproj</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
-		<key>32B71DD2-C939-4109-8B65-896840174ED9</key>
-		<string>../..</string>
+		<key>C77B5B8590AE848AEF391DF05A99D14B3BEBA989</key>
+		<string>../../..</string>
 	</dict>
 	<key>IDESourceControlProjectURL</key>
 	<string>https://github.com/monkeyswarm/MobMuPlatEditor.git</string>
 	<key>IDESourceControlProjectVersion</key>
-	<integer>110</integer>
+	<integer>111</integer>
 	<key>IDESourceControlProjectWCCIdentifier</key>
-	<string>32B71DD2-C939-4109-8B65-896840174ED9</string>
+	<string>C77B5B8590AE848AEF391DF05A99D14B3BEBA989</string>
 	<key>IDESourceControlProjectWCConfigurations</key>
 	<array>
 		<dict>
 			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
 			<string>public.vcs.git</string>
 			<key>IDESourceControlWCCIdentifierKey</key>
-			<string>32B71DD2-C939-4109-8B65-896840174ED9</string>
+			<string>C77B5B8590AE848AEF391DF05A99D14B3BEBA989</string>
 			<key>IDESourceControlWCCName</key>
 			<string>MobMuPlatEditor</string>
 		</dict>

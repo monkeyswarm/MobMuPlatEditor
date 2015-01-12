@@ -8,12 +8,11 @@
 
 #import "MMPTable.h"
 #import "MMPDocumentController.h"
-
 @implementation MMPTable {
   
   NSUInteger _tableSize;
-  float* _tableData;
-  
+  NSMutableArray *_tableData;
+
   CGContextRef _cacheContext;
   CGContextRef _cacheContextSelection;
   float fR,fG,fB,fA;//FRGBA
@@ -30,6 +29,7 @@
   int chunkCount;
   
 }
+@dynamic displayRangeConstant;
 
 - (id)initWithFrame:(NSRect)frame{
   self = [super initWithFrame:frame];
@@ -38,7 +38,10 @@
     _created = YES;
     self.layer.backgroundColor=self.color.CGColor;
     self.selectionColor = [NSColor colorWithCalibratedRed:1. green:1. blue:1. alpha:.5];
-    
+    // default range
+    _displayRangeLo = -1;
+    _displayRangeHi = 1;
+
     //self.userInteractionEnabled = NO;//until table load TODO
     // Initialization code
     
@@ -49,7 +52,7 @@
     [self setFrame:frame];//create context
     
     [self addHandles];
-    
+
   }
   return self;
 }
@@ -62,8 +65,9 @@
 -(void)loadTable {
   loadedTable = NO;
     [self.editingDelegate sendFormattedMessageArray:[NSMutableArray arrayWithObjects:@"/system/requestTable",
-                                                     [MMPDocumentController cachePathWithAddress:self.address],
-                                       self.address, nil]];
+                                                    [MMPDocumentController cachePathWithAddress:self.address],
+                                                     self.address,
+                                                     nil]];
 }
 
 
@@ -102,12 +106,6 @@
   bitmapByteCount     = (bitmapBytesPerRow * pixelsHigh);
   
   colorSpace = CGColorSpaceCreateWithName(kCGColorSpaceGenericRGB);// 2
-  /*bitmapData = malloc( bitmapByteCount );// 3
-   if (bitmapData == NULL)
-   {
-   fprintf (stderr, "Memory not allocated!");
-   return NULL;
-   }*/
   context = CGBitmapContextCreate (nil,// 4
                                    pixelsWide,
                                    pixelsHigh,
@@ -115,9 +113,7 @@
                                    0,
                                    colorSpace,
                                    kCGImageAlphaPremultipliedLast);
-  if (context== NULL)
-  {
-    //free (bitmapData);// 5
+  if (context == NULL){
     fprintf (stderr, "Context not created!");
     return NULL;
   }
@@ -151,8 +147,6 @@
   sG  = [_selectionColor greenComponent];
   sB  = [_selectionColor blueComponent];
   sA  = [_selectionColor alphaComponent];
-  
-  
 }
 
 -(void)draw{
@@ -161,7 +155,15 @@
 
 -(void)drawFromIndex:(NSUInteger)indexA toIndex:(NSUInteger)indexB {
   if(!_tableData)return;
+  // check for div by zero
+  if (_displayRangeHi == _displayRangeLo)return;
+
+  // line
   CGContextSetRGBStrokeColor(_cacheContext, fR,fG,fB,fA);
+  // fill
+  CGContextSetRGBFillColor(_cacheContext, fR, fG, fB, fA);
+  CGContextBeginPath(_cacheContext);
+
   CGContextMoveToPoint(_cacheContext, 0,0);
 	int padding = 3;
   int indexDrawPointA = (int)((float)MIN(indexA,indexB)/_tableSize*self.frame.size.width)-padding;
@@ -181,22 +183,36 @@
     int prevIndex = (int)((float)(i-1)/self.frame.size.width*_tableSize);
     if(indexA==indexB && indexA<index && indexA>prevIndex) index = indexA;
     
-    float y = _tableData[index];
-    float unflippedY = (1-((y+1)/2)) *self.frame.size.height;
-    //NSLog(@"i %d x %.2f index %d y %.2f unflip %.2f", i,x,index,y, unflippedY);
+    float y = [_tableData[index] floatValue];
+
+    // Scale lo to hi to flipped 0 to frame height.
+    float unflippedY = 1-( (y-_displayRangeLo)/(_displayRangeHi - _displayRangeLo));
+    unflippedY *= self.frame.size.height;
+    /*if (_displayRange == 0) { //polar
+      unflippedY = (1-((y+1)/2)) *self.frame.size.height;
+    } else { //0 to 1
+      unflippedY = (1-y) *self.frame.size.height;
+    }*/
+
     if(i==indexDrawPointA){
       CGContextMoveToPoint(_cacheContext, x,unflippedY);
     }
     else {
       CGContextAddLineToPoint(_cacheContext, x, unflippedY);
-      CGContextMoveToPoint(_cacheContext, x,unflippedY);
+      //CGContextMoveToPoint(_cacheContext, x,unflippedY);
     }
   }
-  
-  
-  
-  CGContextStrokePath(_cacheContext);
-  
+
+  if (_displayMode == 0) { //line
+    CGContextStrokePath(_cacheContext);
+  } else { // fill
+    // add points and close
+    CGContextAddLineToPoint(_cacheContext, indexDrawPointB, self.frame.size.height);
+    CGContextAddLineToPoint(_cacheContext, indexDrawPointA, self.frame.size.height);
+    CGContextClosePath(_cacheContext);
+    CGContextDrawPath(_cacheContext, kCGPathFill);
+  }
+
   CGRect newRect = CGRectMake(indexDrawPointA, 0, indexDrawPointB,self.frame.size.height);
   [self setNeedsDisplayInRect:newRect];
 }
@@ -233,10 +249,19 @@
       
       lastTableIndex = touchDownTableIndex;
       float normalizedY = lastPoint.y/self.frame.size.height;//change to -1 to 1
-      float flippedY = (1-normalizedY)*2-1;
+
+      float flippedY = (1 - normalizedY)*(_displayRangeHi - _displayRangeLo) + _displayRangeLo;
+
+      /*float flippedY = ;
+      if (_displayRange == 0) { // polar
+        flippedY = (1-normalizedY)*2-1;
+      } else { //0 to 1
+        flippedY = 1-normalizedY;
+      }*/
+
       //NSLog(@"touchDownTableIndex %d", touchDownTableIndex);
       
-      _tableData[touchDownTableIndex] = flippedY;//check bounds
+      _tableData[touchDownTableIndex] = @(flippedY);//check bounds
       [self drawFromIndex:touchDownTableIndex toIndex:touchDownTableIndex];
       
       //send one element
@@ -257,9 +282,7 @@
 }
 
 -(void)sendRangeMessageFromIndex:(int)indexA toIndex:(int)indexB {
-  /*[self.controlDelegate sendGUIMessageArray:[NSArray arrayWithObjects:self.address, @"range", [NSNumber numberWithInt:indexA], [NSNumber numberWithInt:indexB], nil]];*/
-  [self.editingDelegate sendFormattedMessageArray:[NSMutableArray arrayWithObjects:self.address,
-                                                   //[[NSMutableString alloc]initWithString:@"sii"],
+   [self.editingDelegate sendFormattedMessageArray:[NSMutableArray arrayWithObjects:self.address,
                                                    @"range",
                                                    [NSNumber numberWithInt:indexA],
                                                    [NSNumber numberWithInt:indexB], nil]];
@@ -293,13 +316,20 @@
       dragTableIndex = MIN(dragTableIndex, (int)_tableSize-1);//clip to max index
       float normalizedY = dragPoint.y/self.frame.size.height;//change to -1 to 1
       normalizedY = MAX(MIN(normalizedY,1),0);
-      float flippedY = (1-normalizedY)*2-1;
+
+      float flippedY = (1 - normalizedY)*(_displayRangeHi - _displayRangeLo) + _displayRangeLo;
+      /*float flippedY;
+      if (_displayRange == 0) { // polar
+        flippedY = (1-normalizedY)*2-1;
+      } else { //0 to 1
+        flippedY = 1-normalizedY;
+      }*/
       
       //compute size, including self but not prev
       int traversedElementCount = abs(dragTableIndex-lastTableIndex);
       if(traversedElementCount==0)traversedElementCount=1;
       
-      _tableData[dragTableIndex] = flippedY;
+      _tableData[dragTableIndex] = @(flippedY);
       //==================just for local representation
       //just one
       if(traversedElementCount==1) {
@@ -311,14 +341,14 @@
         int minIndex = MIN(lastTableIndex, dragTableIndex);
         int maxIndex = MAX(lastTableIndex, dragTableIndex);
         
-        float minValue = _tableData[minIndex];
-        float maxValue = _tableData[maxIndex];
+        float minValue = [_tableData[minIndex] floatValue];
+        float maxValue = [_tableData[maxIndex] floatValue];
         //NSLog(@"skip within %d (%.2f) to %d(%.2f)", minTouchIndex, [[_valueArray objectAtIndex:minTouchIndex] floatValue], maxTouchIndex, [[_valueArray objectAtIndex:maxTouchIndex] floatValue]);
         for(int i=minIndex+1;i<=maxIndex;i++){
           float percent = ((float)(i-minIndex))/(maxIndex-minIndex);
           float interpVal = (maxValue - minValue) * percent  + minValue ;
           //NSLog(@"%d %.2f %.2f", i, percent, interpVal);
-          _tableData[i]=interpVal;
+          _tableData[i]=@(interpVal);
           //touchValArray[i-(minIndex+1)]=interpVal;
         }
         [self drawFromIndex:minIndex toIndex:maxIndex];
@@ -327,8 +357,8 @@
       //=======send end points to pd wrapper to do its own interp
       int minIndex = MIN(lastTableIndex, dragTableIndex);
       int maxIndex = MAX(lastTableIndex, dragTableIndex);
-      float minValue = _tableData[minIndex];
-      float maxValue = _tableData[maxIndex];
+      float minValue = [_tableData[minIndex] floatValue];
+      float maxValue = [_tableData[maxIndex] floatValue];
       [self sendSetTableMessageFromIndex:minIndex val:minValue indexB:maxIndex val:maxValue];
       //====
       
@@ -338,13 +368,13 @@
   }
 }
 
--(void)mouseUp:(NSEvent *)theEvent{
+/*-(void)mouseUp:(NSEvent *)theEvent{
   [super mouseUp:theEvent];
   if(![self.editingDelegate isEditing] && loadedTable){
     
     
   }
-}
+}*/
 
 - (void)drawRect:(CGRect)rect
 {
@@ -376,6 +406,43 @@
   CGContextClearRect(_cacheContextSelection, self.bounds);
   [self setNeedsDisplay];
 }
+
+-(void)setDisplayModeUndoable:(NSNumber*)number{
+  [[self undoManager] registerUndoWithTarget:self selector:@selector(setDisplayModeUndoable:) object:[NSNumber numberWithInteger:_displayMode] ];
+  [self setDisplayMode:[number integerValue]];
+}
+
+- (void)setDisplayMode:(NSUInteger)displayMode {
+  _displayMode = displayMode;
+  [self draw];
+}
+
+-(void)setDisplayRangeConstantUndoable:(NSNumber*)number{
+  [[self undoManager] registerUndoWithTarget:self selector:@selector(setDisplayRangeUndoable:) object:[NSNumber numberWithInteger:_displayMode] ];
+  [self setDisplayRangeConstant:[number integerValue]];
+}
+
+- (void)setDisplayRangeConstant:(NSUInteger)displayRangeConstant {
+  if (displayRangeConstant == 0) {// polar -1 to 1
+    _displayRangeLo = -1;
+    _displayRangeHi = 1;
+  } else if (displayRangeConstant == 1) {
+    _displayRangeLo = 0;
+    _displayRangeHi = 1;
+  }
+  [self draw];
+}
+
+- (NSUInteger) displayRangeConstant {
+  if (_displayRangeLo == -1 && _displayRangeHi == 1) {
+    return 0;
+  } else if (_displayRangeLo == 0 && _displayRangeHi == 1) {
+    return 1;
+  } else {
+    return -1;
+  }
+}
+
 
 -(void)receiveList:(NSArray *)inArray{
   if ([inArray count]==1 && [[inArray objectAtIndex:0] isKindOfClass:[NSString class]] && [[inArray objectAtIndex:0] isEqualToString:@"clearSelection"] ){
@@ -410,21 +477,11 @@
   }
   
   _tableSize = [zAryOfLines count]-1;//PD WRITES AN EMPTY LINE AT THE END!!!
-  if(_tableData){
-    free(_tableData);
-  }
-  _tableData = (float*)malloc(_tableSize*sizeof(float));
+  _tableData = [NSMutableArray array];
   int i=0;
   for (NSString * zStrLine in zAryOfLines) {
-    /*NSInteger zInt;
-    NSString * zStr2;
-    NSScanner* zScanner = [NSScanner scannerWithString:zStrLine];
-    [zScanner scanString:@"i=" intoString:&zStr2];
-    [zScanner scanInteger:&zInt];
-    NSLog(@"zStr2= %@, zInt=%ld",zStr2,(long)zInt);*/
     float val = [zStrLine floatValue];
-    _tableData[i++]=val;
-    //NSLog(@"%.4f",val);
+    _tableData[i++]=@(val);
   }
 }
 
@@ -447,7 +504,4 @@
   return self;
 }
 
--(void)dealloc {
-  if(_tableData)free(_tableData);
-}
 @end

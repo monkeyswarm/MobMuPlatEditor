@@ -17,6 +17,7 @@
 
 @property(nonatomic) int range;
 @property(nonatomic) NSMutableArray* valueArray;
+@property(nonatomic) NSUInteger touchMode; //0=all values, 1=individual element index+value
 @end
 
 

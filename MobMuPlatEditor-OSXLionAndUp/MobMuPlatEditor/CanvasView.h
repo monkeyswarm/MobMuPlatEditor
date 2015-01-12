@@ -11,9 +11,7 @@
 #import "MMPControl.h"
 #import "DocumentModel.h"
 
-@interface CanvasView : NSView{
-    NSImageView* buttonBlankView;
-}
+@interface CanvasView : NSView
 
 @property (nonatomic) NSColor* bgColor;
 @property (nonatomic) id<MMPControlEditingDelegate> editingDelegate;
@@ -21,6 +19,7 @@
 @property (nonatomic) int pageViewIndex;
 @property  (nonatomic) int canvasType;
 @property (nonatomic) BOOL isOrientationLandscape;
+@property (nonatomic) NSImageView* buttonBlankView;
 
 - (void)refreshGuides;
 

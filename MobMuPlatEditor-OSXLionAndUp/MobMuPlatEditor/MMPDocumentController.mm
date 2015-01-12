@@ -39,7 +39,7 @@
     NSString* fontnamesjson = [NSString stringWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"uifontlist" ofType:@"txt"]];
     //_fontArray = [[fontnamesjson objectFromJSONString] mutableCopy];//array of dictionaries
     NSData *data = [fontnamesjson dataUsingEncoding:NSUTF8StringEncoding];
-    _fontArray = [[NSJSONSerialization JSONObjectWithData:data options:nil error:nil] mutableCopy];
+    _fontArray = [[NSJSONSerialization JSONObjectWithData:data options:0 error:nil] mutableCopy];
   
 
   
