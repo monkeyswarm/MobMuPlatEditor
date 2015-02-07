@@ -30,6 +30,7 @@
        [self addSubview:warningLabel];
         
         [self addHandles];
+      //[self resizeSubviewsWithOldSize:self.frame.size];
     }
     return self;
 }

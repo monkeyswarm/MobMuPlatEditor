@@ -24,9 +24,9 @@
         [self setDimX:4];
         [self setDimY:3];
         [self redrawDim];
-        //[self setFrame:frame];//necc?
         
         [self addHandles];
+      [self resizeSubviewsWithOldSize:self.frame.size];
     }
     return self;
 }
@@ -62,26 +62,25 @@
 
 -(void)hackRefresh{
     [super hackRefresh];
-    for(NSControl* button in gridButtons){
+    /*for(NSControl* button in gridButtons){
         button.layer.borderWidth=_borderThickness;
       if(button.tag==1)button.layer.backgroundColor=self.highlightColor.CGColor;
       else button.layer.backgroundColor=[[NSColor clearColor] CGColor];
-    }
+    }*/
 }
 
+- (void)resizeSubviewsWithOldSize:(NSSize)oldBoundsSize{
+  [super resizeSubviewsWithOldSize:oldBoundsSize];
 
--(void)setFrame:(NSRect)frameRect{
-    [super setFrame:frameRect];
-    
-    float buttonWidth = (self.frame.size.width + _cellPadding)/_dimX;
-    float buttonHeight = (self.frame.size.height + _cellPadding)/_dimY;
-    
-    for(int j=0;j<_dimY;j++){
-        for(int i=0;i<_dimX;i++){
-            NSView* buttonView = [gridButtons objectAtIndex:j*_dimX+i ];
-            [buttonView setFrame:CGRectMake(i*buttonWidth, j*buttonHeight, buttonWidth-_cellPadding, buttonHeight-_cellPadding)];
-        }
+  float buttonWidth = (self.frame.size.width + _cellPadding)/_dimX;
+  float buttonHeight = (self.frame.size.height + _cellPadding)/_dimY;
+
+  for(int j=0;j<_dimY;j++){
+    for(int i=0;i<_dimX;i++){
+      NSView* buttonView = [gridButtons objectAtIndex:j*_dimX+i ];
+      [buttonView setFrame:CGRectMake(i*buttonWidth, j*buttonHeight, buttonWidth-_cellPadding, buttonHeight-_cellPadding)];
     }
+  }
 }
 
 -(void)setDimXUndoable:(NSNumber*)inVal{

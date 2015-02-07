@@ -10,7 +10,6 @@
 
 #import "Document.h"
 
-#define DEFAULT_PORT_NUMBER 54321
 #define CANVAS_LEFT 250
 #define CANVAS_TOP 8
 
@@ -83,8 +82,9 @@
     [self fillFontPop];//fill the drop-down list of fonts, gotten from the document controller, as defined in uifontlist.txt
 
     // watch
+    /* wear
     _watchCanvasView.buttonBlankView.hidden = YES;
-    _watchCanvasView.canvasType = canvasTypeWatch;
+    _watchCanvasView.canvasType = canvasTypeWatch; */
 
     // load
     [self loadFromModel];
@@ -96,8 +96,8 @@
     [self.tabView selectFirstTabViewItem:nil];
     [self setIsEditing:YES];
 
-    _watchWidgetHighlightColorWell.color = [NSColor redColor];
-    [self refreshWatchEditorElements];
+    /* wear _watchWidgetHighlightColorWell.color = [NSColor redColor];
+    [self refreshWatchEditorElements]; */
 }
 
 + (BOOL)autosavesInPlace{
@@ -126,7 +126,7 @@
       control.editingDelegate=self;
       [canvasView addSubview:control];
   }
-
+  /* wear
   for(NSArray* watchControlDuple in [documentModel watchControlDupleArray]){
     MMPControl* control = watchControlDuple[1];
     control.editingDelegate=self;
@@ -134,7 +134,7 @@
 
     NSTextView *controlTitleTextView = watchControlDuple[0];
     [_watchCanvasView addSubview:controlTitleTextView];
-  }
+  }*/
 
   NSMutableSet* addedTableNamesSet = [[NSMutableSet alloc] init];
     //LOAD EXTERNAL FILES within docmodel ( panels) that may require a local path name
@@ -179,14 +179,12 @@
     [self.docStartPageField setIntValue:[documentModel startPageIndex]+1];
     [self setCurrentPage:[documentModel startPageIndex]];
     
-    //port
-    [[self.docPortField formatter] setGroupingSeparator:@""];
-    [self.docPortField setIntValue:[documentModel port]];
 
     //watch
+  /* wear
     [_watchCanvasView setBgColor:[documentModel backgroundColor]];
     [_watchCanvasView setPageCount:[documentModel watchPageCount]];
-    [_watchPageCountPopButton selectItemAtIndex:[[documentModel watchControlDupleArray] count]];
+    [_watchPageCountPopButton selectItemAtIndex:[[documentModel watchControlDupleArray] count]]; */
 
 
 }
@@ -208,6 +206,7 @@
     }
 }
 
+/* wear
 - (void)pruneWatchControls {
   //check for controls that are out of bounds, add them to this array
   NSMutableArray* toDeleteDupleArray = [[NSMutableArray alloc]init];
@@ -219,12 +218,12 @@
   }
   //and now delete them from view and from control array
   for(NSArray* controlDuple in toDeleteDupleArray){
-    printf("\npruned watch control");
+    //printf("\npruned watch control");
     [controlDuple[0] removeFromSuperview];// title text view
     [controlDuple[1] removeFromSuperview];// control
     [documentModel.watchControlDupleArray removeObject:controlDuple];
   }
-}
+}*/
 
 //called after whenever we change the type of canvas (iphone vs ipad vs iphone 5) or orientation (portrait vs landscape)
 // compute new frames for window and scrollviews
@@ -291,18 +290,18 @@
 
         [documentWindow setFrame:CGRectMake(0, screenFrame.origin.y, CANVAS_LEFT+600+CANVAS_TOP+10, screenFrame.size.height) display:YES animate:NO];
         [documentScrollView setFrame:CGRectMake(0, 0, documentView.frame.size.width, documentView.frame.size.height)];
-        [documentScrollView.documentView setFrameSize:CGSizeMake(CANVAS_LEFT+600+CANVAS_TOP, 912+CANVAS_TOP+CANVAS_TOP) ];
+        [documentScrollView.documentView setFrameSize:CGSizeMake(CANVAS_LEFT+600+CANVAS_TOP, 960+CANVAS_TOP+CANVAS_TOP) ];
 
-        [canvasOuterView setFrame:CGRectMake(CANVAS_LEFT,CANVAS_TOP, 600, 912)];
+        [canvasOuterView setFrame:CGRectMake(CANVAS_LEFT,CANVAS_TOP, 600, 960)];
         [documentScrollView.documentView scrollPoint:CGPointMake(0, [documentScrollView.documentView frame].size.height)];
 
       }
       else{//landscape
-        [documentWindow setFrame:CGRectMake(0, screenFrame.origin.y, CANVAS_LEFT+960+CANVAS_TOP, 552+CANVAS_TOP+CANVAS_TOP+20) display:YES animate:NO];
+        [documentWindow setFrame:CGRectMake(0, screenFrame.origin.y, CANVAS_LEFT+960+CANVAS_TOP, 600+CANVAS_TOP+CANVAS_TOP+20) display:YES animate:NO];
 
         [documentScrollView setFrame:CGRectMake(0, 0, documentView.frame.size.width, documentView.frame.size.height)];
         [documentScrollView.documentView setFrameSize:documentScrollView.contentSize];
-        [canvasOuterView setFrame:CGRectMake(CANVAS_LEFT,documentView.frame.size.height-552-CANVAS_TOP, 960, 552)];
+        [canvasOuterView setFrame:CGRectMake(CANVAS_LEFT,documentView.frame.size.height-56002-CANVAS_TOP, 960, 600)];
 
       }
     }
@@ -352,7 +351,7 @@
     NSColor* noAlphaColor = [[sender color] colorWithAlphaComponent:1];//don't allow transulcency, even if the color picker sends it
     [documentModel setBackgroundColor:noAlphaColor];
     [canvasView setBgColor:noAlphaColor];
-    [_watchCanvasView setBgColor:noAlphaColor];
+    /* wear [_watchCanvasView setBgColor:noAlphaColor]; */
 }
 
 - (IBAction)docPageCountChanged:(NSTextField *)sender {
@@ -407,23 +406,6 @@
     [documentModel setStartPageIndex:newVal];
 }
 
-- (IBAction)docPortChanged:(NSTextField *)sender {
-    int val = [sender intValue];
-    if(val<1000 || val>65535){
-        [self.docPortField setIntValue:DEFAULT_PORT_NUMBER];
-        val=DEFAULT_PORT_NUMBER;
-    }
-    
-    [documentModel setPort:val];
-    
-    //send message out in case PD wrapper is listening to update to new port number
-    NSMutableArray* formattedMessageArray = [[NSMutableArray alloc]init];
-    [formattedMessageArray addObject:@"/system/port"];
-    [formattedMessageArray addObject:[NSNumber numberWithInt:val]];
-    [self sendFormattedMessageArray:formattedMessageArray];
-    
-}
-
 //if user wants a file browser for new pd file
 - (IBAction)docChooseFile:(NSButton *)sender {
     NSOpenPanel* openDlg = [NSOpenPanel openPanel];
@@ -465,7 +447,7 @@
     [newControl setHighlightColor:[self.propHighlightColorWell color] ];
     
     //just for redo
-    [newControl hackRefresh];
+    //[newControl hackRefresh];
     
     //select
     [newControl setIsSelected:YES];
@@ -580,7 +562,7 @@
 - (IBAction)bringForward:(NSButton *)sender {//swap array positions both in subviews and in document controlArray
     NSMutableArray* selectedControls = [[NSMutableArray alloc] init];
     
-    for(MMPControl* control in [documentModel controlArray]){//printf(" %d", currControl);
+    for(MMPControl* control in [documentModel controlArray]){
         if([control isSelected]) [selectedControls addObject:control];
     }
     
@@ -589,7 +571,7 @@
         [[documentModel controlArray] addObject:currControl];
         [currControl removeFromSuperview];
         [canvasView addSubview:currControl];
-        [currControl hackRefresh];
+        //[currControl hackRefresh];
     }
    
 }
@@ -610,7 +592,7 @@
     for(MMPControl* control in [documentModel controlArray]){
         [control removeFromSuperview];
         [canvasView addSubview:control];
-        [control hackRefresh];
+        //[control hackRefresh];
     }
 }
 
@@ -702,7 +684,7 @@
         else if([control isKindOfClass:[MMPMultiSlider class]]){
             [self.propVarView addSubview:self.propMultiSliderView];
             [self.propMultiSliderRangeField setIntegerValue:[(MMPMultiSlider*)control range]];
-            [_propMultiSliderTouchModePopButton selectItemAtIndex:((MMPMultiSlider*)control).touchMode];
+            [_propMultiSliderOutputModePopButton selectItemAtIndex:((MMPMultiSlider*)control).outputMode];
         }
         else if([control isKindOfClass:[MMPToggle class]]){
             [self.propVarView addSubview:self.propToggleView];
@@ -718,7 +700,8 @@
           [self.propTableSelectionColorWell setColor:table.selectionColor];
           [self.propTableModePopButton selectItemAtIndex:table.mode];
           [_propTableDisplayModePopButton selectItemAtIndex:table.displayMode];
-          [_propTableDisplayRangePopButton selectItemAtIndex:table.displayRangeConstant];
+          [_propTableDisplayRangeLoTextField setStringValue:[NSString stringWithFormat:@"%.3f", table.displayRangeLo]];
+          [_propTableDisplayRangeHiTextField setStringValue:[NSString stringWithFormat:@"%.3f", table.displayRangeHi]];
         }
       
         currentSingleSelection=control;
@@ -786,7 +769,7 @@
     BOOL showAndroid = ([tabView indexOfTabViewItem:tabViewItem] == 1);
     for (MMPControl *control in documentModel.controlArray) {
       if ([control isKindOfClass:[MMPLabel class]])
-        [(MMPLabel*)control showAndroidFont:showAndroid];
+        ((MMPLabel*)control).isShowingAndroidFonts = showAndroid;
     }
   }
 }
@@ -989,18 +972,32 @@
   [currTable setDisplayMode:[_propTableDisplayModePopButton indexOfSelectedItem] ];
 }
 
-//just for proper undo/redo
--(void)setPropTableDisplayRange:(NSNumber*)inNumber{
-  [[self undoManager] registerUndoWithTarget:self selector:@selector(setPropTableDisplayRange:) object:[NSNumber numberWithInteger:[_propTableDisplayRangePopButton indexOfSelectedItem] ]];
-  [_propTableDisplayRangePopButton selectItemAtIndex:[inNumber intValue]];
+//
+
+-(void)setPropTableDisplayRangeLo:(NSNumber*)inNumber{
+  [[self undoManager] registerUndoWithTarget:self selector:@selector(setPropTableDisplayRangeLo:) object:[NSNumber numberWithFloat:[_propTableDisplayRangeLoTextField floatValue] ]];
+  [_propTableDisplayRangeLoTextField setFloatValue:[inNumber floatValue]];
 }
 
-- (IBAction)propTableDisplayRangeChanged:(NSPopUpButton *)sender {
+- (IBAction)propTableDisplayRangeLoChanged:(NSTextField *)sender {
   MMPTable *currTable = (MMPTable*)currentSingleSelection;
-  [[self undoManager] registerUndoWithTarget:self selector:@selector(setPropTableDisplayRange:) object:[NSNumber numberWithInteger:currTable.displayRangeConstant]];
-  [[self undoManager] registerUndoWithTarget:currTable selector:@selector(setDisplayRangeUndoable:) object:[NSNumber numberWithInteger:currTable.displayRangeConstant]];
+  [[self undoManager] registerUndoWithTarget:self selector:@selector(setPropTableDisplayRangeLo:) object:[NSNumber numberWithFloat:currTable.displayRangeLo]];
+  [[self undoManager] registerUndoWithTarget:currTable selector:@selector(setDisplayRangeLoObjectUndoable:) object:[NSNumber numberWithFloat:currTable.displayRangeLo]];
 
-  [currTable setDisplayRangeConstant:[_propTableDisplayRangePopButton indexOfSelectedItem] ];
+  [currTable setDisplayRangeLo:[_propTableDisplayRangeLoTextField floatValue] ];
+}
+
+-(void)setPropTableDisplayRangeHi:(NSNumber*)inNumber{
+  [[self undoManager] registerUndoWithTarget:self selector:@selector(setPropTableDisplayRangeHi:) object:[NSNumber numberWithFloat:[_propTableDisplayRangeHiTextField floatValue] ]];
+  [_propTableDisplayRangeHiTextField setFloatValue:[inNumber floatValue]];
+}
+
+- (IBAction)propTableDisplayRangeHiChanged:(NSTextField *)sender {
+  MMPTable *currTable = (MMPTable*)currentSingleSelection;
+  [[self undoManager] registerUndoWithTarget:self selector:@selector(setPropTableDisplayRangeHi:) object:[NSNumber numberWithFloat:currTable.displayRangeHi]];
+  [[self undoManager] registerUndoWithTarget:currTable selector:@selector(setDisplayRangeHiObjectUndoable:) object:[NSNumber numberWithFloat:currTable.displayRangeHi]];
+
+  [currTable setDisplayRangeHi:[_propTableDisplayRangeHiTextField floatValue] ];
 }
 
 //just for proper undo/redo
@@ -1237,18 +1234,18 @@
 }
 
 //just for proper undo/redo
--(void)setPropMultiSliderTouchMode:(NSNumber*)inNum{
-  [[self undoManager] registerUndoWithTarget:self selector:@selector(setPropMultiSliderTouchMode:) object:[NSNumber numberWithInteger:[_propMultiSliderTouchModePopButton indexOfSelectedItem]]];
-  [_propMultiSliderTouchModePopButton selectItemAtIndex:[inNum intValue]];
+-(void)setPropMultiSlideroutputMode:(NSNumber*)inNum{
+  [[self undoManager] registerUndoWithTarget:self selector:@selector(setPropMultiSliderOutputMode:) object:[NSNumber numberWithInteger:[_propMultiSliderOutputModePopButton indexOfSelectedItem]]];
+  [_propMultiSliderOutputModePopButton selectItemAtIndex:[inNum intValue]];
 }
 
-- (IBAction)propMultiSliderTouchModeChanged:(NSPopUpButton *)sender {
+- (IBAction)propMultiSliderOutputModeChanged:(NSPopUpButton *)sender {
   MMPMultiSlider* currMultiSlider = (MMPMultiSlider*)currentSingleSelection;
 
-  [[self undoManager] registerUndoWithTarget:currMultiSlider selector:@selector(setTouchModeUndoable:) object:[NSNumber numberWithInteger:currMultiSlider.touchMode]];
-  [[self undoManager] registerUndoWithTarget:self selector:@selector(setPropMultiSliderTouchMode:) object:[NSNumber numberWithInteger:currMultiSlider.touchMode]];
+  [[self undoManager] registerUndoWithTarget:currMultiSlider selector:@selector(setOutputModeUndoable:) object:[NSNumber numberWithInteger:currMultiSlider.outputMode]];
+  [[self undoManager] registerUndoWithTarget:self selector:@selector(setPropMultiSliderOutputMode:) object:[NSNumber numberWithInteger:currMultiSlider.outputMode]];
 
-  [currMultiSlider setTouchMode:[sender indexOfSelectedItem]];
+  [currMultiSlider setOutputMode:[sender indexOfSelectedItem]];
 }
 
 - (IBAction)lockClearButtonHit:(NSButton *)sender {
@@ -1280,7 +1277,7 @@
 }
 
 #pragma mark - Watch Editor
-
+/* wear
 - (IBAction)watchPageCountChanged:(NSPopUpButton *)sender {
   NSUInteger oldPageCount = [documentModel watchPageCount];
   NSUInteger newPageCount = [sender indexOfSelectedItem ];
@@ -1393,7 +1390,7 @@
     [_watchWidgetTypePopButton selectItemAtIndex:1];//make constant
     [_watchPropVarView addSubview:_watchPropMultiSliderView];
     [_watchPropMultiSliderRangeField setIntegerValue:[(MMPMultiSlider*)currentControl range]];
-    [_watchPropMultiSliderTouchModePopButton selectItemAtIndex:((MMPMultiSlider*)currentControl).touchMode];
+    [_watchPropMultiSliderOutputModePopButton selectItemAtIndex:((MMPMultiSlider*)currentControl).outputMode];
   } else if ([currentControl isKindOfClass:[MMPXYSlider class]]) {
     [_watchWidgetTypePopButton selectItemAtIndex:2];//make constant
   } else if ([currentControl isKindOfClass:[MMPLabel class]]) {
@@ -1462,6 +1459,9 @@
 }
 
 - (IBAction)watchWidgetAddressChanged:(NSTextField *)sender {
+  // On initial state, index = 0 but array = 0, so return;
+  if (currentWatchPageIndex>=documentModel.watchControlDupleArray.count) return;
+
   NSArray *currentWatchControlTuple = documentModel.watchControlDupleArray[currentWatchPageIndex];
   MMPControl *currControl = currentWatchControlTuple[1];
 
@@ -1613,9 +1613,9 @@
   ((MMPMultiSlider *)currentWatchControlDuple[1]).range= [sender intValue];
 }
 
-- (IBAction)watchPropMultiSliderTouchModeChanged:(NSPopUpButton *)sender {
+- (IBAction)watchPropMultiSliderOutputModeChanged:(NSPopUpButton *)sender {
   NSArray *currentWatchControlDuple = documentModel.watchControlDupleArray[currentWatchPageIndex];
-  ((MMPMultiSlider *)currentWatchControlDuple[1]).touchMode = [sender indexOfSelectedItem];
+  ((MMPMultiSlider *)currentWatchControlDuple[1]).outputMode = [sender indexOfSelectedItem];
 }
 
 // watch action methods
@@ -1623,7 +1623,7 @@
   currentWatchPageIndex = newIndex;
   [ _watchCanvasView setPageViewIndex:currentWatchPageIndex];
   self.watchPageIndexLabel.stringValue = [NSString stringWithFormat:@"Page %d/%d", currentWatchPageIndex+1, documentModel.watchPageCount];
-}
+} */
 
 //====end of list of Nib's IBAction methods
 
@@ -1685,17 +1685,8 @@
 }
 
 -(void)receiveOSCHelper:(NSMutableArray*)msgArray{
-  
-    //I respond to this message
-    if([[msgArray objectAtIndex:0] isEqualToString:@"/system"] && [[msgArray objectAtIndex:1] isEqualToString:@"requestPort"]){
-        NSMutableArray* formattedMessageArray = [[NSMutableArray alloc]init];
-        [formattedMessageArray addObject:@"/system/port"];
-        [formattedMessageArray addObject:[NSNumber numberWithInt:[documentModel port]]];
-        [self sendFormattedMessageArray:formattedMessageArray];
-        
-    }
-  
-    else if([msgArray count]==2 && [[msgArray objectAtIndex:0] isEqualToString:@"/system/setPage"] && [[msgArray objectAtIndex:1] isKindOfClass:[NSNumber class]]){
+    // Messages I respond to:
+    if([msgArray count]==2 && [[msgArray objectAtIndex:0] isEqualToString:@"/system/setPage"] && [[msgArray objectAtIndex:1] isKindOfClass:[NSNumber class]]){
       int page = [[msgArray objectAtIndex:1] intValue];
       if(page<0)page=0; if (page>documentModel.pageCount-1)page=documentModel.pageCount-1;
       [self setCurrentPage:page];
@@ -1714,11 +1705,18 @@
     else {
       //otherwise SEND TO OBJECT!!!
       for(MMPControl* currControl in [documentModel controlArray]){//TODO HASH TABLE!!!
-          if([currControl.address isEqualToString:[msgArray objectAtIndex:0]])
+        if([currControl.address isEqualToString:[msgArray objectAtIndex:0]]) {
               [currControl receiveList: [msgArray subarrayWithRange:NSMakeRange(1, [msgArray count]-1)]];
+        }
       }
+      // Watch!
+      /* wearfor(NSArray* currControlDuple in [documentModel watchControlDupleArray]){//TODO HASH TABLE!!!
+        MMPControl *currControl = currControlDuple[1];
+        if([currControl.address isEqualToString:[msgArray objectAtIndex:0]]) {
+          [currControl receiveList: [msgArray subarrayWithRange:NSMakeRange(1, [msgArray count]-1)]];
+        }
+      }*/
     }
-  
 }
 
 //-(void)receiveOSCArray:(NSMutableArray*)msgArray asString:(NSString *)string{//from OSC thread!

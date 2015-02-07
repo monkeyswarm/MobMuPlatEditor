@@ -32,8 +32,8 @@
         
         
         [self setColor:self.color];
-        [self setFrame:frame];
         [self addHandles];
+        [self resizeSubviewsWithOldSize:self.frame.size];
     }
     
     return self;
@@ -68,10 +68,11 @@
 
 }
 
--(void)setFrame:(NSRect)frameRect{
-    [super setFrame:frameRect];
-    [imageView setFrameSize:CGSizeMake(frameRect.size.width, frameRect.size.height)];
-    [textField setFrameSize:CGSizeMake(frameRect.size.width, frameRect.size.height)];
+- (void)resizeSubviewsWithOldSize:(NSSize)oldBoundsSize{
+  [super resizeSubviewsWithOldSize:oldBoundsSize];
+
+  [imageView setFrameSize:CGSizeMake(self.frame.size.width, self.frame.size.height)];
+  [textField setFrameSize:CGSizeMake(self.frame.size.width, self.frame.size.height)];
 }
 
 -(void)setColor:(NSColor *)color{

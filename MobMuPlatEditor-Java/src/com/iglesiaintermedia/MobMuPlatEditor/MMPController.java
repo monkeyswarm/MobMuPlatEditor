@@ -96,7 +96,7 @@ public class MMPController {
 				System.out.print("unknown host exception");
 			}catch(SocketException e){
 				System.out.print("sender socket exception");	
-				JOptionPane.showMessageDialog(null, "Unable to create OSC sender on port 54300. \nI won't be able to receive messages from PD. \nPerhaps another application, or instance of this editor, is on this port.");			
+				JOptionPane.showMessageDialog(null, "Unable to create OSC sender on port 54300. \nI won't be able to send messages to PD. \nPerhaps another application, or instance of this editor, is on this port.");			
 			}
 		}
 		if(MMPController.receiver==null){
@@ -306,8 +306,8 @@ public class MMPController {
 	    windowDelegate.updateWindowAndCanvas();
 	    
 	    windowDelegate.docCanvasTypeMenu.removeActionListener(windowDelegate.docCanvasTypeMenu.getActionListeners()[0]);
-        if(documentModel.canvasType==CanvasType.canvasTypeIPhone4Inch) windowDelegate.docCanvasTypeMenu.setSelectedIndex(1);
-        else if(documentModel.canvasType==CanvasType.canvasTypeIPad) windowDelegate.docCanvasTypeMenu.setSelectedIndex(2);
+        if(documentModel.canvasType==CanvasType.canvasTypeTallPhone) windowDelegate.docCanvasTypeMenu.setSelectedIndex(1);
+        else if(documentModel.canvasType==CanvasType.canvasTypeWideTablet) windowDelegate.docCanvasTypeMenu.setSelectedIndex(2);
         else windowDelegate.docCanvasTypeMenu.setSelectedIndex(0);
 	    windowDelegate.docCanvasTypeMenu.addActionListener(windowDelegate);
 	    
@@ -327,12 +327,7 @@ public class MMPController {
 	    windowDelegate.docStartPageField.setText(Integer.toString(documentModel.startPageIndex+1));// ;) [self.docPageCountField setIntValue:[documentModel pageCount]];
 	    //windowDelegate.canvasPanel.setPageViewIndex(documentModel.startPageIndex) ;
 	    setCurrentPage(documentModel.startPageIndex);
-	    
-	    windowDelegate.portTextField.setText(""+documentModel.port);
-
-	
-	    
-	    
+	  
 	}
 	
 	void pruneControls(){
@@ -744,7 +739,9 @@ public class MMPController {
         		windowDelegate.propMultiCountTextField.removeActionListener(windowDelegate);
 	        	windowDelegate.propMultiCountTextField.setText(""+currMS.range);
 	        	windowDelegate.propMultiCountTextField.addActionListener(windowDelegate);
-	        	
+	        	windowDelegate.propMultiOutputModeBox.removeActionListener(windowDelegate.propMultiOutputModeBox.getActionListeners()[0]);
+	        	windowDelegate.propMultiOutputModeBox.setSelectedIndex(currMS.outputMode);
+	            windowDelegate.propMultiOutputModeBox.addActionListener(windowDelegate);
 	        }
 	        else if(control instanceof MMPToggle){
 	        	windowDelegate.propVarTogglePanel.setVisible(true);
@@ -765,10 +762,24 @@ public class MMPController {
 	        else if (control instanceof MMPTable){
 	        	windowDelegate.propVarTablePanel.setVisible(true);
 	        	MMPTable currTable = (MMPTable)control;
+	        	// touch mode
 	        	windowDelegate.propTableModeBox.removeActionListener(windowDelegate);
 	        	windowDelegate.propTableModeBox.setSelectedIndex(currTable.getMode());
 	            windowDelegate.propTableModeBox.addActionListener(windowDelegate);
+	            // selection color
 	            windowDelegate.propTableSelectionColorWell.setColor(currTable.getSelectionColor());
+	            // display mode
+	            windowDelegate.propTableDisplayModeBox.removeActionListener(windowDelegate);
+	        	windowDelegate.propTableDisplayModeBox.setSelectedIndex(currTable.getDisplayMode());
+	            windowDelegate.propTableDisplayModeBox.addActionListener(windowDelegate);
+	            // range
+	            windowDelegate.propTableDisplayRangeLoTextField.removeActionListener(windowDelegate);
+	        	windowDelegate.propTableDisplayRangeLoTextField.setText(""+currTable.getDisplayRangeLo());
+	        	windowDelegate.propTableDisplayRangeLoTextField.addActionListener(windowDelegate);
+	        	windowDelegate.propTableDisplayRangeHiTextField.removeActionListener(windowDelegate);
+	        	windowDelegate.propTableDisplayRangeHiTextField.setText(""+currTable.getDisplayRangeHi());
+	        	windowDelegate.propTableDisplayRangeHiTextField.addActionListener(windowDelegate);
+	            
 	        }
 	       
 	        currentSingleSelection=control;

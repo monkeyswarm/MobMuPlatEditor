@@ -24,9 +24,12 @@ import com.iglesiaintermedia.MobMuPlatEditor.MMPController;
 
 public class MMPTable extends MMPControl {
 
-	 Color selectionColor;
-	 int mode;
-	
+	 public Color selectionColor;
+	 public int mode; // selection, draw
+	 private int displayMode; //0=line, 1=fill
+	 private float displayRangeLo;
+	 private float displayRangeHi;
+	 
 	int tableSize;
 	float[] tableData;
 	
@@ -52,6 +55,9 @@ public class MMPTable extends MMPControl {
 		this.setHighlightColor(otherTable.highlightColor);
 		this.mode = otherTable.mode;
 		this.selectionColor = otherTable.selectionColor;
+		this.displayMode = otherTable.displayMode;
+		this.displayRangeLo = otherTable.displayRangeLo;
+		this.displayRangeHi = otherTable.displayRangeHi;
 	}
 	
 	public MMPTable(Rectangle frame){
@@ -59,6 +65,8 @@ public class MMPTable extends MMPControl {
 		this.setAddress("/myTable");
 		_created = true;
 		this.setSelectionColor(new Color(1f,1f,1f,.5f));
+		this.displayRangeLo = -1;
+		this.displayRangeHi = 1;
 		
 		this.addMouseListener(this);
 		this.addMouseMotionListener(this);
@@ -151,14 +159,16 @@ public class MMPTable extends MMPControl {
 	
 	void drawRange(int indexA, int indexB) {
 		if(tableData==null)return;
+		// check for div by zero
+		if (displayRangeHi == displayRangeLo)return;
+		  
 		int padding=3;
-		float  minX=getWidth(), minY = getHeight(), maxX =0, maxY = 0;
 		
 		cacheGraphics.setColor(new Color(fR,fG,fB,fA) );
 		GeneralPath polygon =   new GeneralPath(GeneralPath.WIND_EVEN_ODD);
 		//float x = ((Float)(messageArray.get(0))).floatValue() * getWidth();
 		//float y = ((Float)(messageArray.get(1))).floatValue() * getHeight();
-		polygon.moveTo(0,0);
+		//polygon.moveTo(0,0); //prob unneccesary
 		
 		int indexDrawPointA = (int)((float)Math.min(indexA,indexB)/tableSize*this.getWidth())-padding;
 		indexDrawPointA = Math.min(Math.max(indexDrawPointA,0),this.getWidth()-1);
@@ -177,19 +187,33 @@ public class MMPTable extends MMPControl {
 		    if(indexA==indexB && indexA<index && indexA>prevIndex) index = indexA;
 		    
 		    float y = tableData[index];
-		    float unflippedY = (1-((y+1)/2)) *this.getHeight();
+		    //float unflippedY = (1-((y+1)/2)) *this.getHeight();
+		    // Scale lo to hi to flipped 0 to frame height.
+		    float unflippedY = 1-( (y-displayRangeLo)/(displayRangeHi - displayRangeLo));
+		    unflippedY *= getHeight();
 		   //System.out.println("i:"+ i+" x:"+x+" index:"+index+" y:"+y+" unflippd:"+unflippedY);
 		    if(i==indexDrawPointA){
 		    	polygon.moveTo( x,unflippedY);
 		    }
 		    else {
 		    	polygon.lineTo( x, unflippedY);
-		    	polygon.moveTo( x,unflippedY);
 		    }
 		  }  
 		
-	    polygon.closePath();
-	    cacheGraphics.draw(polygon);
+	    
+	    if (displayMode == 0) { //line
+	    	//polygon.closePath();
+	    	cacheGraphics.draw(polygon);
+	    } else if (displayMode == 1) { //fill
+	    	// add outer points
+	    	float yPointOfTableZero = 1 - ((0 -displayRangeLo)/(displayRangeHi - displayRangeLo));
+	        yPointOfTableZero *= getHeight();
+	        polygon.lineTo(indexDrawPointB, yPointOfTableZero);
+	    	polygon.lineTo(indexDrawPointA, yPointOfTableZero);
+	    	polygon.closePath(); // draws line back to initial .moveTo()
+	    	cacheGraphics.fill(polygon);
+	    }
+	    
 	    
 	    Rectangle newRect2 = new Rectangle( indexDrawPointA, 0, Math.abs(indexDrawPointB-indexDrawPointA), this.getHeight() );
 		this.repaint(newRect2);
@@ -238,7 +262,9 @@ public class MMPTable extends MMPControl {
 		        lastTableIndex = touchDownTableIndex;
 		        
 		        float normalizedY = (float)lastPoint.y/getHeight();//change to -1 to 1
-		        float flippedY = (1-normalizedY)*2-1;
+		        //float flippedY = (1-normalizedY)*2-1;
+		        float flippedY = (1 - normalizedY)*(displayRangeHi - displayRangeLo) + displayRangeLo;
+
 		        //NSLog(@"touchDownTableIndex %d", touchDownTableIndex);
 		        
 		        tableData[touchDownTableIndex] = flippedY;//check bounds
@@ -305,8 +331,9 @@ public class MMPTable extends MMPControl {
 		        
 		        float normalizedY = (float)dragPoint.y/getHeight();//change to -1 to 1
 		        normalizedY = Math.max(Math.min(normalizedY,1),0);
-		        float flippedY = (1-normalizedY)*2-1;
-		        
+		        //float flippedY = (1-normalizedY)*2-1;
+		        float flippedY = (1 - normalizedY)*(displayRangeHi - displayRangeLo) + displayRangeLo;
+
 		        //compute size, including self but not prev
 		        int traversedElementCount = Math.abs(dragTableIndex-lastTableIndex);
 		        if(traversedElementCount==0)traversedElementCount=1;
@@ -347,12 +374,47 @@ public class MMPTable extends MMPControl {
 	    }
 	}
 
-	@Override
-	public void mouseMoved(MouseEvent arg0) {
-		// TODO Auto-generated method stub
-		
+	public void setDisplayMode(int newMode) {
+		this.displayMode = newMode;
+		draw();
+	}
+	public int getDisplayMode() {
+		return displayMode;
+	}
+	public void setDisplayRangeLo(float newRangeLo) {
+		this.displayRangeLo = newRangeLo;
+		draw();
+	}
+	public float getDisplayRangeLo() {
+		return displayRangeLo;
+	}
+	public void setDisplayRangeHi(float newRangeHi) {
+		this.displayRangeHi = newRangeHi;
+		draw();
+	}
+	public float getDisplayRangeHi() {
+		return displayRangeHi;
 	}
 	
+	public void setDisplayRangeConstant(int displayRangeConstant) {
+		if (displayRangeConstant == 0) {// polar -1 to 1
+		    displayRangeLo = -1;
+		    displayRangeHi = 1;
+		  } else if (displayRangeConstant == 1) {
+		    displayRangeLo = 0;
+		    displayRangeHi = 1;
+		  }
+		  draw();
+	}
+	public int getDisplayRangeConstant() {
+		if (displayRangeLo == -1 && displayRangeHi == 1) {
+			return 0;
+		} else if (displayRangeLo == 0 && displayRangeHi == 1) {
+			return 1;
+		} else {
+			return -1;
+		}
+	}
 	
 	/*public void clear(){
 		cacheGraphics.setBackground(new Color(255, 255, 255, 0));

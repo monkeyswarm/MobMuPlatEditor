@@ -73,16 +73,23 @@
     
     [self setFrame:frame];
     [self addHandles];
+    [self resizeSubviewsWithOldSize:self.frame.size];
   }
   return self;
 }
 
--(void)setFrame:(NSRect)frameRect{
-  [super setFrame:frameRect];
-  [innerView setFrame:CGRectMake(0,0, frameRect.size.width, frameRect.size.height)];
+- (void)resizeSubviewsWithOldSize:(NSSize)oldBoundsSize{
+  [super resizeSubviewsWithOldSize:oldBoundsSize];
+
+
+  [innerView setFrame:CGRectMake(0,0, self.frame.size.width, self.frame.size.height)];
   [downView setFrame:CGRectMake(0, 0, TAB_WIDTH, self.frame.size.height) ];
-  
-  [textField setFrame:CGRectMake(frameRect.size.width/2-textField.frame.size.width/2, frameRect.size.height/2-textField.frame.size.height/2, textField.frame.size.width, textField.frame.size.height )];
+
+  [textField setFrame:CGRectMake(self.frame.size.width/2-textField.frame.size.width/2,
+                                 self.frame.size.height/2-textField.frame.size.height/2,
+                                 textField.frame.size.width,
+                                 textField.frame.size.height )];
+
 }
 
 -(void)hackRefresh{

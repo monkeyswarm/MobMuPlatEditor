@@ -56,7 +56,7 @@
             offset = (_isOrientationLandscape ? 1024:768);
             break;
         case (canvasTypeAndroid7Inch):
-            offset = (_isOrientationLandscape ? 960:600); //different
+            offset = (_isOrientationLandscape ? 960:600);
             break;
         case(canvasTypeWatch):
           offset = 140;
@@ -93,7 +93,7 @@
             break;
       case (canvasTypeAndroid7Inch):
         width = (_isOrientationLandscape ? 960:600);
-        height = (_isOrientationLandscape ? 552:912);
+        height = (_isOrientationLandscape ? 600:960);
         [_buttonBlankView setFrame:CGRectMake(20, 20, 40, 40)];
         break;
       case (canvasTypeWatch):

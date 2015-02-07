@@ -92,7 +92,6 @@ public class MMPWindow implements ChangeListener, ActionListener, FocusListener,
 	JComboBox docOrientationMenu;
 	 JTextFieldDirty docPageCountField;
 	 JTextFieldDirty docStartPageField;
-	 JTextFieldDirty portTextField;
 	 JTextFieldDirty docFileTextField;
 	ColorWell docBGColorWell;
 	
@@ -133,10 +132,26 @@ public class MMPWindow implements ChangeListener, ActionListener, FocusListener,
 	JTextFieldDirty propPanelFileTextField;
 	JCheckBox propPanelShouldPassTouchesCheckBox;
 	JTextFieldDirty propMultiCountTextField;
+	JComboBox propMultiOutputModeBox;
 	JTextFieldDirty propMenuTitleTextField;
 	
 	JComboBox propTableModeBox;
 	ColorWell propTableSelectionColorWell;
+	JComboBox propTableDisplayModeBox;
+	JTextFieldDirty propTableDisplayRangeLoTextField;
+	JTextFieldDirty propTableDisplayRangeHiTextField;
+	
+	/* wear
+	CanvasPanel watchCanvasPanel;
+	JComboBox watchPageCountBox;
+	JLabel watchPageIndexLabel;
+	JButton watchPageUpButton;
+	JButton watchPageDownButton;
+	ColorWell watchWidgetColorWell;
+	ColorWell watchWidgetHighlightColorWell;
+	JTextFieldDirty watchWidgetAddressField;
+	JTextFieldDirty watchWidgetTitleField;
+	JComboBox watchWidgetTypeBox; */
 	
 	JTextArea consoleTextArea;
 	
@@ -263,8 +278,10 @@ public class MMPWindow implements ChangeListener, ActionListener, FocusListener,
 		tabbedPane = new JTabbedPane(JTabbedPane.TOP);
 		scrollContentPanel.add(tabbedPane);
 		tabbedPane.setLocation(4, 10);
-		tabbedPane.setSize(238, 374);
+		tabbedPane.setSize(245, 374);
 		tabbedPane.addChangeListener(this);
+		Font defaultFont = UIManager.getDefaults().getFont("TabbedPane.font");
+		tabbedPane.setFont( new Font( defaultFont.getName(), Font.PLAIN, 10 ) );
 	       
 		canvasOuterPanel = new JPanel();
 		canvasOuterPanel.setSize(320, 480);
@@ -300,7 +317,10 @@ public class MMPWindow implements ChangeListener, ActionListener, FocusListener,
 		docPanel.add(lblNewLabel);
 		
 		docCanvasTypeMenu = new JComboBox();
-		docCanvasTypeMenu.setModel(new DefaultComboBoxModel(new String[] {"iPhone - 3.5\"", "iPhone - 4\"", "iPad", "Android 7\""}));
+		docCanvasTypeMenu.setModel(new DefaultComboBoxModel(new String[] {"Wide Phone: aspect:0.66 (iPhone 3,4)", 
+																		  "Tall Phone: aspect:0.56 (iPhone 5,6,6+)",
+																		  "Wide Tablet: aspect:0.75 (iPad)",
+																		  "Tall Tablet: aspect:0.625 (Most Android tablets)"}));
 		docCanvasTypeMenu.setBounds(97, 6, 122, 26);
 		docCanvasTypeMenu.setActionCommand("canvasType");
 		docCanvasTypeMenu.addActionListener(this);
@@ -353,21 +373,9 @@ public class MMPWindow implements ChangeListener, ActionListener, FocusListener,
 		docStartPageField.setBounds(155, 124, 54, 28);
 		docPanel.add(docStartPageField);
 		
-		JLabel label_3 = new JLabel("Send/Receive Port");
-		label_3.setBounds(6, 157, 137, 16);
-		docPanel.add(label_3);
-		
-		portTextField = new JTextFieldDirty();
-		portTextField.setColumns(2);
-		portTextField.setActionCommand("port");
-		portTextField.setText(""+controller.documentModel.port);
-		portTextField.addFocusListener(this);
-		portTextField.addActionListener(this);
-		portTextField.setBounds(155, 151, 54, 28);
-		docPanel.add(portTextField);
 		
 		JLabel label_4 = new JLabel("Main Pd File");
-		label_4.setBounds(6, 209, 137, 16);
+		label_4.setBounds(6, 160, 137, 16);
 		docPanel.add(label_4);
 		
 		docFileTextField = new JTextFieldDirty();
@@ -375,21 +383,27 @@ public class MMPWindow implements ChangeListener, ActionListener, FocusListener,
 		docFileTextField.addFocusListener(this);
 		docFileTextField.setActionCommand("pdFile");
 		docFileTextField.addActionListener(this);
-		docFileTextField.setBounds(6, 237, 205, 28);
+		docFileTextField.setBounds(6, 209, 212, 28);
 		docPanel.add(docFileTextField);
 		
 		
 		
 		JButton choosePDFileButton = new JButton("Choose...");
-		choosePDFileButton.setBounds(94, 204, 117, 29);
+		choosePDFileButton.setBounds(49, 241, 117, 29);
 		docPanel.add(choosePDFileButton);
 		choosePDFileButton.addActionListener(this);
 		choosePDFileButton.setActionCommand("pdFileButton");
 		
 		JLabel pdInfoLabel = new JLabel("<html>Open this file, and \"PdWrapper.pd\" in Pd. <br>This application will then send/receive <br>messages to Pd when in \"Lock\" mode.");
-		pdInfoLabel.setFont(new Font("Lucida Grande", Font.PLAIN, 10));
-		pdInfoLabel.setBounds(6, 260, 205, 57);
+		pdInfoLabel.setFont(new Font("Lucida Grande", Font.PLAIN, 9));
+		pdInfoLabel.setBounds(6, 258, 205, 57);
 		docPanel.add(pdInfoLabel);
+		
+		JLabel lblNewLabel_12 = new JLabel("<html>Define which Pd patch the app should open.<br> Type the filename here, or choose from disk.</html>");
+		lblNewLabel_12.setFont(new Font("Lucida Grande", Font.PLAIN, 9));
+		lblNewLabel_12.setVerticalAlignment(SwingConstants.TOP);
+		lblNewLabel_12.setBounds(6, 181, 213, 38);
+		docPanel.add(lblNewLabel_12);
 
 		
 		
@@ -532,6 +546,97 @@ public class MMPWindow implements ChangeListener, ActionListener, FocusListener,
 		propVarPanel.setLayout(null);
 		propPanel.add(propVarPanel);
 		
+		//PROPVAR - Table
+				propVarTablePanel = new JPanel();
+				propVarTablePanel.setBounds(0, 0, 217, 162);
+				propVarTablePanel.setLayout(null);
+				propVarTablePanel.setVisible(false);
+				propVarPanel.add(propVarTablePanel);
+				
+				JLabel propVarTableInfoLabel = new JLabel("<html>The address corresponds to <br>\na PD table of the same name <br>\n(including slash).</html>");
+				propVarTableInfoLabel.setHorizontalAlignment(SwingConstants.CENTER);
+				propVarTableInfoLabel.setFont(new Font("Lucida Grande", Font.PLAIN, 11));
+				propVarTableInfoLabel.setBounds(6, 0, 211, 43);
+				propVarTablePanel.add(propVarTableInfoLabel);
+				
+				propTableModeBox = new JComboBox();
+				propTableModeBox.setModel(new DefaultComboBoxModel(new String[] {"Select", "Draw"}));
+				propTableModeBox.setBounds(115, 43, 102, 27);
+				propTableModeBox.setActionCommand("propTableModeChanged");
+				propTableModeBox.addActionListener(this);
+				propVarTablePanel.add(propTableModeBox);
+				
+				JLabel propVarTableSelectionColorLabel = new JLabel("Selection Color:");
+				propVarTableSelectionColorLabel.setBounds(20, 70, 104, 16);
+				propVarTablePanel.add(propVarTableSelectionColorLabel);
+				
+				propTableSelectionColorWell = new ColorWell();
+				propTableSelectionColorWell.setBounds(136, 65, 56, 30);
+				propVarTablePanel.add(propTableSelectionColorWell);
+				propTableSelectionColorWell.delegate=this;
+				propTableSelectionColorWell.hasAlpha=true;
+				
+				JLabel lblTouchMode = new JLabel("Touch Mode:");
+				lblTouchMode.setBounds(20, 47, 102, 16);
+				propVarTablePanel.add(lblTouchMode);
+				
+				JLabel lblDisplayMode = new JLabel("Display Mode:");
+				lblDisplayMode.setBounds(20, 100, 102, 16);
+				propVarTablePanel.add(lblDisplayMode);
+				
+				propTableDisplayModeBox = new JComboBox();
+				propTableDisplayModeBox.setModel(new DefaultComboBoxModel(new String[] {"Line", "Fill"}));
+				propTableDisplayModeBox.setActionCommand("propTableDisplayModeChanged");
+				propTableDisplayModeBox.setBounds(115, 95, 102, 27);
+				propVarTablePanel.add(propTableDisplayModeBox);
+				
+				propTableDisplayRangeLoTextField = new JTextFieldDirty();
+				//propTableDisplayRangeLoTextField.setColumns(2);
+				propTableDisplayRangeLoTextField.setActionCommand("propTableDisplayRangeLoChanged");
+				propTableDisplayRangeLoTextField.setBounds(120, 120, 48, 28);
+				propVarTablePanel.add(propTableDisplayRangeLoTextField);
+				
+				propTableDisplayRangeHiTextField = new JTextFieldDirty();
+				//propTableDisplayRangeLoTextField.setColumns(2);
+				propTableDisplayRangeHiTextField.setActionCommand("propTableDisplayRangeHiChanged");
+				propTableDisplayRangeHiTextField.setBounds(168, 120, 48, 28);
+				propVarTablePanel.add(propTableDisplayRangeHiTextField);
+				
+				JLabel lblDisplayRange = new JLabel("Display Range:");
+				lblDisplayRange.setBounds(20, 125, 102, 16);
+				propVarTablePanel.add(lblDisplayRange);
+				
+				
+		//PROPVAR - MULTISLIDER
+				propVarMultiSliderPanel = new JPanel();
+				propVarMultiSliderPanel.setBounds(0, 0, 217, 162);
+				propVarMultiSliderPanel.setLayout(null);
+				propVarMultiSliderPanel.setVisible(false);
+				propVarPanel.add(propVarMultiSliderPanel);
+				
+				JLabel lblNumberOfSliders = new JLabel("Number of Sliders");
+				lblNumberOfSliders.setBounds(18, 6, 125, 16);
+				propVarMultiSliderPanel.add(lblNumberOfSliders);
+				
+				propMultiCountTextField = new JTextFieldDirty();
+				propMultiCountTextField.setBounds(144, 0, 67, 28);
+				propVarMultiSliderPanel.add(propMultiCountTextField);
+				propMultiCountTextField.setColumns(10);
+				propMultiCountTextField.addFocusListener(this);
+				propMultiCountTextField.setActionCommand("propVarMultiCountChanged");
+				
+				propMultiOutputModeBox = new JComboBox();
+				propMultiOutputModeBox.setBounds(109, 40, 102, 27);
+				propMultiOutputModeBox.setModel(new DefaultComboBoxModel(new String[] {"All slider values", "Slider index and value"}));
+				propMultiOutputModeBox.setActionCommand("propMultiOutputModeChanged");
+				propMultiOutputModeBox.addActionListener(this);
+				propVarMultiSliderPanel.add(propMultiOutputModeBox);
+				
+				JLabel lblOutputMode = new JLabel("Output Mode");
+				lblOutputMode.setBounds(18, 44, 92, 16);
+				propVarMultiSliderPanel.add(lblOutputMode);
+				propMultiCountTextField.addActionListener(this);
+				
 		//PROPVAR - GRID
 				propVarGridPanel = new JPanel();
 				propVarGridPanel.setBounds(0, 0, 217, 162);
@@ -790,24 +895,7 @@ public class MMPWindow implements ChangeListener, ActionListener, FocusListener,
 		propPanelShouldPassTouchesCheckBox.addActionListener(this);
 		propVarPanelPanel.add(propPanelShouldPassTouchesCheckBox);
 		
-		//PROPVAR - MULTISLIDER
-		propVarMultiSliderPanel = new JPanel();
-		propVarMultiSliderPanel.setBounds(0, 0, 217, 162);
-		propVarMultiSliderPanel.setLayout(null);
-		propVarMultiSliderPanel.setVisible(false);
-		propVarPanel.add(propVarMultiSliderPanel);
 		
-		JLabel lblNumberOfSliders = new JLabel("Number of Sliders");
-		lblNumberOfSliders.setBounds(18, 6, 125, 16);
-		propVarMultiSliderPanel.add(lblNumberOfSliders);
-		
-		propMultiCountTextField = new JTextFieldDirty();
-		propMultiCountTextField.setBounds(144, 0, 67, 28);
-		propVarMultiSliderPanel.add(propMultiCountTextField);
-		propMultiCountTextField.setColumns(10);
-		propMultiCountTextField.addFocusListener(this);
-		propMultiCountTextField.setActionCommand("propVarMultiCountChanged");
-		propMultiCountTextField.addActionListener(this);
 		
 		//PROPVAR - Toggle
 		propVarTogglePanel = new JPanel();
@@ -852,40 +940,7 @@ public class MMPWindow implements ChangeListener, ActionListener, FocusListener,
 		lblNewLabel_9.setBounds(15, 72, 196, 54);
 		propVarMenuPanel.add(lblNewLabel_9);
 		
-		//PROPVAR - Table
-		propVarTablePanel = new JPanel();
-		propVarTablePanel.setBounds(0, 0, 217, 162);
-		propVarTablePanel.setLayout(null);
-		propVarTablePanel.setVisible(false);
-		propVarPanel.add(propVarTablePanel);
-		
-		JLabel propVarTableInfoLabel = new JLabel("<html>The address corresponds to <br>\na PD table of the same name <br>\n(including slash).</html>");
-		propVarTableInfoLabel.setHorizontalAlignment(SwingConstants.CENTER);
-		propVarTableInfoLabel.setFont(new Font("Lucida Grande", Font.PLAIN, 11));
-		propVarTableInfoLabel.setBounds(16, 6, 176, 43);
-		propVarTablePanel.add(propVarTableInfoLabel);
-		
-		propTableModeBox = new JComboBox();
-		propTableModeBox.setModel(new DefaultComboBoxModel(new String[] {"Select", "Draw"}));
-		propTableModeBox.setBounds(109, 61, 102, 27);
-		propTableModeBox.setActionCommand("propTableModeChanged");
-		propTableModeBox.addActionListener(this);
-		propVarTablePanel.add(propTableModeBox);
-		
-		JLabel propVarTableSelectionColorLabel = new JLabel("Selection Color");
-		propVarTableSelectionColorLabel.setBounds(16, 99, 102, 16);
-		propVarTablePanel.add(propVarTableSelectionColorLabel);
-		
-		propTableSelectionColorWell = new ColorWell();
-		propTableSelectionColorWell.setBounds(130, 93, 56, 30);
-		propVarTablePanel.add(propTableSelectionColorWell);
-		propTableSelectionColorWell.delegate=this;
-		propTableSelectionColorWell.hasAlpha=true;
-		
-		JLabel lblTouchMode = new JLabel("Touch Mode:");
-		lblTouchMode.setBounds(16, 65, 102, 16);
-		propVarTablePanel.add(lblTouchMode);
-		
+		// bottom buttons
 		
 		JButton propDeleteButton = new JButton("Delete");
 		propDeleteButton.setFont(new Font("Lucida Grande", Font.PLAIN, 12));
@@ -908,8 +963,81 @@ public class MMPWindow implements ChangeListener, ActionListener, FocusListener,
 		propBringForwardButton.addActionListener(this);
 		propBringForwardButton.setActionCommand("bringForward");
 		
+		// WATCH
+		/* wear
+		JPanel watchPanel = new JPanel();
+		tabbedPane.addTab("Watch", null, watchPanel, null);
+		watchPanel.setLayout(null);
 		
+		watchCanvasPanel = new CanvasPanel();
+		watchCanvasPanel.setSize(140, 140);
+		watchCanvasPanel.setLocation(5, 6);
+		watchCanvasPanel.editingDelegate=controller;
+		watchCanvasPanel.setLayout(null);
+		watchPanel.add(watchCanvasPanel);
 		
+		JLabel lblNumberOfPages = new JLabel("Number of pages");
+		lblNumberOfPages.setBounds(130, 6, 88, 28);
+		watchPanel.add(lblNumberOfPages);
+		
+		watchPageCountBox = new JComboBox();
+		watchPageCountBox.setModel(new DefaultComboBoxModel(new String[] {"0 (no watch)", "1", "2", "3", "4", "5", "6", "7", "8"}));
+		watchPageCountBox.setBounds(130, 38, 88, 27);
+		watchPanel.add(watchPageCountBox);
+		
+		watchPageIndexLabel = new JLabel("Page 0 / 0");
+		watchPageIndexLabel.setBounds(130, 72, 88, 16);
+		watchPanel.add(watchPageIndexLabel);
+		
+		watchPageUpButton = new JButton("Up");
+		watchPageUpButton.setBounds(130, 89, 94, 29);
+		watchPanel.add(watchPageUpButton);
+		
+		watchPageDownButton = new JButton("Down");
+		watchPageDownButton.setBounds(130, 115, 94, 29);
+		watchPanel.add(watchPageDownButton);
+		
+		watchWidgetColorWell = new ColorWell();
+		watchWidgetColorWell.setBounds(5, 152, 40, 30);
+		watchPanel.add(watchWidgetColorWell);
+		watchWidgetColorWell.delegate=this;
+		watchWidgetColorWell.hasAlpha=true;
+		
+		watchWidgetHighlightColorWell = new ColorWell();
+		watchWidgetHighlightColorWell.setBounds(81, 152, 40, 30);
+		watchPanel.add(watchWidgetHighlightColorWell);
+		watchWidgetHighlightColorWell.delegate=this;
+		watchWidgetHighlightColorWell.hasAlpha=true;
+
+		watchWidgetAddressField = new JTextFieldDirty();
+		watchWidgetAddressField.setColumns(2);
+		watchWidgetAddressField.addFocusListener(this);
+		watchWidgetAddressField.setActionCommand("watchWidgetAddressChanged");
+		watchWidgetAddressField.addActionListener(this);
+		watchWidgetAddressField.setBounds(98, 179, 120, 28);
+		watchPanel.add(watchWidgetAddressField);
+		
+		watchWidgetTitleField = new JTextFieldDirty();
+		watchWidgetTitleField.setColumns(2);
+		watchWidgetTitleField.addFocusListener(this);
+		watchWidgetTitleField.setActionCommand("watchWidgetTitleChanged");
+		watchWidgetTitleField.addActionListener(this);
+		watchWidgetTitleField.setBounds(98, 206, 120, 28);
+		watchPanel.add(watchWidgetTitleField);
+		
+		JLabel lblNewLabel_11 = new JLabel("Color");
+		lblNewLabel_11.setBounds(49, 158, 61, 16);
+		watchPanel.add(lblNewLabel_11);
+		
+		JLabel lblHighlightColor = new JLabel("Highlight Color");
+		lblHighlightColor.setBounds(130, 158, 88, 16);
+		watchPanel.add(lblHighlightColor);
+		
+		watchWidgetTypeBox = new JComboBox();
+		watchWidgetTypeBox.setBounds(70, 27, 126, 27);
+		watchWidgetTypeBox.setActionCommand("watchWidgetTypeChanged");
+		watchWidgetTypeBox.addActionListener(this);
+		watchPanel.add(watchWidgetTypeBox);*/
 		
 		//Lock
 		JPanel lockPanel = new JPanel();
@@ -1167,7 +1295,7 @@ public class MMPWindow implements ChangeListener, ActionListener, FocusListener,
     	
     	layoutDialog = new JDialog(frame);
     	layoutDialog.setModal(true);
-    	layoutDialog.add(layoutPanel);
+    	layoutDialog.getContentPane().add(layoutPanel);
     	layoutDialog.pack();
     	layoutDialog.setResizable(false);
     	
@@ -1535,10 +1663,10 @@ public class MMPWindow implements ChangeListener, ActionListener, FocusListener,
         }
         else if(cmd.equals("canvasType")){
         	switch(docCanvasTypeMenu.getSelectedIndex()){
-        		case 0:controller.documentModel.canvasType = DocumentModel.CanvasType.canvasTypeIPhone3p5Inch; break;
-        		case 1:controller.documentModel.canvasType = DocumentModel.CanvasType.canvasTypeIPhone4Inch; break;
-        		case 2:controller.documentModel.canvasType = DocumentModel.CanvasType.canvasTypeIPad; break;
-        		case 3:controller.documentModel.canvasType = DocumentModel.CanvasType.canvasTypeAndroid7Inch; break;
+        		case 0:controller.documentModel.canvasType = DocumentModel.CanvasType.canvasTypeWidePhone; break;
+        		case 1:controller.documentModel.canvasType = DocumentModel.CanvasType.canvasTypeTallPhone; break;
+        		case 2:controller.documentModel.canvasType = DocumentModel.CanvasType.canvasTypeWideTablet; break;
+        		case 3:controller.documentModel.canvasType = DocumentModel.CanvasType.canvasTypeTallTablet; break;
         	}
         	controller.dirtyBit=true;
         	updateWindowAndCanvas();
@@ -1561,10 +1689,6 @@ public class MMPWindow implements ChangeListener, ActionListener, FocusListener,
         else if(cmd.equals("startPage")){
         	//System.out.print("\ncomand startPage");
         	updateStartPage();
-        }
-        
-        else if(cmd.equals("port")){
-        	updatePort();
         }
         
         else if(cmd.equals("pdFile")){
@@ -1685,7 +1809,7 @@ public class MMPWindow implements ChangeListener, ActionListener, FocusListener,
         	String androidFontName = (String)propLabelAndroidFontTypeBox.getSelectedItem();
         	MMPLabel currLabel = (MMPLabel)controller.currentSingleSelection;
         	if(currLabel!=null){
-        		currLabel.setAndroidFontName(androidFontName);
+        		currLabel.setAndroidFontFileName(androidFontName);
         	}
         }
      
@@ -1713,6 +1837,11 @@ public class MMPWindow implements ChangeListener, ActionListener, FocusListener,
         	updateMultiSliderCount();
         }
         
+        else if (cmd.equals("propMultiOutputModeChanged")){
+        	MMPMultiSlider currMultiSlider = (MMPMultiSlider)controller.currentSingleSelection;
+        	currMultiSlider.outputMode = propMultiOutputModeBox.getSelectedIndex();
+        }
+        
         else if(cmd.equals("propVarToggleBorderThicknessChanged")){
         	updateToggleThickness();
         }
@@ -1723,6 +1852,16 @@ public class MMPWindow implements ChangeListener, ActionListener, FocusListener,
         else if (cmd.equals("propTableModeChanged")){
         	MMPTable currTable = (MMPTable)controller.currentSingleSelection;
         	currTable.setMode(propTableModeBox.getSelectedIndex());
+        }
+        else if (cmd.equals("propTableDisplayModeChanged")){
+        	MMPTable currTable = (MMPTable)controller.currentSingleSelection;
+        	currTable.setDisplayMode(propTableDisplayModeBox.getSelectedIndex());
+        }
+        else if (cmd.equals("propTableDisplayRangeLoChanged")){
+        	updateTableDisplayRangeLo();
+        }
+        else if (cmd.equals("propTableDisplayRangeHiChanged")){
+        	updateTableDisplayRangeHi();
         }
         else if (cmd.equals("propGridModeChanged")){
         	MMPGrid currGrid = (MMPGrid)controller.currentSingleSelection;
@@ -1774,6 +1913,14 @@ public class MMPWindow implements ChangeListener, ActionListener, FocusListener,
         	}
         	controller.dirtyBit=true;
         	canvasPanel.repaint();
+        }
+        // watch
+        else if (cmd.equals("watchWidgetAddressChanged")) {
+        	
+        } else if (cmd.equals("watchWidgetTitleChanged")) {
+        	
+        } else if (cmd.equals("watchWidgetTypeChanged")) {
+        	
         }
         
         else if(cmd.equals("clearConsole")){
@@ -1867,19 +2014,6 @@ public class MMPWindow implements ChangeListener, ActionListener, FocusListener,
     	}
     	catch(NumberFormatException e){
     		docStartPageField.setText(""+(controller.documentModel.startPageIndex+1));
-    	}
-	}
-
-	void updatePort(){
-		String text = portTextField.getText();
-    	try{
-    		int val = Integer.parseInt(text);
-    		System.out.print("\n"+val);
-    		controller.documentModel.port=val;
-    		controller.dirtyBit=true;
-    	}
-    	catch(NumberFormatException e){
-    		portTextField.setText(""+controller.documentModel.port);
     	}
 	}
 
@@ -2028,6 +2162,28 @@ public class MMPWindow implements ChangeListener, ActionListener, FocusListener,
     		propToggleThicknessTextField.setText(""+currToggle.borderThickness);
     	}
 	}
+	
+	void updateTableDisplayRangeLo() {
+		MMPTable currTable = (MMPTable)controller.currentSingleSelection;
+		String text = propTableDisplayRangeLoTextField.getText();
+		try {
+			float newDisplayRangeLo = Float.parseFloat(text);
+			currTable.setDisplayRangeLo(newDisplayRangeLo);
+		} catch (NumberFormatException e) {
+			propTableDisplayRangeLoTextField.setText(""+currTable.getDisplayRangeLo());
+		}
+	}
+	
+	void updateTableDisplayRangeHi() {
+		MMPTable currTable = (MMPTable)controller.currentSingleSelection;
+		String text = propTableDisplayRangeHiTextField.getText();
+		try {
+			float newDisplayRangeHi = Float.parseFloat(text);
+			currTable.setDisplayRangeHi(newDisplayRangeHi);
+		} catch (NumberFormatException e) {
+			propTableDisplayRangeHiTextField.setText(""+currTable.getDisplayRangeHi());
+		}
+	}
 
 	
 	void updateWindowAndCanvas(){
@@ -2036,7 +2192,7 @@ public class MMPWindow implements ChangeListener, ActionListener, FocusListener,
 		double height = screenSize.getHeight();
 		
 	    //System.out.print("\nupdate - canvas "+controller.documentModel.canvasType+" orientislandscape "+controller.documentModel.isOrientationLandscape);
-	    if(controller.documentModel.canvasType==DocumentModel.CanvasType.canvasTypeIPhone3p5Inch){//iphone 3.5"
+	    if(controller.documentModel.canvasType==DocumentModel.CanvasType.canvasTypeWidePhone){//iphone 3.5"
 	        if(controller.documentModel.isOrientationLandscape==false){//portrait
 	            frame.getContentPane().setPreferredSize(new Dimension(CANVAS_LEFT+320+CANVAS_TOP, 480+CANVAS_TOP+CANVAS_TOP+menuBar.getHeight()));
 	            frame.pack();
@@ -2044,11 +2200,7 @@ public class MMPWindow implements ChangeListener, ActionListener, FocusListener,
 	            scrollPane.setSize(new Dimension(CANVAS_LEFT+320+CANVAS_TOP, 480+CANVAS_TOP+CANVAS_TOP));
 	            //scrollContentPanel seems to resize - no
 	            scrollContentPanel.setPreferredSize( new Dimension(5,5) );
-	            
-	            //[documentScrollView setFrame:CGRectMake(0, 0, documentView.frame.size.width, documentView.frame.size.height)];
-	            //[documentScrollView.documentView setFrameSize:documentScrollView.contentSize];
-	            //[canvasOuterView setFrame:CGRectMake(CANVAS_LEFT,documentView.frame.size.height-480-CANVAS_TOP, 320, 480)];
-	            
+	           
 	        }
 	        else{//landscape
 	            
@@ -2057,23 +2209,16 @@ public class MMPWindow implements ChangeListener, ActionListener, FocusListener,
 	        	canvasOuterPanel.setBounds(new Rectangle(CANVAS_LEFT,CANVAS_TOP, 480, 320));
 	        	scrollPane.setSize(new Dimension(CANVAS_LEFT+480+CANVAS_TOP, 500));
 	        	scrollContentPanel.setPreferredSize( new Dimension(5,5) );
-	           // [documentScrollView setFrame:CGRectMake(0, 0, documentView.frame.size.width, documentView.frame.size.height)];
-	           // [documentScrollView.documentView setFrameSize:documentScrollView.contentSize];
-	           // [canvasOuterView setFrame:CGRectMake(CANVAS_LEFT,documentView.frame.size.height-320-CANVAS_TOP, 480, 320)];
 	        }
 	    }
-	    else if(controller.documentModel.canvasType==DocumentModel.CanvasType.canvasTypeIPhone4Inch){//iphone 4"
+	    else if(controller.documentModel.canvasType==DocumentModel.CanvasType.canvasTypeTallPhone){//iphone 4"
 	    	if(controller.documentModel.isOrientationLandscape==false){//portrait
 	            frame.getContentPane().setPreferredSize(new Dimension(CANVAS_LEFT+320+CANVAS_TOP, 568+CANVAS_TOP+CANVAS_TOP+menuBar.getHeight()));
 	            frame.pack();
 	            canvasOuterPanel.setBounds(new Rectangle(CANVAS_LEFT,CANVAS_TOP, 320, 568));
 	            scrollPane.setSize(new Dimension(CANVAS_LEFT+320+CANVAS_TOP, 568+CANVAS_TOP+CANVAS_TOP));
 	            scrollContentPanel.setPreferredSize( new Dimension(5,5) );
-	            /*[documentWindow setFrame:CGRectMake(0, screenFrame.origin.y, CANVAS_LEFT+320+CANVAS_TOP, 568+CANVAS_TOP+CANVAS_TOP+20) display:YES animate:NO];
-	            [documentScrollView setFrame:CGRectMake(0, 0, documentView.frame.size.width, documentView.frame.size.height)];
-	            [documentScrollView.documentView setFrameSize:documentScrollView.contentSize];
-	            [canvasOuterView setFrame:CGRectMake(CANVAS_LEFT,documentView.frame.size.height-568-CANVAS_TOP, 320, 568)];*/
-	            
+	        
 	        }
 	        else{//landscape
 	        	frame.getContentPane().setPreferredSize(new Dimension(CANVAS_LEFT+568+CANVAS_TOP, 500));
@@ -2088,7 +2233,7 @@ public class MMPWindow implements ChangeListener, ActionListener, FocusListener,
 	            [canvasOuterView setFrame:CGRectMake(CANVAS_LEFT,documentView.frame.size.height-320-CANVAS_TOP, 568, 320)];*/
 	        }
 	    }
-	    else if(controller.documentModel.canvasType==DocumentModel.CanvasType.canvasTypeIPad){//ipad
+	    else if(controller.documentModel.canvasType==DocumentModel.CanvasType.canvasTypeWideTablet){//ipad
 	    	frame.setLocation(0,0);
 	    	if(controller.documentModel.isOrientationLandscape==false){//portrait 
 	    		frame.getContentPane().setPreferredSize(new Dimension(CANVAS_LEFT+768+CANVAS_TOP+CANVAS_TOP+scrollPane.getVerticalScrollBar().getWidth(), (int)height-60));//TODO smaller of height and 1024
@@ -2107,21 +2252,21 @@ public class MMPWindow implements ChangeListener, ActionListener, FocusListener,
 	            scrollContentPanel.setPreferredSize(new Dimension(5, 5 ) );//tigher than ness, will resize...
 	           
 	        }
-	    } else { //android 7 inch
+	    } else { //tallTablet android 7 inch
 	    	frame.setLocation(0,0);
 	    	if(controller.documentModel.isOrientationLandscape==false){//portrait 
 	    		frame.getContentPane().setPreferredSize(new Dimension(CANVAS_LEFT+600+CANVAS_TOP+CANVAS_TOP+scrollPane.getVerticalScrollBar().getWidth(), (int)height-60));
 	            frame.pack();
-	            canvasOuterPanel.setBounds(new Rectangle(CANVAS_LEFT,CANVAS_TOP, 600, 912));
+	            canvasOuterPanel.setBounds(new Rectangle(CANVAS_LEFT,CANVAS_TOP, 600, 960));
 	            scrollPane.setSize(new Dimension(CANVAS_LEFT+600+CANVAS_TOP+CANVAS_TOP+scrollPane.getVerticalScrollBar().getWidth(), (int)height-60-menuBar.getHeight()) );
-	            scrollContentPanel.setPreferredSize( new Dimension(CANVAS_LEFT+600+CANVAS_TOP+CANVAS_TOP, 912+CANVAS_TOP+CANVAS_TOP ) ) ;
+	            scrollContentPanel.setPreferredSize( new Dimension(CANVAS_LEFT+600+CANVAS_TOP+CANVAS_TOP, 960+CANVAS_TOP+CANVAS_TOP ) ) ;
 	            
 	        }
 	        else{//landscape
-	        	frame.getContentPane().setPreferredSize(new Dimension(CANVAS_LEFT+960+CANVAS_TOP, 552+CANVAS_TOP+CANVAS_TOP+menuBar.getHeight()));//TODO smaller of height and 1024
+	        	frame.getContentPane().setPreferredSize(new Dimension(CANVAS_LEFT+960+CANVAS_TOP, 600+CANVAS_TOP+CANVAS_TOP+menuBar.getHeight()));//TODO smaller of height and 1024
 	            frame.pack();
-	            canvasOuterPanel.setBounds(new Rectangle(CANVAS_LEFT,CANVAS_TOP, 960, 552));
-	            scrollPane.setSize(new Dimension(CANVAS_LEFT+960+CANVAS_TOP, 552+CANVAS_TOP+CANVAS_TOP) );
+	            canvasOuterPanel.setBounds(new Rectangle(CANVAS_LEFT,CANVAS_TOP, 960, 600));
+	            scrollPane.setSize(new Dimension(CANVAS_LEFT+960+CANVAS_TOP, 600+CANVAS_TOP+CANVAS_TOP) );
 	            scrollContentPanel.setPreferredSize(new Dimension(5, 5 ) );//tigher than ness, will resize...
 	           
 	        }
@@ -2154,10 +2299,6 @@ public class MMPWindow implements ChangeListener, ActionListener, FocusListener,
     	if(e.getComponent()==this.docStartPageField && this.docStartPageField.dirty==true){
     		this.docStartPageField.dirty=false;
     		updateStartPage();
-    	}
-    	if(e.getComponent()==this.portTextField && this.portTextField.dirty==true){
-    		this.portTextField.dirty=false;
-    		updatePort();
     	}
     	if(e.getComponent()==this.propAddressTextField && this.propAddressTextField.dirty==true){
     		this.propAddressTextField.dirty=false;
@@ -2202,6 +2343,14 @@ public class MMPWindow implements ChangeListener, ActionListener, FocusListener,
     	if(e.getComponent()==this.propToggleThicknessTextField && this.propToggleThicknessTextField.dirty==true){
     		this.propToggleThicknessTextField.dirty=false;
     		updateToggleThickness();
+    	}
+    	if(e.getComponent()==this.propTableDisplayRangeLoTextField && this.propTableDisplayRangeLoTextField.dirty==true){
+    		this.propTableDisplayRangeLoTextField.dirty=false;
+    		updateTableDisplayRangeLo();
+    	}
+    	if(e.getComponent()==this.propTableDisplayRangeHiTextField && this.propTableDisplayRangeHiTextField.dirty==true){
+    		this.propTableDisplayRangeHiTextField.dirty=false;
+    		updateTableDisplayRangeHi();
     	}
     	if(e.getComponent()==this.snapToGridXTextField ){
     		updateSnapToGridXField();

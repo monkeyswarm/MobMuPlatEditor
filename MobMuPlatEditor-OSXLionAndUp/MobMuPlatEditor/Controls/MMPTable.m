@@ -29,7 +29,6 @@
   int chunkCount;
   
 }
-@dynamic displayRangeConstant;
 
 - (id)initWithFrame:(NSRect)frame{
   self = [super initWithFrame:frame];
@@ -42,17 +41,9 @@
     _displayRangeLo = -1;
     _displayRangeHi = 1;
 
-    //self.userInteractionEnabled = NO;//until table load TODO
-    // Initialization code
-    
-
-      //_tableName = @"dummyName";//todo use init value to protect against nil storage?
-    
-    
-    [self setFrame:frame];//create context
-    
-    [self addHandles];
-
+  [self createContext];
+  [self addHandles];
+  //[self resizeSubviewsWithOldSize:self.frame.size]; not necc since we don't have subviews
   }
   return self;
 }
@@ -73,7 +64,10 @@
 
 -(void)setFrame:(NSRect)frame{
   [super setFrame:frame];
-  
+  [self createContext];
+}
+
+- (void)createContext {
   if(_cacheContext!=nil){//free stuff
     CGContextRelease(_cacheContext);
   }
@@ -81,18 +75,17 @@
     CGContextRelease(_cacheContextSelection);
   }
   //_cacheContext = [self createBitmapContextW:(int)self.frame.size.width H:(int)self.frame.size.height];
-  _cacheContext = CGBitmapContextCreate (nil, (int)frame.size.width, (int)frame.size.height, 8, 0, CGColorSpaceCreateDeviceRGB(),  kCGImageAlphaPremultipliedLast  );
+  _cacheContext = CGBitmapContextCreate (nil, (int)self.frame.size.width, (int)self.frame.size.height, 8, 0, CGColorSpaceCreateDeviceRGB(),  kCGImageAlphaPremultipliedLast  );
   //CGContextSetRGBFillColor(_cacheContext, 1., 0., 1., 1.);
-  
+
   if(_cacheContext == nil) {//this happens on zero-size frame, during copy/paste initWithCoder:
     return;
   }
   CGContextSetLineWidth(_cacheContext, 2);
-  
-  _cacheContextSelection = CGBitmapContextCreate (nil, (int)frame.size.width, (int)frame.size.height, 8, 0, CGColorSpaceCreateDeviceRGB(),  kCGImageAlphaPremultipliedLast  );
+
+  _cacheContextSelection = CGBitmapContextCreate (nil, (int)self.frame.size.width, (int)self.frame.size.height, 8, 0, CGColorSpaceCreateDeviceRGB(),  kCGImageAlphaPremultipliedLast  );
   //CGContextSetRGBFillColor(_cacheContextSelection, 1., 0., 1., .5);
   [self draw];
-
 }
 
 -(CGContextRef) createBitmapContextW:(int) pixelsWide H:(int) pixelsHigh {
@@ -186,13 +179,8 @@
     float y = [_tableData[index] floatValue];
 
     // Scale lo to hi to flipped 0 to frame height.
-    float unflippedY = 1-( (y-_displayRangeLo)/(_displayRangeHi - _displayRangeLo));
+    float unflippedY = 1-((y-_displayRangeLo)/(_displayRangeHi - _displayRangeLo));
     unflippedY *= self.frame.size.height;
-    /*if (_displayRange == 0) { //polar
-      unflippedY = (1-((y+1)/2)) *self.frame.size.height;
-    } else { //0 to 1
-      unflippedY = (1-y) *self.frame.size.height;
-    }*/
 
     if(i==indexDrawPointA){
       CGContextMoveToPoint(_cacheContext, x,unflippedY);
@@ -207,8 +195,10 @@
     CGContextStrokePath(_cacheContext);
   } else { // fill
     // add points and close
-    CGContextAddLineToPoint(_cacheContext, indexDrawPointB, self.frame.size.height);
-    CGContextAddLineToPoint(_cacheContext, indexDrawPointA, self.frame.size.height);
+    CGFloat yPointOfTableZero = 1 - ((0 -_displayRangeLo)/(_displayRangeHi - _displayRangeLo));
+    yPointOfTableZero *= self.frame.size.height;
+    CGContextAddLineToPoint(_cacheContext, indexDrawPointB, yPointOfTableZero);
+    CGContextAddLineToPoint(_cacheContext, indexDrawPointA, yPointOfTableZero);
     CGContextClosePath(_cacheContext);
     CGContextDrawPath(_cacheContext, kCGPathFill);
   }
@@ -318,12 +308,6 @@
       normalizedY = MAX(MIN(normalizedY,1),0);
 
       float flippedY = (1 - normalizedY)*(_displayRangeHi - _displayRangeLo) + _displayRangeLo;
-      /*float flippedY;
-      if (_displayRange == 0) { // polar
-        flippedY = (1-normalizedY)*2-1;
-      } else { //0 to 1
-        flippedY = 1-normalizedY;
-      }*/
       
       //compute size, including self but not prev
       int traversedElementCount = abs(dragTableIndex-lastTableIndex);
@@ -417,32 +401,25 @@
   [self draw];
 }
 
--(void)setDisplayRangeConstantUndoable:(NSNumber*)number{
-  [[self undoManager] registerUndoWithTarget:self selector:@selector(setDisplayRangeUndoable:) object:[NSNumber numberWithInteger:_displayMode] ];
-  [self setDisplayRangeConstant:[number integerValue]];
+-(void)setDisplayRangeLoObjectUndoable:(NSNumber*)inRangeObject{
+  [[self undoManager] registerUndoWithTarget:self selector:@selector(setRangeObjectLoUndoable:) object:[NSNumber numberWithFloat:self.displayRangeLo] ];
+  [self setDisplayRangeLo:[inRangeObject floatValue] ];
 }
 
-- (void)setDisplayRangeConstant:(NSUInteger)displayRangeConstant {
-  if (displayRangeConstant == 0) {// polar -1 to 1
-    _displayRangeLo = -1;
-    _displayRangeHi = 1;
-  } else if (displayRangeConstant == 1) {
-    _displayRangeLo = 0;
-    _displayRangeHi = 1;
-  }
+-(void)setDisplayRangeHiObjectUndoable:(NSNumber*)inRangeObject{
+  [[self undoManager] registerUndoWithTarget:self selector:@selector(setRangeObjectHiUndoable:) object:[NSNumber numberWithFloat:self.displayRangeHi] ];
+  [self setDisplayRangeHi:[inRangeObject floatValue] ];
+}
+
+- (void)setDisplayRangeLo:(CGFloat)displayRangeLo {
+  _displayRangeLo = displayRangeLo;
   [self draw];
 }
 
-- (NSUInteger) displayRangeConstant {
-  if (_displayRangeLo == -1 && _displayRangeHi == 1) {
-    return 0;
-  } else if (_displayRangeLo == 0 && _displayRangeHi == 1) {
-    return 1;
-  } else {
-    return -1;
-  }
+- (void)setDisplayRangeHi:(CGFloat)displayRangeHi {
+  _displayRangeHi = displayRangeHi;
+  [self draw];
 }
-
 
 -(void)receiveList:(NSArray *)inArray{
   if ([inArray count]==1 && [[inArray objectAtIndex:0] isKindOfClass:[NSString class]] && [[inArray objectAtIndex:0] isEqualToString:@"clearSelection"] ){

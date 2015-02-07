@@ -8,17 +8,14 @@
 
 #import "DocumentModel.h"
 
-
-
 @implementation DocumentModel
-
 
 //@synthesize isCanvasIPad, isOrientationLandscape, isPageScrollShortEnd, backgroundColor, pdFilePath, pageCount, startPageIndex, controlArray;
 
 -(id)init{
     self = [super init];
     _controlArray = [[NSMutableArray alloc]init];
-    _watchControlDupleArray = [[NSMutableArray alloc]init];
+    /* wear _watchControlDupleArray = [[NSMutableArray alloc]init];*/
     //[_pageArray addObject:[[NSMutableArray alloc]init]];//single page - add in init or new
     
     //defaults
@@ -31,7 +28,7 @@
     _version=[[[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"] floatValue ];
 
     // watch
-    _watchPageCount = 0;
+    /* wear _watchPageCount = 0;*/
 
     return self;
 }
@@ -124,7 +121,7 @@
         //multislider
         else if([control isKindOfClass:[MMPMultiSlider class]]){
             [GUIDict setObject:[NSNumber numberWithInt:[(MMPMultiSlider*)control range]] forKey:@"range"] ;
-            [GUIDict setObject:[NSNumber numberWithInteger:((MMPMultiSlider*)control).touchMode] forKey:@"touchMode"] ;
+            [GUIDict setObject:[NSNumber numberWithInteger:((MMPMultiSlider*)control).outputMode] forKey:@"outputMode"] ;
         }
         //Toggle
         else if([control isKindOfClass:[MMPToggle class]]){
@@ -157,6 +154,7 @@
     [topDict setObject:jsonControlDictArray forKey:@"gui"];//add this array of dictionaries to the top level dictionary
 
     // watch
+  /* wear
     NSMutableArray* jsonWatchPageDictArray = [[NSMutableArray alloc]init];//array of dictionaries
     for(NSArray* controlDuple in  _watchControlDupleArray){
       NSMutableDictionary* watchPageDict = [[NSMutableDictionary alloc]init];
@@ -178,7 +176,7 @@
       //multislider
       else if([control isKindOfClass:[MMPMultiSlider class]]){
         [watchPageGUIDict setObject:[NSNumber numberWithInt:[(MMPMultiSlider*)control range]] forKey:@"range"] ;
-        [watchPageGUIDict setObject:[NSNumber numberWithInteger:((MMPMultiSlider*)control).touchMode] forKey:@"touchMode"] ;
+        [watchPageGUIDict setObject:[NSNumber numberWithInteger:((MMPMultiSlider*)control).outputMode] forKey:@"outputMode"] ;
       }
       // XYSlider has no additional properties
       //Label
@@ -199,7 +197,7 @@
       //
       [jsonWatchPageDictArray addObject:watchPageDict];
     }
-    [topDict setObject:jsonWatchPageDictArray forKey:@"wearGui"];
+    [topDict setObject:jsonWatchPageDictArray forKey:@"wearGui"];*/
 
     NSData *jsonData = [NSJSONSerialization dataWithJSONObject:topDict
                                                      options:0
@@ -347,8 +345,8 @@
                 control = [[MMPMultiSlider alloc] initWithFrame:newFrame];
                 if([guiDict objectForKey:@"range"])
                     [(MMPMultiSlider*)control setRange:[[guiDict objectForKey:@"range"] intValue] ];
-                if([guiDict objectForKey:@"touchMode"])
-                    ((MMPMultiSlider*)control).touchMode = [[guiDict objectForKey:@"touchMode"] integerValue];
+                if([guiDict objectForKey:@"outputMode"])
+                    ((MMPMultiSlider*)control).outputMode = [[guiDict objectForKey:@"outputMode"] integerValue];
             }
             else if([classString isEqualToString:@"MMPLCD"]){
                 control = [[MMPLCD alloc] initWithFrame:newFrame];
@@ -398,7 +396,7 @@
             [[model controlArray] addObject:control];
         }
 // WATCH
-  NSArray* watchControlPageDictArray;
+  /* wear NSArray* watchControlPageDictArray;
 
   if([topDict objectForKey:@"wearGui"]) {
     watchControlPageDictArray = [topDict objectForKey:@"wearGui"];//array of dictionaries, one for each page (with title and control)
@@ -453,8 +451,8 @@
         control = [[MMPMultiSlider alloc] initWithFrame:newFrame];
         if([pageGuiDict objectForKey:@"range"])
           [(MMPMultiSlider*)control setRange:[[pageGuiDict objectForKey:@"range"] intValue] ];
-        if([pageGuiDict objectForKey:@"touchMode"])
-          ((MMPMultiSlider*)control).touchMode = [[pageGuiDict objectForKey:@"touchMode"] integerValue];
+        if([pageGuiDict objectForKey:@"outputMode"])
+          ((MMPMultiSlider*)control).outputMode = [[pageGuiDict objectForKey:@"outputMode"] integerValue];
       }
       else if([classString isEqualToString:@"MMPLabel"]){
         control = [[MMPLabel alloc] initWithFrame:newFrame];
@@ -495,7 +493,7 @@
     }
     model.watchPageCount = [watchControlPageDictArray count]; //make dynamic
 
-  }
+  }*/
     return model;
 }
 

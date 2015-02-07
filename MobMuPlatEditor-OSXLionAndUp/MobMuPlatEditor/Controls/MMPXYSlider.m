@@ -29,10 +29,10 @@
         [self addSubview:cursorHorizView];
         [self addSubview: cursorVertView];
         [self setColor:self.color];
-        [self setFrame:frame];
         [self setValueX:.5 Y:.5];//set initial val, but don't send it out as message
         
         [self addHandles];
+      [self resizeSubviewsWithOldSize:self.frame.size];
         
     }
     
@@ -45,13 +45,15 @@
     [self setValueX:_valueX Y:_valueY];
 }
 
--(void)setFrame:(NSRect)frameRect{
-    [super setFrame:frameRect];
-    [borderView setFrame:CGRectMake(0, 0, self.frame.size.width, self.frame.size.height)];
-    CGRect horizFrame = CGRectMake(0, _valueY*self.frame.size.height-LINE_WIDTH/2, self.frame.size.width, LINE_WIDTH);
-    [cursorHorizView setFrame:horizFrame];
-    CGRect vertFrame = CGRectMake(_valueX*self.frame.size.width-LINE_WIDTH/2, 0, LINE_WIDTH, self.frame.size.height);
-    [cursorVertView setFrame:vertFrame];
+- (void)resizeSubviewsWithOldSize:(NSSize)oldBoundsSize{
+  [super resizeSubviewsWithOldSize:oldBoundsSize];
+
+
+  [borderView setFrame:CGRectMake(0, 0, self.frame.size.width, self.frame.size.height)];
+  CGRect horizFrame = CGRectMake(0, _valueY*self.frame.size.height-LINE_WIDTH/2, self.frame.size.width, LINE_WIDTH);
+  [cursorHorizView setFrame:horizFrame];
+  CGRect vertFrame = CGRectMake(_valueX*self.frame.size.width-LINE_WIDTH/2, 0, LINE_WIDTH, self.frame.size.height);
+  [cursorVertView setFrame:vertFrame];
 }
 
 -(void)setColor:(NSColor *)color{

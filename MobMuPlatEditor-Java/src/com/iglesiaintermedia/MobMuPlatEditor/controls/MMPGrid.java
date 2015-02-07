@@ -73,8 +73,8 @@ public class MMPGrid extends MMPControl {
 	public void setBounds(Rectangle frame){
 		super.setBounds(frame);
 		
-		int buttonWidth = getWidth()/dimX;
-		int buttonHeight = getHeight()/dimY;
+		int buttonWidth = (getWidth() + cellPadding)/dimX;
+		int buttonHeight = (getHeight() + cellPadding)/dimY;
 		
 		for(int j=0;j<dimY;j++){
 	        for(int i=0;i<dimX;i++){
@@ -102,8 +102,8 @@ public class MMPGrid extends MMPControl {
 	}
 	
 	void redrawDim(){
-		int buttonWidth = getWidth()/dimX;
-		int buttonHeight = getHeight()/dimY;
+		int buttonWidth = (getWidth() + cellPadding)/dimX;
+		int buttonHeight = (getHeight() + cellPadding)/dimY;
 		//System.out.print("\nredraw dim "+ buttonWidth+" "+buttonHeight);
 		
 		for(TogglePanel tp : togglePanelArray)tp.getParent().remove(tp);

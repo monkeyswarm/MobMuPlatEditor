@@ -11,69 +11,76 @@
 
 @implementation MMPDocumentController {
   OSCInPort *inPort;
-	OSCOutPort *outPort;
+  OSCOutPort *outPort;
 }
 
 -(id)init{
-    self = [super init];
-  
+  self = [super init];
+
   NSNotificationCenter* nc = [NSNotificationCenter defaultCenter];
   [nc addObserver:self
          selector:@selector(appWillTerminate:)
              name:NSApplicationWillTerminateNotification
            object:nil];
-  
-    [[NSColorPanel sharedColorPanel] setShowsAlpha:YES];
-    
-    //set up one OSC manager for all open documents
-   /* _manager = [[OSCManager alloc]init];
-    [_manager setOSCReceivePort:[NSMutableArray arrayWithObjects:[NSNumber numberWithInt:54310], nil] withDict:nil];
-    [_manager setIPAddressAndPort:[NSMutableArray arrayWithObjects:@"localhost", [NSNumber numberWithInt:54300], nil] withDict:nil];
-    _manager.delegate=self;
-    */
+
+  [[NSColorPanel sharedColorPanel] setShowsAlpha:YES];
+
+  //set up one OSC manager for all open documents
+  /* _manager = [[OSCManager alloc]init];
+   [_manager setOSCReceivePort:[NSMutableArray arrayWithObjects:[NSNumber numberWithInt:54310], nil] withDict:nil];
+   [_manager setIPAddressAndPort:[NSMutableArray arrayWithObjects:@"localhost", [NSNumber numberWithInt:54300], nil] withDict:nil];
+   _manager.delegate=self;
+   */
   _manager = [[OSCManager alloc] init];
-	[_manager setDelegate:self];
+  [_manager setDelegate:self];
   outPort = [_manager createNewOutputToAddress:@"127.0.0.1" atPort:54300];
   inPort = [_manager createNewInputForPort:54310];
 
-    NSString* fontnamesjson = [NSString stringWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"uifontlist" ofType:@"txt"]];
-    //_fontArray = [[fontnamesjson objectFromJSONString] mutableCopy];//array of dictionaries
-    NSData *data = [fontnamesjson dataUsingEncoding:NSUTF8StringEncoding];
-    _fontArray = [[NSJSONSerialization JSONObjectWithData:data options:0 error:nil] mutableCopy];
-  
+  if (!inPort) {
+    NSAlert *alert = [[NSAlert alloc] init];
+    [alert addButtonWithTitle:@"OK"];
+    [alert setMessageText:@"Unable to create OSC receiver on port 54310. \nI won't be able to receive messages from PD. \nPerhaps another application, or instance of this editor, is on this port."];
+    [alert setAlertStyle:NSWarningAlertStyle];
+    [alert runModal];
+  }
 
-  
-  //printf("\ncontroller font array %d", [_fontArray count]);
-    [_fontArray sortUsingDescriptors:[NSArray arrayWithObjects:[NSSortDescriptor sortDescriptorWithKey:@"family" ascending:YES], nil]];
-    //create an extra font list element called "default"
-    NSMutableDictionary* defaultDict = [[NSMutableDictionary alloc]init];
-    [defaultDict setObject:@"Default" forKey:@"family"];
-    [defaultDict setObject:[NSArray array] forKey:@"types"];
-    [_fontArray addObject:defaultDict];
+  NSString* fontnamesjson = [NSString stringWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"uifontlist" ofType:@"txt"]];
+  //_fontArray = [[fontnamesjson objectFromJSONString] mutableCopy];//array of dictionaries
+  NSData *data = [fontnamesjson dataUsingEncoding:NSUTF8StringEncoding];
+  _fontArray = [[NSJSONSerialization JSONObjectWithData:data options:0 error:nil] mutableCopy];
 
-    //android
-    _androidFontArray = [[NSMutableArray alloc] initWithObjects:
-                         /*@"Roboto-Black",
-                         @"Roboto-BlackItalic",*/
-                         @"Roboto-Regular",
-                         @"Roboto-Bold",
-                         @"Roboto-Italic",
-                         @"Roboto-BoldItalic",
-                         @"Roboto-Light",
-                         @"Roboto-LightItalic",
-                         /*@"Roboto-Medium",
-                         @"Roboto-MediumItalic",*/
-                         @"Roboto-Thin",
-                         @"Roboto-ThinItalic",
-                         @"RobotoCondensed-Regular",
-                         @"RobotoCondensed-Bold",
-                         @"RobotoCondensed-Italic",
-                         @"RobotoCondensed-BoldItalic",
-                         /*@"RobotoCondensed-Light",
-                         @"RobotoCondensed-LightItalic",*/
-                         nil];
 
-    return self;
+
+  [_fontArray sortUsingDescriptors:[NSArray arrayWithObjects:[NSSortDescriptor sortDescriptorWithKey:@"family" ascending:YES], nil]];
+  //create an extra font list element called "default"
+  NSMutableDictionary* defaultDict = [[NSMutableDictionary alloc]init];
+  [defaultDict setObject:@"Default" forKey:@"family"];
+  [defaultDict setObject:[NSArray array] forKey:@"types"];
+  [_fontArray addObject:defaultDict];
+
+  //android
+  _androidFontArray = [[NSMutableArray alloc] initWithObjects:
+                       /*@"Roboto-Black",
+                        @"Roboto-BlackItalic",*/
+                       @"Roboto-Regular",
+                       @"Roboto-Bold",
+                       @"Roboto-Italic",
+                       @"Roboto-BoldItalic",
+                       @"Roboto-Light",
+                       @"Roboto-LightItalic",
+                       /*@"Roboto-Medium",
+                        @"Roboto-MediumItalic",*/
+                       @"Roboto-Thin",
+                       @"Roboto-ThinItalic",
+                       @"RobotoCondensed-Regular",
+                       @"RobotoCondensed-Bold",
+                       @"RobotoCondensed-Italic",
+                       @"RobotoCondensed-BoldItalic",
+                       /*@"RobotoCondensed-Light",
+                        @"RobotoCondensed-LightItalic",*/
+                       nil];
+
+  return self;
 }
 
 + (NSString*)cachePathWithAddress:(NSString *)address {
@@ -90,15 +97,15 @@
                                               attributes:@{}
                                                    error:nil];
   }
-  
+
   if(address == nil){//just want folder
     return [scratchFolder path];
   }
-  
+
   //strip off slash :(
   if([address hasPrefix:@"/"])
     address = [address substringFromIndex:1];
-  
+
   NSURL *scratchFile = [scratchFolder URLByAppendingPathComponent:address];
   return [scratchFile path] ;
 }
@@ -106,9 +113,9 @@
 //OSC manager delegate method: get OSC message, sent it to ALL open documents
 - (void) receivedOSCMessage:(OSCMessage *)m {
   for(Document* doc in [self documents]){
-        //[doc receiveOSCArray:oscArray asString:string];
+    //[doc receiveOSCArray:oscArray asString:string];
     [doc receivedOSCMessage:m];
-    }
+  }
 }
 
 + (OSCMessage*) oscMessageFromList:(NSArray*)list{
@@ -140,7 +147,7 @@
 }
 
 -(void)appWillTerminate:(NSNotification*)notif{ //clear cache!
-  
+
   NSFileManager *fm = [NSFileManager defaultManager];
   NSString *directory = [MMPDocumentController cachePathWithAddress:nil];
   NSError *error = nil;

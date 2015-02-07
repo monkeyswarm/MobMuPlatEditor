@@ -7,9 +7,13 @@
 //
 
 #import "MMPLabel.h"
-#define DEFAULT_FONT @"HelveticaNeue"
+#define DEFAULT_IOS_FONT @"HelveticaNeue"
+#define DEFAULT_ANDROID_FONT @"Roboto-Regular"
 #define DEFAULT_FONTSIZE 16
-@implementation MMPLabel
+@implementation MMPLabel {
+  NSFont *_iOSFont;
+  NSFont *_androidFont;
+}
 @synthesize stringValue = _stringValue;
 
 
@@ -20,41 +24,43 @@
   else return NO;
 }
 
-- (id)initWithFrame:(NSRect)frame{
+- (instancetype)initWithFrame:(NSRect)frameRect {
+  self = [super initWithFrame:frameRect];
+  if (self) {
+    self.address = @"/myLabel";
+    _fontFamily=@"Default";
+    _fontName=@"";
+    _androidFontName = DEFAULT_ANDROID_FONT;
+
+    _iOSFont = [NSFont fontWithName:DEFAULT_IOS_FONT size:DEFAULT_FONTSIZE];
+    _androidFont = [NSFont fontWithName:DEFAULT_ANDROID_FONT size:DEFAULT_FONTSIZE];
+    //_currentFont = _iOSFont;
+
+    textView = [[NSTextView alloc]initWithFrame:CGRectMake(0, 0, self.frame.size.width, self.frame.size.height)];
+    textView.backgroundColor=[NSColor clearColor];
+    textView.font = _iOSFont;
+
+    [textView setEditable:NO];
+    [textView setTextColor:self.color];
+    //TODO just use one text view and swap the font...geez.
+    /*androidTextView = [[NSTextView alloc]initWithFrame:CGRectMake(0, 0, self.frame.size.width, self.frame.size.height)];
+     androidTextView.backgroundColor=[NSColor clearColor];
+     androidTextView.hidden = YES;*/
+
+    /*[androidTextView setEditable:NO];
+     [androidTextView setTextColor:self.color];*/
+    //[self setAndroidFontName:@"Roboto-Regular"];
+    [self setStringValue:@"my text goes here"];
+    [self setTextSize:DEFAULT_FONTSIZE];
+    [self addSubview:textView];
+    //[self addSubview:androidTextView];
     
-    self = [super initWithFrame:frame];
-    if (self) {
-        self.address = @"/myLabel";
-        _fontFamily=@"Default";
-        _fontName=@"";
-        textView = [[NSTextView alloc]initWithFrame:CGRectMake(0, 0, frame.size.width, frame.size.height)];
-        textView.backgroundColor=[NSColor clearColor];
-        
-        [textView setEditable:NO];
-        [textView setTextColor:self.color];
-        //TODO just use one text view and swap the font...geez.
-        androidTextView = [[NSTextView alloc]initWithFrame:CGRectMake(0, 0, frame.size.width, frame.size.height)];
-        androidTextView.backgroundColor=[NSColor clearColor];
-        androidTextView.hidden = YES;
-
-        [androidTextView setEditable:NO];
-        [androidTextView setTextColor:self.color];
-        [self setAndroidFontName:@"Roboto-Regular"];
-
-        [self setStringValue:@"my text goes here"];
-        [self setTextSize:DEFAULT_FONTSIZE];
-        [self addSubview:textView];
-        [self addSubview:androidTextView];
-
-        [self addHandles];
-    }
-    return self;
+    [self addHandles];
+    [self resizeSubviewsWithOldSize:self.frame.size];
+  }
+  return self;
 }
 
--(void)showAndroidFont:(BOOL)showAndroidFont {
-    androidTextView.hidden = !showAndroidFont;
-    textView.hidden = showAndroidFont;
-}
 
 //ugly hack so that this object doesn't take touches, but passes to controls underneath
 - (NSView *)hitTest:(NSPoint)aPoint{
@@ -89,7 +95,6 @@
 -(void)setStringValue:(NSString *)aString{
     _stringValue = aString;
     [textView setString:aString];
-    [androidTextView setString:aString];
 }
 
 -(void)setTextSizeUndoable:(NSNumber*)inNumber{
@@ -99,39 +104,63 @@
 
 -(void)setTextSize:(int)inInt{
     _textSize = inInt;
+
   //iOS
-    if([_fontFamily isEqualToString:@"Default"])[textView setFont:[NSFont fontWithName:DEFAULT_FONT size:inInt]];
-    else [textView setFont:[NSFont fontWithName:_fontName size:inInt]];
+  if([_fontFamily isEqualToString:@"Default"]) {
+    _iOSFont = [NSFont fontWithName:DEFAULT_IOS_FONT size:inInt];
+  } else {
+    _iOSFont = [NSFont fontWithName:_fontName size:inInt];
+  }
   //Android
-  if ([NSFont fontWithName:_androidFontName size:inInt]) 
-    [androidTextView setFont:[NSFont fontWithName:_androidFontName size:inInt]];
+  if ([NSFont fontWithName:_androidFontName size:inInt])  {
+    _androidFont = [NSFont fontWithName:_androidFontName size:inInt];
+  }
+  // kick
+  textView.font = _isShowingAndroidFonts ? _androidFont : _iOSFont;
 }
 
 -(void)setColor:(NSColor *)color{
     [super setColor:color];
     [textView setTextColor:color];
-    [androidTextView setTextColor:color];
 }
 
 -(void)setFontFamily:(NSString *)fontFamily fontName:(NSString *)fontName{
     _fontName = fontName;
     _fontFamily=fontFamily;
-    if([fontFamily isEqualToString:@"Default"])[textView setFont:[NSFont fontWithName:DEFAULT_FONT size:_textSize]];
-    else [textView setFont:[NSFont fontWithName:fontName size:_textSize]];
+  if([fontFamily isEqualToString:@"Default"]){
+    _iOSFont = [NSFont fontWithName:DEFAULT_IOS_FONT size:_textSize];
+  } else {
+    _iOSFont = [NSFont fontWithName:fontName size:_textSize];
+  }
+
+  if (!_isShowingAndroidFonts) {
+    textView.font = _iOSFont;
+  }
 }
 
 -(void)setAndroidFontName:(NSString *)fontName{
     _androidFontName = fontName;
-    NSFont *test = [NSFont fontWithName:fontName size:12];
-  NSLog(@"%@",[[[NSFontManager sharedFontManager] availableFontFamilies] description]);
-  if (test)
-    [androidTextView setFont:[NSFont fontWithName:fontName size:_textSize]];
+    NSFont *testForFont = [NSFont fontWithName:fontName size:12];
+  //NSLog(@"%@",[[[NSFontManager sharedFontManager] availableFontFamilies] description]);
+  if (testForFont) {
+    _androidFont = [NSFont fontWithName:fontName size:_textSize];
+    if (_isShowingAndroidFonts) { //if showing, set font
+      textView.font = _androidFont;
+    }
+  }
 }
 
--(void)setFrame:(NSRect)frameRect{
-    [super setFrame:frameRect];
-    [textView setFrame:CGRectMake(0, 0, self.frame.size.width, self.frame.size.height)];
-    [androidTextView setFrame:CGRectMake(0, 0, self.frame.size.width, self.frame.size.height)];
+- (void)setIsShowingAndroidFonts:(BOOL)isShowingAndroidFonts {
+  _isShowingAndroidFonts = isShowingAndroidFonts;
+  // kick
+  textView.font = _isShowingAndroidFonts ? _androidFont : _iOSFont;
+}
+
+- (void)resizeSubviewsWithOldSize:(NSSize)oldBoundsSize{
+  [super resizeSubviewsWithOldSize:oldBoundsSize];
+
+
+  [textView setFrame:CGRectMake(0, 0, self.frame.size.width, self.frame.size.height)];
 }
 
 //receive messages from PureData (via [send toGUI]), routed from ViewController via the address to this object
@@ -141,11 +170,9 @@
         if([[inArray objectAtIndex:1] isKindOfClass:[NSNumber class]]){
             if ([[inArray objectAtIndex:1] intValue]>0) {
                 [textView setTextColor:self.highlightColor];
-                [androidTextView setTextColor:self.highlightColor];
             }
             else {
                 [textView setTextColor:self.color];
-                [androidTextView setTextColor:self.highlightColor];
             }
         }
     }
@@ -169,7 +196,6 @@
             [newString appendString:@" "];
         }
         [textView setString:newString];
-        [androidTextView setString:newString];
     }
 }
 

@@ -26,10 +26,10 @@
 		DCE2F0151732BAA6002B897C /* MMPToggle.m in Sources */ = {isa = PBXBuildFile; fileRef = DCE2F00A1732BAA6002B897C /* MMPToggle.m */; };
 		DCE2F0161732BAA6002B897C /* MMPXYSlider.m in Sources */ = {isa = PBXBuildFile; fileRef = DCE2F00C1732BAA6002B897C /* MMPXYSlider.m */; };
 		DCE2F0211732BAD3002B897C /* CanvasView.m in Sources */ = {isa = PBXBuildFile; fileRef = DCE2F0181732BAD3002B897C /* CanvasView.m */; };
-		DCE2F0221732BAD3002B897C /* Document.mm in Sources */ = {isa = PBXBuildFile; fileRef = DCE2F01A1732BAD3002B897C /* Document.mm */; };
+		DCE2F0221732BAD3002B897C /* Document.m in Sources */ = {isa = PBXBuildFile; fileRef = DCE2F01A1732BAD3002B897C /* Document.m */; };
 		DCE2F0231732BAD3002B897C /* DocumentModel.m in Sources */ = {isa = PBXBuildFile; fileRef = DCE2F01C1732BAD3002B897C /* DocumentModel.m */; };
 		DCE2F0241732BAD3002B897C /* EditHandle.m in Sources */ = {isa = PBXBuildFile; fileRef = DCE2F01E1732BAD3002B897C /* EditHandle.m */; };
-		DCE2F0251732BAD3002B897C /* MMPDocumentController.mm in Sources */ = {isa = PBXBuildFile; fileRef = DCE2F0201732BAD3002B897C /* MMPDocumentController.mm */; };
+		DCE2F0251732BAD3002B897C /* MMPDocumentController.m in Sources */ = {isa = PBXBuildFile; fileRef = DCE2F0201732BAD3002B897C /* MMPDocumentController.m */; };
 		DCE2F02A1732BB1A002B897C /* Document.xib in Resources */ = {isa = PBXBuildFile; fileRef = DCE2F0261732BB1A002B897C /* Document.xib */; };
 		DCE2F02B1732BB1A002B897C /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = DCE2F0281732BB1A002B897C /* MainMenu.xib */; };
 		DCE2F0331732BB39002B897C /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = DCE2F02D1732BB39002B897C /* main.m */; };
@@ -58,6 +58,7 @@
 		F9BAFD8C19D23E1B001CD2D2 /* RobotoCondensed-Light.ttf in CopyFiles */ = {isa = PBXBuildFile; fileRef = F9BAFD6619D236E4001CD2D2 /* RobotoCondensed-Light.ttf */; };
 		F9BAFD8D19D23E1B001CD2D2 /* RobotoCondensed-LightItalic.ttf in CopyFiles */ = {isa = PBXBuildFile; fileRef = F9BAFD6719D236E4001CD2D2 /* RobotoCondensed-LightItalic.ttf */; };
 		F9BAFD8E19D23E1B001CD2D2 /* RobotoCondensed-Regular.ttf in CopyFiles */ = {isa = PBXBuildFile; fileRef = F9BAFD6819D236E4001CD2D2 /* RobotoCondensed-Regular.ttf */; };
+		F9E56AFE1A81EF3F0017851A /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DC084BA9168E13B100664E0E /* QuartzCore.framework */; };
 		F9F44F3918BC2A3200101132 /* MMPMultiTouch.m in Sources */ = {isa = PBXBuildFile; fileRef = F9F44F3818BC2A3200101132 /* MMPMultiTouch.m */; };
 /* End PBXBuildFile section */
 
@@ -139,13 +140,13 @@
 		DCE2F0171732BAD3002B897C /* CanvasView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CanvasView.h; path = MobMuPlatEditor/CanvasView.h; sourceTree = SOURCE_ROOT; };
 		DCE2F0181732BAD3002B897C /* CanvasView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CanvasView.m; path = MobMuPlatEditor/CanvasView.m; sourceTree = SOURCE_ROOT; };
 		DCE2F0191732BAD3002B897C /* Document.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Document.h; path = MobMuPlatEditor/Document.h; sourceTree = SOURCE_ROOT; };
-		DCE2F01A1732BAD3002B897C /* Document.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = Document.mm; path = MobMuPlatEditor/Document.mm; sourceTree = SOURCE_ROOT; };
+		DCE2F01A1732BAD3002B897C /* Document.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Document.m; path = MobMuPlatEditor/Document.m; sourceTree = SOURCE_ROOT; };
 		DCE2F01B1732BAD3002B897C /* DocumentModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DocumentModel.h; path = MobMuPlatEditor/DocumentModel.h; sourceTree = SOURCE_ROOT; };
 		DCE2F01C1732BAD3002B897C /* DocumentModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DocumentModel.m; path = MobMuPlatEditor/DocumentModel.m; sourceTree = SOURCE_ROOT; };
 		DCE2F01D1732BAD3002B897C /* EditHandle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EditHandle.h; path = MobMuPlatEditor/EditHandle.h; sourceTree = SOURCE_ROOT; };
 		DCE2F01E1732BAD3002B897C /* EditHandle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = EditHandle.m; path = MobMuPlatEditor/EditHandle.m; sourceTree = SOURCE_ROOT; };
 		DCE2F01F1732BAD3002B897C /* MMPDocumentController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MMPDocumentController.h; path = MobMuPlatEditor/MMPDocumentController.h; sourceTree = SOURCE_ROOT; };
-		DCE2F0201732BAD3002B897C /* MMPDocumentController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = MMPDocumentController.mm; path = MobMuPlatEditor/MMPDocumentController.mm; sourceTree = SOURCE_ROOT; };
+		DCE2F0201732BAD3002B897C /* MMPDocumentController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MMPDocumentController.m; path = MobMuPlatEditor/MMPDocumentController.m; sourceTree = SOURCE_ROOT; };
 		DCE2F0271732BB1A002B897C /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = MobMuPlatEditor/en.lproj/Document.xib; sourceTree = SOURCE_ROOT; };
 		DCE2F0291732BB1A002B897C /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = MobMuPlatEditor/en.lproj/MainMenu.xib; sourceTree = SOURCE_ROOT; };
 		DCE2F02D1732BB39002B897C /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = MobMuPlatEditor/main.m; sourceTree = SOURCE_ROOT; };
@@ -188,6 +189,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F9E56AFE1A81EF3F0017851A /* QuartzCore.framework in Frameworks */,
 				DCA65A7A19CD56FD00382000 /* VVBasics.framework in Frameworks */,
 				DCA65A7B19CD56FD00382000 /* VVOSC.framework in Frameworks */,
 				DC34E248168BB79800648C2F /* Cocoa.framework in Frameworks */,
@@ -244,13 +246,13 @@
 				DCE2F0171732BAD3002B897C /* CanvasView.h */,
 				DCE2F0181732BAD3002B897C /* CanvasView.m */,
 				DCE2F0191732BAD3002B897C /* Document.h */,
-				DCE2F01A1732BAD3002B897C /* Document.mm */,
+				DCE2F01A1732BAD3002B897C /* Document.m */,
 				DCE2F01B1732BAD3002B897C /* DocumentModel.h */,
 				DCE2F01C1732BAD3002B897C /* DocumentModel.m */,
 				DCE2F01D1732BAD3002B897C /* EditHandle.h */,
 				DCE2F01E1732BAD3002B897C /* EditHandle.m */,
 				DCE2F01F1732BAD3002B897C /* MMPDocumentController.h */,
-				DCE2F0201732BAD3002B897C /* MMPDocumentController.mm */,
+				DCE2F0201732BAD3002B897C /* MMPDocumentController.m */,
 				DC34E24E168BB79800648C2F /* Supporting Files */,
 			);
 			name = MobMuPlatEd;
@@ -423,10 +425,10 @@
 				DCE2F0151732BAA6002B897C /* MMPToggle.m in Sources */,
 				DCE2F0161732BAA6002B897C /* MMPXYSlider.m in Sources */,
 				DCE2F0211732BAD3002B897C /* CanvasView.m in Sources */,
-				DCE2F0221732BAD3002B897C /* Document.mm in Sources */,
+				DCE2F0221732BAD3002B897C /* Document.m in Sources */,
 				DCE2F0231732BAD3002B897C /* DocumentModel.m in Sources */,
 				DCE2F0241732BAD3002B897C /* EditHandle.m in Sources */,
-				DCE2F0251732BAD3002B897C /* MMPDocumentController.mm in Sources */,
+				DCE2F0251732BAD3002B897C /* MMPDocumentController.m in Sources */,
 				DCE2F0331732BB39002B897C /* main.m in Sources */,
 				F9109646190DFBC8008707EE /* MMPTable.m in Sources */,
 			);

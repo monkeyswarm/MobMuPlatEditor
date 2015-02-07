@@ -28,8 +28,9 @@
         [self setRange:8];
         
         [self setColor:self.color];
-        [self setFrame:frame];
+        //[self setFrame:frame];
         [self addHandles];
+        [self resizeSubviewsWithOldSize:self.frame.size];
     }
     return self;
 }
@@ -40,14 +41,15 @@
     box.layer.borderWidth=2;
 }
 
--(void)setFrame:(NSRect)frameRect{
-    [super setFrame:frameRect];
-    headWidth=frameRect.size.width/_range;
-    box.frame=CGRectMake(0, SLIDER_HEIGHT/2, frameRect.size.width, frameRect.size.height-SLIDER_HEIGHT);
-    for(int i=0;i<[headViewArray count];i++){
-        NSView* head = [headViewArray objectAtIndex:i];
-        head.frame =  CGRectMake( i*headWidth, frameRect.size.height-SLIDER_HEIGHT, headWidth, SLIDER_HEIGHT );
-    }
+- (void)resizeSubviewsWithOldSize:(NSSize)oldBoundsSize{
+  [super resizeSubviewsWithOldSize:oldBoundsSize];
+
+  headWidth=self.frame.size.width/_range;
+  box.frame=CGRectMake(0, SLIDER_HEIGHT/2, self.frame.size.width, self.frame.size.height-SLIDER_HEIGHT);
+  for(int i=0;i<[headViewArray count];i++){
+    NSView* head = [headViewArray objectAtIndex:i];
+    head.frame =  CGRectMake( i*headWidth, self.frame.size.height-SLIDER_HEIGHT, headWidth, SLIDER_HEIGHT );
+  }
 
 }
 
@@ -92,9 +94,9 @@
     [self bringUpHandle];
 }
 
--(void)setTouchModeUndoable:(NSNumber*)inVal{
-  [[self undoManager] registerUndoWithTarget:self selector:@selector(setTouchModeUndoable:) object:[NSNumber numberWithInteger:_touchMode]];
-  [self setTouchMode:[inVal integerValue]];
+-(void)setOutputModeUndoable:(NSNumber*)inVal{
+  [[self undoManager] registerUndoWithTarget:self selector:@selector(setOutputModeUndoable:) object:[NSNumber numberWithInteger:_outputMode]];
+  [self setOutputMode:[inVal integerValue]];
 }
 
 - (void)sendSliderIndex:(int)index value:(float)value {
@@ -125,7 +127,7 @@
         float headVal = 1.0-( (clippedPointY-SLIDER_HEIGHT/2) / (self.frame.size.height - SLIDER_HEIGHT) );
         [_valueArray setObject:[NSNumber numberWithFloat:headVal] atIndexedSubscript:headIndex];
         // send out
-        if (_touchMode == 1) {
+        if (_outputMode == 1) {
           [self sendSliderIndex:headIndex value:headVal];
         } else  {
           [self sendValue];
@@ -169,7 +171,7 @@
           float interpVal = (maxTouchedValue - minTouchedValue) * percent  + minTouchedValue ;
           //NSLog(@"%d %.2f %.2f", i, percent, interpVal);
           [_valueArray setObject:[NSNumber numberWithFloat:interpVal] atIndexedSubscript:i];
-          if(_touchMode==1) {
+          if(_outputMode==1) {
             [self sendSliderIndex:i value:interpVal];
           }
         }
@@ -177,7 +179,7 @@
       }
 
       // send out
-      if (_touchMode == 1) {
+      if (_outputMode == 1) {
         [self sendSliderIndex:headIndex value:headVal];
       } else  {
         [self sendValue];

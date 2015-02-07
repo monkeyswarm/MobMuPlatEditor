@@ -18,6 +18,7 @@
       self.layer.backgroundColor=self.color.CGColor;
         self.layer.cornerRadius=EDGE_RADIUS;
         [self addHandles];
+      [self resizeSubviewsWithOldSize:self.frame.size];
     }
     return self;
 }

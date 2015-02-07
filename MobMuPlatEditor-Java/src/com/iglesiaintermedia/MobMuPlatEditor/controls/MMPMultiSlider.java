@@ -23,6 +23,7 @@ public class MMPMultiSlider extends MMPControl{
 	float headWidth;
 	int currHeadIndex;
 	public int range;
+	public int outputMode; //0=all values, 1=individual element index+value
 	
 	public MMPMultiSlider(MMPMultiSlider otherMS){
 		//this.MMPMultiSlider(otherMS.getBounds());
@@ -105,6 +106,13 @@ public class MMPMultiSlider extends MMPControl{
 		editingDelegate.sendMessage(address, args);
 	}
 	
+	void sendSliderIndexAndValue(int index, float value){
+		Object[] args = new Object[2];
+		args[0]=Integer.valueOf(index);
+		args[1]=Float.valueOf(value);
+		editingDelegate.sendMessage(address, args);
+	}
+	
 	//on receive a new list into valueArray, redraw the slider positions
 	/*void updateThumbs(){
 		for(int i=0;i<valueArray.size();i++){
@@ -136,9 +144,13 @@ public class MMPMultiSlider extends MMPControl{
 	       float clippedPointY = Math.max(Math.min(e.getY(), getHeight()-SLIDER_HEIGHT/2), SLIDER_HEIGHT/2);
 	       float headVal = 1.0f-( (clippedPointY-SLIDER_HEIGHT/2) / (getHeight() - SLIDER_HEIGHT) );
 
-	       valueArray.set(headIndex, new Float(headVal));
-	       sendValue();
+	       valueArray.set(headIndex, Float.valueOf(headVal));
 	       
+	       if (outputMode==0) {
+	    	   sendValue();
+	       } else { //touchMode 1
+	    	   sendSliderIndexAndValue(headIndex, headVal);
+	       }
 	       //update position
 	       RoundedPanel currHead = touchPanelArray.get(headIndex);
 	       currHead.setBounds((int)(headIndex*headWidth), (int)(clippedPointY-SLIDER_HEIGHT/2), (int)headWidth, SLIDER_HEIGHT);
@@ -157,8 +169,8 @@ public class MMPMultiSlider extends MMPControl{
 		       float clippedPointY = Math.max(Math.min(e.getY(), getHeight()-SLIDER_HEIGHT/2), SLIDER_HEIGHT/2);
 		       float headVal = 1.0f-( (clippedPointY-SLIDER_HEIGHT/2) / (getHeight() - SLIDER_HEIGHT) );
 
-		       valueArray.set(headIndex, new Float(headVal));
-		       sendValue();
+		       valueArray.set(headIndex, Float.valueOf(headVal));
+		       
 		       
 		       //update position
 		       RoundedPanel currHead = touchPanelArray.get(headIndex);
@@ -176,10 +188,19 @@ public class MMPMultiSlider extends MMPControl{
 		           float percent = ((float)(i-minTouchIndex))/(maxTouchIndex-minTouchIndex);
 		           float interpVal = (maxTouchedValue - minTouchedValue) * percent  + minTouchedValue ;
 		           //NSLog(@"%d %.2f %.2f", i, percent, interpVal);
-		           valueArray.set(i, new Float(interpVal));
+		           valueArray.set(i, Float.valueOf(interpVal));
+		           if (outputMode==1) {
+		        	   sendSliderIndexAndValue(i, interpVal);
+		           }
 		         }
 		        this.updateThumbs(minTouchIndex+1, maxTouchIndex-1);
 		       }
+		       
+		       if (outputMode==1) {
+	        	   sendSliderIndexAndValue(headIndex, headVal);
+	           } else {
+	        	   sendValue();
+	           }
 		       
 		       if(headIndex!=currHeadIndex){//dragged to new head
 		    	   RoundedPanel prevHead = touchPanelArray.get(currHeadIndex);

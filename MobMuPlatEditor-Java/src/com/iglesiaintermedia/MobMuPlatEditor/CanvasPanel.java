@@ -31,7 +31,7 @@ public class CanvasPanel extends JPanel implements MouseListener{
 	
 	public CanvasPanel(){
 		super();
-		canvasType=CanvasType.canvasTypeIPhone3p5Inch;
+		canvasType=CanvasType.canvasTypeWidePhone;
 		pageCount=1;
         pageViewIndex=0;
        guideColor = new Color(0f,0f,0f,.2f);
@@ -64,17 +64,20 @@ public class CanvasPanel extends JPanel implements MouseListener{
 	    pageViewIndex=inIndex;
 	    int offset=0;
 	    switch(canvasType){
-	        case canvasTypeIPhone3p5Inch:
+	        case canvasTypeWidePhone:
 	            offset = (isOrientationLandscape ? 480:320);
 	            break;
-	        case canvasTypeIPhone4Inch:
+	        case canvasTypeTallPhone:
 	            offset = (isOrientationLandscape ? 568:320);
 	            break;
-	        case canvasTypeIPad:
+	        case canvasTypeWideTablet:
 	            offset = (isOrientationLandscape ? 1024:768);
 	            break;
-	        case canvasTypeAndroid7Inch:
+	        case canvasTypeTallTablet:
 	            offset = (isOrientationLandscape ? 900:600);
+	            break;
+	        case canvasTypeWatch:
+	            offset = 140;
 	            break;
 	    }
 	  
@@ -86,23 +89,23 @@ public class CanvasPanel extends JPanel implements MouseListener{
 	void refreshIcon(CanvasType intype){
 		Image resizedImage;
 		 switch(intype){
-	        case canvasTypeIPhone3p5Inch:
+	        case canvasTypeWidePhone:
 	        	 resizedImage =  iconImage.getScaledInstance(30,30, Image.SCALE_SMOOTH);
 	    		// System.out.print("\nresizedImage !=null ? "+(resizedImage!=null));
 	        	 buttonBlankLabel.setIcon(new ImageIcon( resizedImage ));
 	    		buttonBlankLabel.setBounds(10,10,30,30);
 	    		break;
-	        case canvasTypeIPhone4Inch:
+	        case canvasTypeTallPhone:
 	        	 resizedImage =  iconImage.getScaledInstance(30,30, Image.SCALE_SMOOTH);
 	    		 buttonBlankLabel.setIcon(new ImageIcon( resizedImage ));
 	    		buttonBlankLabel.setBounds(10,10,30,30);
 	    		break;
-	        case canvasTypeIPad:
+	        case canvasTypeWideTablet:
 	        	 resizedImage =  iconImage.getScaledInstance(40,40, Image.SCALE_SMOOTH);
 	    		 buttonBlankLabel.setIcon(new ImageIcon( resizedImage ));
 	    		buttonBlankLabel.setBounds(20,20,40,40);
 	    		break;
-	        case canvasTypeAndroid7Inch:
+	        case canvasTypeTallTablet:
 	        	 resizedImage =  iconImage.getScaledInstance(40,40, Image.SCALE_SMOOTH);
 	    		 buttonBlankLabel.setIcon(new ImageIcon( resizedImage ));
 	    		buttonBlankLabel.setBounds(20,20,40,40);
@@ -113,23 +116,26 @@ public class CanvasPanel extends JPanel implements MouseListener{
 	void refresh(){//called on changing pagecount, canvas, orientation
 	    int width=0; int height=0;
 	    switch(canvasType){
-	        case canvasTypeIPhone3p5Inch:
+	        case canvasTypeWidePhone:
 	            width = (isOrientationLandscape ? 480:320);
 	            height = (isOrientationLandscape ? 320:480);
 	            break;
-	        case canvasTypeIPhone4Inch:
+	        case canvasTypeTallPhone:
 	            width = (isOrientationLandscape ? 568:320);
 	            height = (isOrientationLandscape ? 320:568);
 	            break;
-	        case canvasTypeIPad:
+	        case canvasTypeWideTablet:
 	            width = (isOrientationLandscape ? 1024:768);
 	            height = (isOrientationLandscape ? 768:1024);
 	            break;
-	        case canvasTypeAndroid7Inch:
+	        case canvasTypeTallTablet:
 	            width = (isOrientationLandscape ? 960:600);
-	            height = (isOrientationLandscape ? 552:912);
+	            height = (isOrientationLandscape ? 600:960);
 	            break;
-	        	
+	        case canvasTypeWatch:
+	        	width = 140;
+	            height = 140;
+	            break;
 	    }
 	    this.setBounds(new Rectangle(0,0,width*pageCount, height));//[self setFrame:CGRectMake(0, 0, width*_pageCount, height)];
 	    this.setPageViewIndex(pageViewIndex);//[self setPageViewIndex:_pageViewIndex];

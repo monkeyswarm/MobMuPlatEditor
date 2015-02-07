@@ -44,9 +44,10 @@
     
     _touchStack = [[NSMutableArray alloc] init];
     _touchByVoxArray = [[NSMutableArray alloc] init];
-    [self setFrame:frame];
+    //[self setFrame:frame];
     
     [self addHandles];
+    [self resizeSubviewsWithOldSize:self.frame.size];
   }
   return self;
 }
@@ -57,11 +58,12 @@
   //todo clear mock touches
 }
 
--(void)setFrame:(NSRect)frameRect{
-  [super setFrame:frameRect];
+- (void)resizeSubviewsWithOldSize:(NSSize)oldBoundsSize{
+  [super resizeSubviewsWithOldSize:oldBoundsSize];
+
+
   [borderView setFrame:CGRectMake(0, 0, self.frame.size.width, self.frame.size.height)];
-    [self removeTouches:[_touchStack copy]];//copy becase remove touches send s list of touches to remove from touchstack...
-  
+  [self removeTouches:[_touchStack copy]];//copy becase remove touches send s list of touches to remove from touchstack...
 }
 
 -(void)setColor:(NSColor *)inColor{

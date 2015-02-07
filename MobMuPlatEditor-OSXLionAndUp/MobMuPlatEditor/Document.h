@@ -41,7 +41,7 @@
     IBOutlet NSScrollView* documentScrollView;
     
     int currentPageIndex;//0-index
-    NSUInteger currentWatchPageIndex;
+    /* wear NSUInteger currentWatchPageIndex;*/
 
     NSMutableArray* textLineArray;//array (last N) of strings for display
     
@@ -58,7 +58,6 @@
     NSColorWell *_docBGColorWell;
     NSTextField *_docPageCountField;
     NSTextField *_docStartPageField;
-    NSTextField *_docPortField;
     NSButton *_docChooseFileButton;
     NSTextField *_docFileTextField;
     
@@ -149,7 +148,6 @@
 - (IBAction)docBGColorChanged:(NSColorWell *)sender;
 - (IBAction)docPageCountChanged:(NSTextField *)sender;
 - (IBAction)docStartPageChanged:(NSTextField *)sender;
-- (IBAction)docPortChanged:(NSTextField *)sender;
 - (IBAction)docChooseFile:(NSButton *)sender;
 - (IBAction)docFileFieldChanged:(NSTextField *)sender;
 
@@ -199,12 +197,13 @@
 - (IBAction)propPanelImagePathTextChanged:(NSTextField *)sender;
 - (IBAction)propPanelPassTouchesChanged:(NSButton *)sender;
 - (IBAction)propMultiSliderRangeChanged:(NSTextField *)sender;
-- (IBAction)propMultiSliderTouchModeChanged:(NSPopUpButton *)sender;
+- (IBAction)propMultiSliderOutputModeChanged:(NSPopUpButton *)sender;
 - (IBAction)propMenuTitleTextChanged:(NSTextField *)sender;
 - (IBAction)propTableSelectionColorWellChanged:(NSColorWell *)sender;
 - (IBAction)propTableModeChanged:(NSPopUpButton *)sender;
 - (IBAction)propTableDisplayModeChanged:(NSPopUpButton *)sender;
-- (IBAction)propTableDisplayRangeChanged:(NSPopUpButton *)sender;
+- (IBAction)propTableDisplayRangeLoChanged:(NSTextField *)sender;
+- (IBAction)propTableDisplayRangeHiChanged:(NSTextField *)sender;
 
 
 //lock
@@ -218,6 +217,7 @@
 -(IBAction)paste:(id)sender;
 
 //watch
+/* wear
 - (IBAction)watchPageCountChanged:(NSPopUpButton *)sender;
 - (IBAction)watchPageUpHit:(NSButton *)sender;
 - (IBAction)watchPageDownHit:(NSButton *)sender;
@@ -236,7 +236,7 @@
 - (IBAction)watchPropGridCellPaddingChanged:(NSTextField *)sender;
 - (IBAction)watchPropGridModeChanged:(NSPopUpButton *)sender;
 - (IBAction)watchPropMultiSliderRangeChanged:(NSTextField *)sender;
-- (IBAction)watchPropMultiSliderTouchModeChanged:(NSPopUpButton *)sender;
+- (IBAction)watchPropMultiSliderOutputModeChanged:(NSPopUpButton *)sender;*/
 
 //as editing delegate
 @property (nonatomic) BOOL isEditing;
@@ -296,7 +296,6 @@
 @property (strong) IBOutlet NSButton *propPanelChooseImageButton;
 @property (strong) IBOutlet NSTextField *propPanelImagePathTextField;
 @property (strong) IBOutlet NSButton *propPanelPassTouchesButton;
-@property (strong) IBOutlet NSTextField *docPortField;
 @property (strong) IBOutlet NSPopUpButtonCell *propLabelFontType;
 @property (strong) IBOutlet NSPopUpButton *propLabelFontTypeButton;
 @property (strong) IBOutlet NSColorWell *propKnobIndicatorColorWell;
@@ -306,7 +305,7 @@
 @property (strong) IBOutlet NSButton *addMenuButton;
 @property (strong) IBOutlet NSView *propMultiSliderView;
 @property (strong) IBOutlet NSTextField *propMultiSliderRangeField;
-@property (strong) IBOutlet NSPopUpButton *propMultiSliderTouchModePopButton; //new
+@property (strong) IBOutlet NSPopUpButton *propMultiSliderOutputModePopButton; //new
 @property (strong) IBOutlet NSView *propToggleView;
 @property (strong) IBOutlet NSTextField *propToggleThicknessTextField;
 @property (strong) IBOutlet NSView *propMenuView;
@@ -317,7 +316,9 @@
 @property (strong) IBOutlet NSColorWell *propTableSelectionColorWell;
 @property (strong) IBOutlet NSPopUpButton *propTableModePopButton;
 @property (strong) IBOutlet NSPopUpButton *propTableDisplayModePopButton;
-@property (strong) IBOutlet NSPopUpButton *propTableDisplayRangePopButton;
+@property (strong) IBOutlet NSTextField *propTableDisplayRangeLoTextField; //new
+@property (strong) IBOutlet NSTextField *propTableDisplayRangeHiTextField;
+
 
 @property (strong) IBOutlet NSPanel *editingGridPanel;
 @property (strong) IBOutlet NSButton *editingGridEnableCheckButton;
@@ -327,6 +328,7 @@
 @property (strong) IBOutlet NSButton *editingGridCloseButton;
 
 // WATCH
+/* wear
 @property (strong) IBOutlet CanvasView *watchCanvasView;
 @property (strong) IBOutlet NSPopUpButton *watchPageCountPopButton;
 @property (strong) IBOutlet NSTextField *watchPageIndexLabel;
@@ -347,10 +349,10 @@
 @property (strong) IBOutlet NSView *watchPropGridView;
 @property (strong) IBOutlet NSView *watchPropMultiSliderView;
 @property (strong) IBOutlet NSTextField *watchPropMultiSliderRangeField;
-@property (strong) IBOutlet NSPopUpButton *watchPropMultiSliderTouchModePopButton;
+@property (strong) IBOutlet NSPopUpButton *watchPropMultiSliderOutputModePopButton;
 @property (strong) IBOutlet NSView *watchPropLabelView;
 @property (strong) IBOutlet NSTextField *watchPropLabelTextField;
-@property (strong) IBOutlet NSTextField *watchPropLabelSizeTextField;
+@property (strong) IBOutlet NSTextField *watchPropLabelSizeTextField;*/
 
 
 

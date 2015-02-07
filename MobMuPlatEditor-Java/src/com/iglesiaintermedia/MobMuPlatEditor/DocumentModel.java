@@ -11,8 +11,13 @@ import java.lang.reflect.Type;
 
 import com.iglesiaintermedia.MobMuPlatEditor.controls.*;
 public class DocumentModel {
-	public final static float VERSION = 1.5f;
-	public enum CanvasType{ canvasTypeIPhone3p5Inch ,canvasTypeIPhone4Inch , canvasTypeIPad , canvasTypeAndroid7Inch}
+	public final static float VERSION = 1.64f;//matching ios version.
+	public enum CanvasType{ 
+		canvasTypeWidePhone,
+		canvasTypeTallPhone, 
+		canvasTypeWideTablet , 
+		canvasTypeTallTablet,
+		canvasTypeWatch}
 	
 	CanvasType canvasType;
 	boolean isOrientationLandscape;
@@ -60,12 +65,9 @@ public class DocumentModel {
 	    pageCount = 1;
 	    startPageIndex = 0;
 	    backgroundColor = new Color(128,128,128);
-	    canvasType=CanvasType.canvasTypeIPhone3p5Inch;
+	    canvasType=CanvasType.canvasTypeWidePhone;
 	    port=54321;
-	    
 	    version=VERSION;
-	    
-
 	}
 	
 	public String modelToString(){
@@ -77,10 +79,10 @@ public class DocumentModel {
 	    //pd file
 	    if(pdFile!=null)topDict.put("pdFile", pdFile);//setObject:_pdFile forKey:@"pdFile"];
 	    //canvasType
-	    if(canvasType==CanvasType.canvasTypeIPhone3p5Inch)topDict.put("canvasType", "iPhone3p5Inch"); //setObject:@"iPhone3p5Inch" forKey:@"canvasType"];
-	    else if(canvasType==CanvasType.canvasTypeIPhone4Inch)topDict.put("canvasType", "iPhone4Inch");
-	    else if(canvasType==CanvasType.canvasTypeIPad)topDict.put("canvasType", "iPad");
-	    else if(canvasType==CanvasType.canvasTypeAndroid7Inch) topDict.put("canvasType", "android7Inch");
+	    if(canvasType==CanvasType.canvasTypeWidePhone)topDict.put("canvasType", "widePhone"); //setObject:@"iPhone3p5Inch" forKey:@"canvasType"];
+	    else if(canvasType==CanvasType.canvasTypeTallPhone)topDict.put("canvasType", "tallPhone");
+	    else if(canvasType==CanvasType.canvasTypeWideTablet)topDict.put("canvasType", "wideTablet");
+	    else if(canvasType==CanvasType.canvasTypeTallTablet) topDict.put("canvasType", "tallTablet");
 	    
 	    topDict.put("isOrientationLandscape", new Boolean(isOrientationLandscape)); //setObject:[NSNumber numberWithBool:_isOrientationLandscape] forKey:@"isOrientationLandscape"];
 	    topDict.put("isPageScrollShortEnd", new Boolean(isPageScrollShortEnd));
@@ -160,6 +162,7 @@ public class DocumentModel {
 	        else if(control instanceof MMPMultiSlider){
 	        	MMPMultiSlider currMultiSlider = (MMPMultiSlider)control;
 	        	GUIDict.put("range", new Integer(currMultiSlider.range));
+	        	GUIDict.put("outputMode", new Integer(currMultiSlider.outputMode));
 	        }
 	        //toggle
 	        else if(control instanceof MMPToggle){
@@ -174,6 +177,9 @@ public class DocumentModel {
 	        	MMPTable currTable = (MMPTable)control;
 	        	GUIDict.put("mode", new Integer(currTable.getMode()));
 	        	GUIDict.put("selectionColor", DocumentModel.RGBAArrayFromColor(currTable.getSelectionColor()));
+	        	GUIDict.put("displayMode", currTable.getDisplayMode());
+	        	GUIDict.put("displayRangeLo", currTable.getDisplayRangeLo());
+	        	GUIDict.put("displayRangeHi", currTable.getDisplayRangeHi());
 	        }
 	        else if(control instanceof MMPUnknown){
 	        	GUIDict = ((MMPUnknown)control).badGUIDict;
@@ -214,10 +220,23 @@ public class DocumentModel {
 		 if(topDict.get("pdFile")!=null) 
 		    model.pdFile=topDict.get("pdFile").getAsString();// objectForKey:@"pdFile"]];
 		    if(topDict.get("canvasType")!=null){
-		        if((topDict.get("canvasType").getAsString()).equals("iPhone3p5Inch")) model.canvasType=CanvasType.canvasTypeIPhone3p5Inch;// objectForKey:@"canvasType"] isEqualToString:@"iPhone3p5Inch"])[model setCanvasType:canvasTypeIPhone3p5Inch];
-		        if((topDict.get("canvasType").getAsString()).equals("iPhone4Inch")) model.canvasType=CanvasType.canvasTypeIPhone4Inch;
-		        if((topDict.get("canvasType").getAsString()).equals("iPad")) model.canvasType=CanvasType.canvasTypeIPad;
-		        if((topDict.get("canvasType").getAsString()).equals("android7Inch")) model.canvasType=CanvasType.canvasTypeAndroid7Inch;
+		    	String canvasTypeString = topDict.get("canvasType").getAsString();
+		        if(canvasTypeString.equals("iPhone3p5Inch") ||
+		           canvasTypeString.equals("widePhone")) {
+		        	model.canvasType=CanvasType.canvasTypeWidePhone;
+		        }
+		        if(canvasTypeString.equals("iPhone4Inch") || 
+		           canvasTypeString.equals("tallPhone")) {
+		        	model.canvasType=CanvasType.canvasTypeTallPhone;
+		        }
+		        if(canvasTypeString.equals("iPad") || 
+		        	canvasTypeString.equals("wideTablet")) {
+		        	model.canvasType=CanvasType.canvasTypeWideTablet;
+		        }
+		        if(canvasTypeString.equals("android7Inch")|| 
+		           canvasTypeString.equals("tallTablet")) { 
+		        	model.canvasType=CanvasType.canvasTypeTallTablet;
+		        }
 		    }
 		        
 		    if(topDict.get("isOrientationLandscape")!=null)
@@ -341,6 +360,8 @@ public class DocumentModel {
 		                control = new MMPMultiSlider(newFrame);
 		                if(guiDict.get("range")!=null)
 		                    ((MMPMultiSlider)control).setRange( guiDict.get("range").getAsInt()  );
+		                if(guiDict.get("outputMode")!=null)
+		                    ((MMPMultiSlider)control).outputMode = ( guiDict.get("outputMode").getAsInt()  );
 		            }
 		            else if(classString.equals("MMPLCD")){
 		                control = new MMPLCD(newFrame);
@@ -360,6 +381,15 @@ public class DocumentModel {
 		            	if(guiDict.get("selectionColor")!=null) {
 		            		Color selectionColor = DocumentModel.colorFromRGBAArray(guiDict.get("selectionColor").getAsJsonArray());
 		            		((MMPTable)control).setSelectionColor( selectionColor );
+		            	}
+		            	if(guiDict.get("displayMode")!=null) {
+		            		((MMPTable)control).setDisplayMode(guiDict.get("displayMode").getAsInt()); 
+		            	}
+		            	if(guiDict.get("displayRangeLo")!=null) {
+		            		((MMPTable)control).setDisplayRangeLo(guiDict.get("displayRangeLo").getAsFloat()); 
+		            	}
+		            	if(guiDict.get("displayRangeHi")!=null) {
+		            		((MMPTable)control).setDisplayRangeHi(guiDict.get("displayRangeHi").getAsFloat()); 
 		            	}
 		            }
 		            //no class

@@ -55,8 +55,9 @@ int osxMinorVersion=-1;
         [self addSubview:indicatorView];
         
 		[self setColor:self.color];
-        [self setFrame:frame];
+        //[self setFrame:frame];
 		[self addHandles];
+      [self resizeSubviewsWithOldSize:self.frame.size];
         
         _value=0;
         [self updateIndicator];
@@ -86,6 +87,34 @@ int osxMinorVersion=-1;
     [self updateIndicator];
 }
 
+- (void)resizeSubviewsWithOldSize:(NSSize)oldBoundsSize{
+  [super resizeSubviewsWithOldSize:oldBoundsSize];
+
+
+  dim = self.frame.size.width-((EXTRA_RADIUS+TICK_DIM)*2);//diameter of circle
+
+  //rounded up to nearest int - for corner radius
+  radius = (float)(int)(dim/2+.5);
+
+  [knobView setFrame:CGRectMake(EXTRA_RADIUS+TICK_DIM, EXTRA_RADIUS+TICK_DIM, dim, dim)];
+  knobView.layer.cornerRadius = radius;
+
+  indicatorDim=dim/2+2;
+  indicatorThickness = dim/8;
+
+  centerPoint=CGPointMake(dim/2+EXTRA_RADIUS+TICK_DIM, dim/2+EXTRA_RADIUS+TICK_DIM);
+  [indicatorView setFrame:CGRectMake(centerPoint.x-indicatorThickness/2,centerPoint.y-indicatorThickness/2, indicatorThickness, indicatorDim)];
+  [self updateIndicator];
+
+  //tickmarks
+  for(NSView* dot in tickViewArray){
+    float angle= /*M_PI/2+M_PI-*/((float)[tickViewArray indexOfObject:dot]/(_range-1)* (M_PI*2-ROTATION_PAD_RAD*2)+ROTATION_PAD_RAD+M_PI/2);/**/
+    float xPos=(dim/2+EXTRA_RADIUS+TICK_DIM/2)*cos(angle);
+    float yPos=(dim/2+EXTRA_RADIUS+TICK_DIM/2)*sin(angle);
+    [dot setFrame:CGRectMake(centerPoint.x+xPos-(TICK_DIM/2),centerPoint.y+yPos-(TICK_DIM/2), TICK_DIM, TICK_DIM)];
+  }
+}
+
 -(void)setFrame:(NSRect)frameRect{
     //unlike other MMPControls, we always keep this frame square
     
@@ -93,31 +122,6 @@ int osxMinorVersion=-1;
     int newDim = (frameRect.size.width>frameRect.size.height) ? frameRect.size.width : frameRect.size.height;
     CGRect squareFrame = CGRectMake(frameRect.origin.x, frameRect.origin.y, newDim, newDim);
     [super setFrame:squareFrame];
-    dim = squareFrame.size.width-((EXTRA_RADIUS+TICK_DIM)*2);//diameter of circle 
-   
-    //rounded up to nearest int - for corner radius
-    radius = (float)(int)(dim/2+.5);
-     
-    [knobView setFrame:CGRectMake(EXTRA_RADIUS+TICK_DIM, EXTRA_RADIUS+TICK_DIM, dim, dim)];
-    knobView.layer.cornerRadius = radius;
-    
-    indicatorDim=dim/2+2;
-    indicatorThickness = dim/8;
-    
-    centerPoint=CGPointMake(dim/2+EXTRA_RADIUS+TICK_DIM, dim/2+EXTRA_RADIUS+TICK_DIM);
-    [indicatorView setFrame:CGRectMake(centerPoint.x-indicatorThickness/2,centerPoint.y-indicatorThickness/2, indicatorThickness, indicatorDim)];
-    [self updateIndicator];
-    
-    //tickmarks
-    for(NSView* dot in tickViewArray){
-        float angle= /*M_PI/2+M_PI-*/((float)[tickViewArray indexOfObject:dot]/(_range-1)* (M_PI*2-ROTATION_PAD_RAD*2)+ROTATION_PAD_RAD+M_PI/2);/**/
-        float xPos=(dim/2+EXTRA_RADIUS+TICK_DIM/2)*cos(angle);
-        float yPos=(dim/2+EXTRA_RADIUS+TICK_DIM/2)*sin(angle);
-        [dot setFrame:CGRectMake(centerPoint.x+xPos-(TICK_DIM/2),centerPoint.y+yPos-(TICK_DIM/2), TICK_DIM, TICK_DIM)];
-        //printf("\nfr %.2f %.2f %.2f %.2f", dot.frame.origin.x, dot.frame.origin.x, dot.frame.size.width, dot.frame.size.height);
-    }
-    
-    
 }
 
 -(void)setColor:(NSColor *)color{
@@ -152,8 +156,8 @@ int osxMinorVersion=-1;
         [self addSubview:dot];
         [tickViewArray addObject:dot];
     }
-    //call setFrame again to do layout
-    [self setFrame:self.frame];
+  //[self setNeedsLayout:YES];
+  [self resizeSubviewsWithOldSize:self.frame.size];
 }
 
 -(void)setValue:(float)inVal{

@@ -7,6 +7,9 @@
 //
 
 #import "MMPSlider.h"
+
+//#import <QuartzCore/QuartzCore.h>
+
 #define SLIDER_TROUGH_WIDTH 10
 #define SLIDER_TROUGH_TOPINSET 10
 #define SLIDER_THUMB_HEIGHT 20
@@ -22,6 +25,8 @@
         
         //the "rail"
         troughView=[[NSView alloc]init ];
+      //CALayer *layer = [CALayer layer];
+      //troughView.layer = layer;
         [troughView setWantsLayer:YES];
         troughView.layer.cornerRadius=3;
         [self addSubview:troughView];
@@ -33,42 +38,41 @@
         [self addSubview:thumbView];
         
         [self setColor:self.color];
-        [self setFrame:frame];
         [self addHandles];
+        [self resizeSubviewsWithOldSize:self.frame.size];
     }
     return self;
 }
 
 -(void)hackRefresh{
-    [super hackRefresh];
+  //[troughView setWantsLayer:YES];
     troughView.layer.cornerRadius=3;
     thumbView.layer.cornerRadius=5;
     [self updateThumb];
+  [super hackRefresh];
 }
 
--(void)setFrame:(NSRect)frameRect{
-    
-    [super setFrame:frameRect];
-    
-    if(!_isHorizontal){//vertical
-        for(int i=0;i<[tickViewArray count];i++){
-            NSView* tick = [tickViewArray objectAtIndex:i];
-            [tick setFrame:CGRectMake((self.frame.size.width-10)/4, SLIDER_TROUGH_TOPINSET+i*(frameRect.size.height-SLIDER_TROUGH_TOPINSET*2)/(_range-1)-1, (self.frame.size.width-10)/2+10, 2)];
-        }
-    
-        [troughView setFrame: CGRectMake((frameRect.size.width-10)/2, SLIDER_TROUGH_TOPINSET, SLIDER_TROUGH_WIDTH, frameRect.size.height-(SLIDER_TROUGH_TOPINSET*2))];
+- (void)resizeSubviewsWithOldSize:(NSSize)oldBoundsSize{
+  [super resizeSubviewsWithOldSize:oldBoundsSize];
+  NSRect frameRect = self.frame;
+  if(!_isHorizontal){//vertical
+    for(int i=0;i<[tickViewArray count];i++){
+      NSView* tick = [tickViewArray objectAtIndex:i];
+      [tick setFrame:CGRectMake((self.frame.size.width-10)/4, SLIDER_TROUGH_TOPINSET+i*(frameRect.size.height-SLIDER_TROUGH_TOPINSET*2)/(_range-1)-1, (self.frame.size.width-10)/2+10, 2)];
     }
-    
-    else{//horizontal
-        for(int i=0;i<[tickViewArray count];i++){
-            NSView* tick = [tickViewArray objectAtIndex:i];
-            [tick setFrame:CGRectMake(SLIDER_TROUGH_TOPINSET+i*(frameRect.size.width-SLIDER_TROUGH_TOPINSET*2)/(_range-1)-1,  (frameRect.size.height-10)/4, 2, (frameRect.size.height-10)/2+10)];
-        }
-        [troughView setFrame: CGRectMake(SLIDER_TROUGH_TOPINSET, (frameRect.size.height-10)/2, frameRect.size.width-(SLIDER_TROUGH_TOPINSET*2), SLIDER_TROUGH_WIDTH)];
+
+    [troughView setFrame: CGRectMake((frameRect.size.width-10)/2, SLIDER_TROUGH_TOPINSET, SLIDER_TROUGH_WIDTH, frameRect.size.height-(SLIDER_TROUGH_TOPINSET*2))];
+  }
+
+  else{//horizontal
+    for(int i=0;i<[tickViewArray count];i++){
+      NSView* tick = [tickViewArray objectAtIndex:i];
+      [tick setFrame:CGRectMake(SLIDER_TROUGH_TOPINSET+i*(frameRect.size.width-SLIDER_TROUGH_TOPINSET*2)/(_range-1)-1,  (frameRect.size.height-10)/4, 2, (frameRect.size.height-10)/2+10)];
     }
-    
-    [self updateThumb];
-    
+    [troughView setFrame: CGRectMake(SLIDER_TROUGH_TOPINSET, (frameRect.size.height-10)/2, frameRect.size.width-(SLIDER_TROUGH_TOPINSET*2), SLIDER_TROUGH_WIDTH)];
+  }
+
+  [self updateThumb];
 }
 
 -(void)setColor:(NSColor *)color{
@@ -98,7 +102,8 @@
             [self addSubview:tick];
         }
     }
-    [self setFrame:self.frame];
+    //[self setNeedsLayout:YES];
+    [self resizeSubviewsWithOldSize:self.frame.size];
 }
 
 -(void)setValue:(float)inVal{
@@ -141,7 +146,9 @@
 
 -(void)setIsHorizontal:(BOOL)isHorizontal{
     _isHorizontal=isHorizontal;
-    [self setFrame:self.frame];
+    //[self setFrame:self.frame];
+  //[self setNeedsLayout:YES];
+  [self resizeSubviewsWithOldSize:self.frame.size];
 }
 
 -(void)mouseDown:(NSEvent *)event{
@@ -220,7 +227,8 @@
 - (void)encodeWithCoder:(NSCoder *)coder {
     [super encodeWithCoder:coder];
     [coder encodeBool:self.isHorizontal forKey:@"isHorizontal"];
-	[coder encodeInt:self.range forKey:@"range"];
+    [coder encodeInt:self.range forKey:@"range"];
+  //[coder encodeObject:troughView forKey:@"troughView"];
 
 }
 
@@ -228,10 +236,15 @@
     if(self=[super initWithCoder:coder]){
         [self setIsHorizontal:[coder decodeBoolForKey:@"isHorizontal"]];
         [self setRange:[coder decodeIntForKey:@"range"]];
+      //troughView = [coder decodeObjectForKey:@"troughView"];
+      //[troughView setWantsLayer:YES];
+      //[self hackRefresh];
     }
     return self;
 }
 
+/*- (void)drawRect:(NSRect)dirtyRect {
 
+}*/
 
 @end

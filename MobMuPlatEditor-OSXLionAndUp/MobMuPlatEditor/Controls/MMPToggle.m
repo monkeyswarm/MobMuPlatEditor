@@ -23,16 +23,16 @@
         [self addSubview:innerView];
         [self setBorderThickness:4];
         
-        [self setFrame:frame];
         [self addHandles];
+        [self resizeSubviewsWithOldSize:self.frame.size];
         
     }
     return self;
 }
 
--(void)setFrame:(NSRect)frameRect{
-    [super setFrame:frameRect];
-    [innerView setFrame:CGRectMake(0,0, frameRect.size.width, frameRect.size.height)];
+- (void)resizeSubviewsWithOldSize:(NSSize)oldBoundsSize{
+  [super resizeSubviewsWithOldSize:oldBoundsSize];
+  [innerView setFrame:CGRectMake(0,0, self.frame.size.width, self.frame.size.height)];
 }
 
 -(void)setBorderThicknessUndoable:(NSNumber*)inNum{
