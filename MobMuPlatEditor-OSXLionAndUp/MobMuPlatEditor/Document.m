@@ -241,7 +241,7 @@
             
         }
         else{//landscape
-            [documentWindow setFrame:CGRectMake(0, screenFrame.origin.y, CANVAS_LEFT+480+CANVAS_TOP, 500) display:YES animate:NO];
+            [documentWindow setFrame:CGRectMake(0, screenFrame.origin.y, CANVAS_LEFT+480+CANVAS_TOP, 530) display:YES animate:NO];
             
             [documentScrollView setFrame:CGRectMake(0, 0, documentView.frame.size.width, documentView.frame.size.height)];
             [documentScrollView.documentView setFrameSize:documentScrollView.contentSize];
@@ -258,7 +258,7 @@
             
         }
         else{//landscape
-            [documentWindow setFrame:CGRectMake(0, screenFrame.origin.y, CANVAS_LEFT+568+CANVAS_TOP, 500) display:YES animate:NO];
+            [documentWindow setFrame:CGRectMake(0, screenFrame.origin.y, CANVAS_LEFT+568+CANVAS_TOP, 530) display:YES animate:NO];
             
             [documentScrollView setFrame:CGRectMake(0, 0, documentView.frame.size.width, documentView.frame.size.height)];
             [documentScrollView.documentView setFrameSize:documentScrollView.contentSize];

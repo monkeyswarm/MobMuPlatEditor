@@ -212,6 +212,7 @@ public class MMPTable extends MMPControl {
 	    	polygon.lineTo(indexDrawPointA, yPointOfTableZero);
 	    	polygon.closePath(); // draws line back to initial .moveTo()
 	    	cacheGraphics.fill(polygon);
+	    	cacheGraphics.draw(polygon);// fill and stroke.
 	    }
 	    
 	    

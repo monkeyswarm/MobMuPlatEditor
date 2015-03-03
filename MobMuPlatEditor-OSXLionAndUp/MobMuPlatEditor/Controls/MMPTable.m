@@ -200,7 +200,7 @@
     CGContextAddLineToPoint(_cacheContext, indexDrawPointB, yPointOfTableZero);
     CGContextAddLineToPoint(_cacheContext, indexDrawPointA, yPointOfTableZero);
     CGContextClosePath(_cacheContext);
-    CGContextDrawPath(_cacheContext, kCGPathFill);
+    CGContextDrawPath(_cacheContext, kCGPathFillStroke);
   }
 
   CGRect newRect = CGRectMake(indexDrawPointA, 0, indexDrawPointB,self.frame.size.height);
