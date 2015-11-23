@@ -16,8 +16,8 @@ public class MMPButton extends MMPControl implements MouseListener{
 	
 	public MMPButton(MMPButton otherButton){//copy constructor
 		this(otherButton.getBounds());//normal constructor
-		this.setColor(otherButton.color);
-		this.setHighlightColor(otherButton.highlightColor);
+		this.setColor(otherButton.getColor());
+		this.setHighlightColor(otherButton.getHighlightColor());
 		this.address=otherButton.address;
 		
 	}
@@ -31,7 +31,7 @@ public class MMPButton extends MMPControl implements MouseListener{
 		
 		this.addMouseListener(this);
 		this.addMouseMotionListener(this);
-		this.setColor(this.color);
+		this.setColor(this.getColor());
 		this.setBounds(frame);
 	}
 	
@@ -63,7 +63,7 @@ public class MMPButton extends MMPControl implements MouseListener{
 		
 		if(!editingDelegate.isEditing()){
 	      setValue(1);
-	      buttonPanel.setBackground(highlightColor);
+	      buttonPanel.setBackground(getHighlightColor());
 	      
 	    }
 	}
@@ -74,20 +74,27 @@ public class MMPButton extends MMPControl implements MouseListener{
 		super.mouseReleased(e);
 	    if(!editingDelegate.isEditing()){
 	    	setValue(0);
-	    	buttonPanel.setBackground(color);
+	    	buttonPanel.setBackground(this.isEnabled()? getColor() : getDisabledColor());
 	    }
-		
 	}
 	
 	//receive messages from PureData (via [send toGUI], routed through the PdWrapper.pd patch), routed from Document via the address to this object
 	//for button, any message means a instantaneous touch down and touch up
 	//it does not respond to "set" anything
 	public void receiveList(ArrayList<Object> messageArray){
+		super.receiveList(messageArray);
 		if (messageArray.size()>0 && (messageArray.get(0) instanceof Float || messageArray.get(0) instanceof Integer) ){
 	       setValue(1);
 	       setValue(0);
 	    }
 	}
 	
-	
+	public void setEnabled(boolean enabled){
+		super.setEnabled(enabled);
+		if (enabled) {
+			buttonPanel.setBackground(this.getColor());
+		} else {
+			buttonPanel.setBackground(this.getDisabledColor());
+		}
+	}
 }

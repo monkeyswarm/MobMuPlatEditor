@@ -22,8 +22,8 @@ public class MMPSlider extends MMPControl implements MouseListener, MouseMotionL
 	//copy constructor
 	public MMPSlider(MMPSlider otherSlider){
 		this(otherSlider.getBounds());//normal constructor
-		this.setColor(otherSlider.color);
-		this.setHighlightColor(otherSlider.highlightColor);
+		this.setColor(otherSlider.getColor());
+		this.setHighlightColor(otherSlider.getHighlightColor());
 		this.address=otherSlider.address;
 		this.setRange(otherSlider.range);
 	}
@@ -52,7 +52,7 @@ public class MMPSlider extends MMPControl implements MouseListener, MouseMotionL
 		this.addMouseListener(this);
 		this.addMouseMotionListener(this);
 		
-		this.setColor(this.color);
+		this.setColor(this.getColor()); //necc?
 		this.setBounds(frame);
 		//this.addHandles();
 		
@@ -97,7 +97,7 @@ public class MMPSlider extends MMPControl implements MouseListener, MouseMotionL
 	    if(range>2){
 	        for(int i=0;i<range;i++){
 	           JPanel tick = new JPanel();
-	            tick.setBackground(color);
+	            tick.setBackground(getColor());
 	            tickViewArray.add(tick);
 	            add(tick);
 	            
@@ -177,10 +177,10 @@ public class MMPSlider extends MMPControl implements MouseListener, MouseMotionL
 		           sendValue();
 	        }
 	        
-	        thumbPanel.setBackground(highlightColor);
-	        troughPanel.setBackground(highlightColor);
+	        thumbPanel.setBackground(getHighlightColor());
+	        troughPanel.setBackground(getHighlightColor());
 	        if(tickViewArray!=null)
-	        	for (JPanel tick : tickViewArray)tick.setBackground(highlightColor);
+	        	for (JPanel tick : tickViewArray)tick.setBackground(getHighlightColor());
 	        
 	    }
 		
@@ -211,10 +211,10 @@ public class MMPSlider extends MMPControl implements MouseListener, MouseMotionL
 	public void mouseReleased(MouseEvent e) {
 		super.mouseReleased(e);
 	    if(!editingDelegate.isEditing()){
-	    	 thumbPanel.setBackground(color);
-		        troughPanel.setBackground(color);
+	    	 thumbPanel.setBackground(getColor());
+		        troughPanel.setBackground(getColor());
 		        if(tickViewArray!=null)
-		        	for (JPanel tick : tickViewArray)tick.setBackground(color);
+		        	for (JPanel tick : tickViewArray)tick.setBackground(getColor());
 		        
 	    }
 	    
@@ -261,6 +261,7 @@ public class MMPSlider extends MMPControl implements MouseListener, MouseMotionL
 	
 	//receive messages from PureData (via [send toGUI], routed through the PdWrapper.pd patch), routed from Document via the address to this object
 	public void receiveList(ArrayList<Object> messageArray){
+		super.receiveList(messageArray);
 		boolean sendVal  = true;
 		//if message preceded by "set", then set "sendVal" flag to NO, and strip off set and make new messages array without it
 	    if (messageArray.size()>0 && (messageArray.get(0) instanceof String) && messageArray.get(0).equals("set") ){
@@ -279,4 +280,12 @@ public class MMPSlider extends MMPControl implements MouseListener, MouseMotionL
 	    }
 
 	}
+	
+	 public void setEnabled(boolean enabled){
+			super.setEnabled(enabled);
+			Color c = this.isEnabled() ? getColor() : getDisabledColor();
+			troughPanel.setBackground(c);
+			thumbPanel.setBackground(c);
+			for(JPanel tick: tickViewArray)tick.setBackground(c);
+	 }
 }

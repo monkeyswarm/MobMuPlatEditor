@@ -27,8 +27,8 @@ public class MMPMultiTouch extends MMPControl{
 	  
 	public MMPMultiTouch(MMPMultiTouch otherMT){
 		this(otherMT.getBounds());//normal constructor
-		this.setColor(otherMT.color);
-		this.setHighlightColor(otherMT.highlightColor);
+		this.setColor(otherMT.getColor());
+		this.setHighlightColor(otherMT.getHighlightColor());
 		this.address=otherMT.address;
 	}
 	
@@ -45,7 +45,7 @@ public class MMPMultiTouch extends MMPControl{
 		
 		this.addMouseListener(this);
 		this.addMouseMotionListener(this);
-		this.setColor(color);
+		this.setColor(getColor());
 		this.setBounds(frame);
 	}
 	
@@ -104,12 +104,12 @@ public class MMPMultiTouch extends MMPControl{
 				
 				tvg.cursorX = new JPanel();
 				tvg.cursorX.setBounds(0, clippedPoint.y-CURSOR_WIDTH/2, getWidth(), CURSOR_WIDTH);
-				tvg.cursorX.setBackground(this.highlightColor);
+				tvg.cursorX.setBackground(this.getHighlightColor());
 				this.add(tvg.cursorX);
 				
 				tvg.cursorY = new JPanel();
 				tvg.cursorY.setBounds(clippedPoint.x-CURSOR_WIDTH/2, 0, CURSOR_WIDTH, getHeight());
-				tvg.cursorY.setBackground(this.highlightColor);
+				tvg.cursorY.setBackground(this.getHighlightColor());
 				this.add(tvg.cursorY);
 				
 				this.add(tvg.touchView);
@@ -160,7 +160,7 @@ public class MMPMultiTouch extends MMPControl{
 				sendState();
 
 				if(_touchStack.size()>0)
-					borderPanel.setBorder(BorderFactory.createLineBorder(highlightColor, BORDER_WIDTH)); 
+					borderPanel.setBorder(BorderFactory.createLineBorder(getHighlightColor(), BORDER_WIDTH)); 
 				
 
 			}
@@ -209,7 +209,7 @@ public class MMPMultiTouch extends MMPControl{
 				_currMyTouch.point = normAndClipPoint(e.getPoint());//necc?
 				touchesToRemoveArray.add(_currMyTouch);
 				removeTouches(touchesToRemoveArray);
-				if (_touchStack.size()==0) borderPanel.setBorder(BorderFactory.createLineBorder(color, BORDER_WIDTH)); 
+				if (_touchStack.size()==0) borderPanel.setBorder(BorderFactory.createLineBorder(getColor(), BORDER_WIDTH)); 
 			}
 		}	
 	}
@@ -309,6 +309,24 @@ public class MMPMultiTouch extends MMPControl{
     	}
     	editingDelegate.sendMessage(address, msgArray.toArray());
     	
+    }
+    
+    public void setEnabled(boolean enabled){
+		super.setEnabled(enabled);
+		Color c;
+		if(_touchStack.size()>0) {
+			c = enabled ? getHighlightColor() : getDisabledHighlightColor();
+		} else {
+			c = enabled ? getColor() : getDisabledColor();
+		}
+		borderPanel.setBorder(BorderFactory.createLineBorder(c, BORDER_WIDTH));
+		this.repaint();
+		
+		for(MyTouch myTouch : _touchStack ){
+			myTouch.touchViewGroup.cursorX.setBackground(c);
+			myTouch.touchViewGroup.cursorY.setBackground(c);
+		}
+			
     }
 	
 }

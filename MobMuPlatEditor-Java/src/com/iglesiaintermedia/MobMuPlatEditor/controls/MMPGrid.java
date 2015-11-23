@@ -34,38 +34,33 @@ public class MMPGrid extends MMPControl {
 	
 	public MMPGrid(MMPGrid otherGrid){
 		this(otherGrid.getBounds());//normal constructor
-		this.setColor(otherGrid.color);
-		this.setHighlightColor(otherGrid.highlightColor);
+		this.setColor(otherGrid.getColor());
+		this.setHighlightColor(otherGrid.getHighlightColor());
 		this.address=otherGrid.address;
 		
 		this.setMode(otherGrid.mode);
 		this.setDimX(otherGrid.dimX);
 		this.setDimY(otherGrid.dimY);
 		this.setBorderThickness(otherGrid.borderThickness);
-		this.setCellPadding(otherGrid.cellPadding);
-		
-		
+		this.setCellPadding(otherGrid.cellPadding);	
 	}
 	
 	public MMPGrid(Rectangle frame){
 		super();
-		//borderThickness=5;
 		
 		togglePanelArray = new ArrayList<TogglePanel>();
 		dimY=2;
 		dimX=2;
 		address="/myGrid";
 		
-		
 		setCellPadding(2);
 		setBorderThickness(3);
 		setDimX(4);
 		setDimY(3);
 		
-		
 		this.addMouseListener(this);
 		this.addMouseMotionListener(this);
-		this.setColor(this.color);
+		this.setColor(this.getColor());
 		this.setBounds(frame);
 		
 	}
@@ -111,7 +106,7 @@ public class MMPGrid extends MMPControl {
 		
 		 for(int j=0;j<dimY;j++){
 		        for(int i=0;i<dimX;i++){
-		            TogglePanel togglePanel = new TogglePanel();
+		            TogglePanel togglePanel = new TogglePanel(this);
 		            togglePanel.setBorderThickness(borderThickness);
 		            togglePanel.addMouseListener(this);
 		            togglePanel.addMouseMotionListener(this);
@@ -167,7 +162,7 @@ public class MMPGrid extends MMPControl {
 	
 	void doOn(TogglePanel tp){
 		tp.value=1;
-		tp.setColor(highlightColor);
+		tp.setColor(getHighlightColor());
 		sendValueOfPanel(tp);
 	}
 	void doOff(TogglePanel tp){
@@ -226,10 +221,10 @@ public class MMPGrid extends MMPControl {
 		RoundedBorderPanel borderPanel;
 		RoundedPanel touchPanel;
 		int value;
-		public TogglePanel(){
+		public TogglePanel(MMPGrid parentGrid){
 			super();
 			setLayout(null);
-			borderPanel = new RoundedBorderPanel();
+			borderPanel = new RoundedBorderPanel(parentGrid);
 			add(borderPanel);
 			
 			touchPanel = new RoundedPanel();
@@ -264,9 +259,10 @@ public class MMPGrid extends MMPControl {
 	class RoundedBorderPanel extends JPanel{
 		//int borderThickness;
 		//protected Dimension arcs = new Dimension(EDGE_RADIUS, EDGE_RADIUS);
-		
-		public RoundedBorderPanel(){
+		private MMPGrid _parentGrid;
+		public RoundedBorderPanel(MMPGrid parentGrid){
 			super();
+			_parentGrid = parentGrid;
 			setOpaque(false);
 			//borderThickness=5;
 		}
@@ -280,7 +276,7 @@ public class MMPGrid extends MMPControl {
 	        //System.out.print("\npaintBorder w h "+getWidth()+" "+this.getHeight());
 			if(borderThickness>0){//added this because on borderthickness=0 it was still drawing a border...
 	        Graphics2D g2 = (Graphics2D)g.create();
-	        g2.setColor(color);
+	        g2.setColor(_parentGrid.isEnabled() ? getColor() : getDisabledColor());
 	        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 	        g2.setStroke(new BasicStroke(borderThickness,BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
 	        g2.drawRoundRect(borderThickness/2, borderThickness/2, getWidth()-borderThickness-1, this.getHeight()-borderThickness-1, EDGE_RADIUS*2, EDGE_RADIUS*2);
@@ -293,6 +289,7 @@ public class MMPGrid extends MMPControl {
 	
 	//receive messages from PureData (via [send toGUI], routed through the PdWrapper.pd patch), routed from Document via the address to this object
 	public void receiveList(ArrayList<Object> messageArray){
+		super.receiveList(messageArray);
 		//System.out.print("receive size "+messageArray.size()+" element 1 int? "+(messageArray.get(1) instanceof Integer));
 		boolean sendVal  = true;
 		//if message preceded by "set", then set "sendVal" flag to NO, and strip off set and make new messages array without it
@@ -320,7 +317,7 @@ public class MMPGrid extends MMPControl {
 	 		 TogglePanel currTogglePanel = togglePanelArray.get(indexX+indexY*dimX);
 	 		if(val>0)val=1;if(val<0)val=0;
 	 		currTogglePanel.value=val;
-	 		if(val==1)currTogglePanel.setColor(highlightColor);
+	 		if(val==1)currTogglePanel.setColor(getHighlightColor());
 			else currTogglePanel.setColor(clearColor);
 	 		
 	 		if(sendVal){
@@ -352,7 +349,7 @@ public class MMPGrid extends MMPControl {
 		 	   else rowIndex=  ((Integer)(messageArray.get(1))).intValue() ;
 		 	  
 		 	  if(rowIndex>=0 && rowIndex<dimY){
-		 		   Object[] args = new Object[dimY];
+		 		   Object[] args = new Object[dimX];
 		 		  for(int i=0;i<dimX;i++){
 		 			  int currValue = togglePanelArray.get(i+dimX*rowIndex).value;
 		 			  args[i]=new Integer(currValue);
@@ -370,9 +367,15 @@ public class MMPGrid extends MMPControl {
 			}
 			//this.repaint();
 	 	}
-	    
-	    
-	    
-
+	}
+	
+	public void setEnabled(boolean enabled){
+		super.setEnabled(enabled);
+		for (TogglePanel tp : togglePanelArray) {
+			if (tp.value==1) {
+				tp.setColor(enabled ? getHighlightColor() : getDisabledHighlightColor());
+			}
+			tp.borderPanel.repaint();
+		}
 	}
 }

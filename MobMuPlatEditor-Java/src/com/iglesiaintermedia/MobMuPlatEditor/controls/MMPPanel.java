@@ -20,11 +20,12 @@ public class MMPPanel extends MMPControl{
 	BufferedImage myPicture;
 	public String imagePath;
 	public boolean shouldPassTouches;
+	private boolean _highlighted;
 	
 	public MMPPanel(MMPPanel otherPanel){
 		this(otherPanel.getBounds());//normal constructor
-		this.setColor(otherPanel.color);
-		this.setHighlightColor(otherPanel.highlightColor);
+		this.setColor(otherPanel.getColor());
+		this.setHighlightColor(otherPanel.getHighlightColor());
 		this.address=otherPanel.address;
 		
 		
@@ -44,7 +45,7 @@ public class MMPPanel extends MMPControl{
 	
 		this.addMouseListener(this);
 		this.addMouseMotionListener(this);
-		this.setColor(color);
+		this.setColor(this.getColor());
 		this.setBounds(frame);
 		
 	}
@@ -57,7 +58,7 @@ public class MMPPanel extends MMPControl{
 	
 	public void setColor(Color inColor){
 		super.setColor(inColor);
-		this.setBackground(inColor);
+		this.setBackground(inColor); //TODO use updateColor
 	}
 	
 	public void setImagePath(String inPath){
@@ -96,23 +97,7 @@ public class MMPPanel extends MMPControl{
 			this.repaint();
 			warningLabel.setVisible(true);
 		}
-		/*if([[NSFileManager defaultManager] fileExistsAtPath:newImagePath]){
-	        [imageView setImage:[[NSImage alloc]initWithContentsOfFile:newImagePath] ];
-	        textField.hidden=YES;
-	    }
-	    else if ([[NSFileManager defaultManager] fileExistsAtPath:constructedRelativePath]){
-	        [imageView setImage:[[NSImage alloc]initWithContentsOfFile:constructedRelativePath] ];
-	        textField.hidden=YES;
-	    }
-	    
-	    else{
-	        [imageView setImage:nil];
-	        textField.hidden=NO;
-	    }*/
-
-		
 	}
-	
 	
 	protected void paintComponent(Graphics g) {
 		
@@ -129,6 +114,7 @@ public class MMPPanel extends MMPControl{
 	}
 	
 	public void receiveList(ArrayList<Object> messageArray){
+		super.receiveList(messageArray);
 		//System.out.print("\npanel receive");
 		//change image
 		if (messageArray.size()==2 && (messageArray.get(0) instanceof String) && messageArray.get(0).equals("image") && (messageArray.get(1) instanceof String)){
@@ -138,15 +124,27 @@ public class MMPPanel extends MMPControl{
 	    else if (messageArray.size()==2 && (messageArray.get(0) instanceof String) && messageArray.get(0).equals("highlight") && (messageArray.get(1) instanceof Float || messageArray.get(1) instanceof Integer)){
 	    	Object ob = messageArray.get(1);
 	    	if(ob instanceof Float) {
-	   			if (((Float)(ob)).floatValue()>0) this.setBackground(highlightColor);
-	   			else this.setBackground(color);
+	    		_highlighted = ((Float)(ob)).floatValue()>0;
 	   		}
 	   		else if(ob instanceof Integer){
-    			if(((Integer)(ob)).intValue() >0)this.setBackground(highlightColor);
-    			else this.setBackground(color);
-	    	}
+	   			_highlighted = ((Integer)(ob)).intValue()>0;
+	   		}
+	    	updateColor();
 	   	}
-	    
 	}
 	
+	 public void setEnabled(boolean enabled){
+			super.setEnabled(enabled);
+			updateColor();
+	 }
+	 
+	 void updateColor() {
+		 Color c;
+		 if (_highlighted) {
+			 c = this.isEnabled() ? getHighlightColor() : getDisabledHighlightColor();
+		 } else {
+			c = this.isEnabled() ? getColor() : getDisabledColor();
+		}
+		 this.setBackground(c);
+	 }
 }

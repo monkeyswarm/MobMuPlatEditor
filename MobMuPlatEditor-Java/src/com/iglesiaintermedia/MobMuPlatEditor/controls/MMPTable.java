@@ -20,6 +20,8 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.ArrayList;
 
+import javax.swing.JPanel;
+
 import com.iglesiaintermedia.MobMuPlatEditor.MMPController;
 
 public class MMPTable extends MMPControl {
@@ -47,12 +49,14 @@ public class MMPTable extends MMPControl {
 	Point touchDownPoint,lastPoint;
 	int lastTableIndex;
 	
+	//JPanel _grayOutPanel;
+	
 	//copy constructor
 	public MMPTable(MMPTable otherTable){
 		this(otherTable.getBounds());//normal constructor
 		this.address=otherTable.address;
-		this.setColor(otherTable.color);
-		this.setHighlightColor(otherTable.highlightColor);
+		this.setColor(otherTable.getColor());
+		this.setHighlightColor(otherTable.getHighlightColor());
 		this.mode = otherTable.mode;
 		this.selectionColor = otherTable.selectionColor;
 		this.displayMode = otherTable.displayMode;
@@ -72,8 +76,8 @@ public class MMPTable extends MMPControl {
 		this.addMouseMotionListener(this);
 		
 		//TODO fix super.setColor so I don't have to do this...
-		this.setColor(this.color);
-		this.setHighlightColor(this.highlightColor);
+		this.setColor(this.getColor());
+		this.setHighlightColor(this.getHighlightColor());
 		
 		this.setBounds(frame);
 		//paintRect(.2f, .2f, .8f, .8f);
@@ -437,6 +441,7 @@ public class MMPTable extends MMPControl {
 	}
 	
 	public void receiveList(ArrayList<Object> messageArray){
+		super.receiveList(messageArray);
 		if(messageArray.size()==1 && (messageArray.get(0) instanceof String) && messageArray.get(0).equals("clearSelection") ){
 			cacheGraphicsSelection.clearRect(0,0,getWidth(),getHeight());
 			this.repaint();
@@ -480,6 +485,21 @@ public class MMPTable extends MMPControl {
 		for (String line : stringList) {
 			tableData[i++] = Float.parseFloat(line);
 		}
+		
+	}
+	
+	public void setEnabled(boolean enabled){
+		super.setEnabled(enabled);
+		Color c = this.isEnabled() ? getColor() : getDisabledColor();
+		this.setBackground(c);
+		Color h = this.isEnabled() ? getHighlightColor() : getDisabledHighlightColor();
+		float[] compArray = new float[4];
+		h.getComponents(compArray);
+		fR=compArray[0];
+		fG=compArray[1];
+		fB=compArray[2];
+		fA=compArray[3];
+		this.draw();
 		
 	}
 }

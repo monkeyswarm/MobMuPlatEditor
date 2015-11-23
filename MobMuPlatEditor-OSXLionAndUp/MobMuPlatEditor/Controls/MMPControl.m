@@ -227,7 +227,19 @@
   [self setHighlightColor:color];
 }
 
-//empty implementation, all subclasses override this when receiveing a message
--(void)receiveList:(NSArray *)inArray{}
+//all subclasses override this when receiveing a message
+-(void)receiveList:(NSArray *)inArray{
+  if ([inArray count] >= 2 &&
+      [inArray[0] isKindOfClass:[NSString class]] &&
+      [inArray[0] isEqualToString:@"enable"] &&
+      [inArray[1] isKindOfClass:[NSNumber class]]) {
+    self.enabled = ([inArray[1] floatValue] > 0);
+  }
+}
+
+- (void)setEnabled:(BOOL)enabled {
+  [super setEnabled:enabled];
+  self.alphaValue = enabled ? 1 : .2;
+}
 
 @end

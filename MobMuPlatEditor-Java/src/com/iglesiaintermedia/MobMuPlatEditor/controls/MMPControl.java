@@ -2,7 +2,6 @@ package com.iglesiaintermedia.MobMuPlatEditor.controls;
 
 import java.awt.Color;
 import java.awt.Rectangle;
-
 import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -24,8 +23,8 @@ public class MMPControl extends JPanel implements MouseListener, MouseMotionList
 	final static int HANDLE_SIZE = 20; //size of the EditHandle in the lower right corner
 	
 	String address;
-	public Color color;
-	public Color highlightColor;
+	private Color _color, _disabledColor;
+	private Color _highlightColor, _disabledHighlightColor;
 	public boolean isSelected;
 	public MMPController editingDelegate;
 	
@@ -44,8 +43,8 @@ public class MMPControl extends JPanel implements MouseListener, MouseMotionList
 		super();
 		setLayout(null);
 		setOpaque(false);
-		color = Color.BLUE;//new Color(1f,.1f,.1f,.1f);
-		highlightColor = Color.RED;//new Color(0f,.1f,.1f,.1f);
+		_color = Color.BLUE;//new Color(1f,.1f,.1f,.1f);
+		_highlightColor = Color.RED;//new Color(0f,.1f,.1f,.1f);
 		
 		topPanel = new JPanel();
 		topPanel.setOpaque(false);
@@ -89,15 +88,46 @@ public class MMPControl extends JPanel implements MouseListener, MouseMotionList
 	}
 	
 	public void setColor(Color newColor){
-		color = newColor;
+		_color = newColor;
+		_disabledColor = new Color(newColor.getRed(), newColor.getGreen(), newColor.getBlue(), (int)(newColor.getAlpha() * .2));
+	}
+	
+	public Color getColor() {
+		return  _color;
 	}
 	
 	public void setHighlightColor(Color newColor){
-		highlightColor = newColor;
+		_highlightColor = newColor;
+		_disabledHighlightColor = new Color(newColor.getRed(), newColor.getGreen(), newColor.getBlue(), (int)(newColor.getAlpha() * .2));
 	}
 	
-	public void receiveList(ArrayList<Object> newList){
-		
+	public Color getHighlightColor() {
+		return _highlightColor;
+	}
+	
+	public Color getDisabledColor() {
+		return _disabledColor;
+	}
+	
+	public Color getDisabledHighlightColor() {
+		return _disabledHighlightColor;
+	}
+	
+	
+	public void receiveList(ArrayList<Object> messageArray){
+		if (messageArray.size()>=2 && 
+				(messageArray.get(0) instanceof String) && 
+				messageArray.get(0).equals("enable") && 
+				(messageArray.get(1) instanceof Float)) {
+			boolean enabled = ((Float)(messageArray.get(1))).floatValue() > 0;
+			this.setEnabled(enabled);
+			//this.setEnabled(((Float)(messageArray.get(1))).floatValue() > 0);
+			//this.setAlpha(this.isEnabled() ? 1.0f : .2f );
+			//this.setBackground(this.isEnabled() ? new Color(128, 128 , 128, 128) : new Color(128, 128, 128, 0));
+			//this.setColor(new Color(255, 0 , 0, 128));
+			//this.setBackground(new Color(128, 0 , 255, 128));
+			
+		}
 	}
 
 	@Override
@@ -180,5 +210,13 @@ public class MMPControl extends JPanel implements MouseListener, MouseMotionList
 	public void mouseMoved(MouseEvent arg0) {
 		// TODO Auto-generated method stub
 		
+	}
+	
+	// Ignore and pass through mouse events if not editing and widget is disabled.
+	public boolean contains(int x, int y) {
+		if (!this.isEnabled() && !editingDelegate.isEditing()) {
+			return false;
+		}
+		return super.contains(x, y);
 	}
 }

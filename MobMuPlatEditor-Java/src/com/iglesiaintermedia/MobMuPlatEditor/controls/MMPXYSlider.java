@@ -9,6 +9,8 @@ import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 import javax.swing.border.Border;
 
+import com.iglesiaintermedia.MobMuPlatEditor.controls.MMPGrid.TogglePanel;
+
 public class MMPXYSlider extends MMPControl {
 	static final int LINE_WIDTH = 4;
 	
@@ -20,14 +22,13 @@ public class MMPXYSlider extends MMPControl {
 	
 	public int range;
 	public boolean isHorizontal;
-	private ArrayList<JPanel> tickViewArray;
 	float value;
 	
 	//copy constructor
 	public MMPXYSlider(MMPXYSlider otherXYSlider){
 		this(otherXYSlider.getBounds());//normal constructor
-		this.setColor(otherXYSlider.color);
-		this.setHighlightColor(otherXYSlider.highlightColor);
+		this.setColor(otherXYSlider.getColor());
+		this.setHighlightColor(otherXYSlider.getHighlightColor());
 		this.address=otherXYSlider.address;
 	}
 	
@@ -48,7 +49,7 @@ public class MMPXYSlider extends MMPControl {
 		this.addMouseListener(this);
 		this.addMouseMotionListener(this);
 		
-		this.setColor(this.color);
+		this.setColor(this.getColor());
 		this.setBounds(frame);
 		this.setValue(.5f,.5f);
 		
@@ -80,11 +81,7 @@ public class MMPXYSlider extends MMPControl {
 		
 		cursorHorizView.setBounds(0, (int)((1.0-valueY)*this.getHeight()-LINE_WIDTH/2), this.getWidth(), LINE_WIDTH);
 		cursorVertView.setBounds((int)(valueX*this.getWidth()-LINE_WIDTH/2), 0, LINE_WIDTH, this.getHeight()); 
-		
 	}
-	
-	
-
 	
 	//send OSC message out
 	public void sendValue(){
@@ -99,10 +96,8 @@ public class MMPXYSlider extends MMPControl {
 		super.mousePressed(e);
 		
 		if(!editingDelegate.isEditing()){
-	       borderView.setBorder(BorderFactory.createLineBorder(highlightColor, LINE_WIDTH)); 
-	        cursorHorizView.setBackground(highlightColor);
-	        cursorVertView.setBackground(highlightColor);  
-	        this.mouseDragged(e);
+	       setWidgetColor(this.getHighlightColor());
+	       this.mouseDragged(e);
 	    }
 	}
 
@@ -128,12 +123,8 @@ public class MMPXYSlider extends MMPControl {
 	public void mouseReleased(MouseEvent e) {
 		super.mouseReleased(e);
 	    if(!editingDelegate.isEditing()){
-	    	 borderView.setBorder(BorderFactory.createLineBorder(color, LINE_WIDTH)); 
-		     cursorHorizView.setBackground(color);
-		     cursorVertView.setBackground(color);  
-	    	
+	    	setWidgetColor(this.isEnabled() ? getColor() : getDisabledColor());
 	    }
-		
 	}
 
 	@Override
@@ -158,6 +149,7 @@ public class MMPXYSlider extends MMPControl {
 	
 	//receive messages from PureData (via [send toGUI], routed through the PdWrapper.pd patch), routed from Document via the address to this object
 	public void receiveList(ArrayList<Object> messageArray){
+		super.receiveList(messageArray);
 		boolean sendVal  = true;
 		//if message preceded by "set", then set "sendVal" flag to NO, and strip off set and make new messages array without it
 	    if (messageArray.size()>0 && (messageArray.get(0) instanceof String) && messageArray.get(0).equals("set") ){
@@ -169,7 +161,21 @@ public class MMPXYSlider extends MMPControl {
 	        setValue( ((Float)(messageArray.get(0))).floatValue(), ((Float)(messageArray.get(1))).floatValue() );
 	        if(sendVal)sendValue();
 	    }
-
 	}
-
+	
+	public void setEnabled(boolean enabled){
+		super.setEnabled(enabled);
+		if (enabled) {
+			setWidgetColor(getColor());
+		} else {
+			setWidgetColor(getDisabledColor());
+		}
+	}
+	
+	public void setWidgetColor(Color color) {
+		borderView.setBorder(BorderFactory.createLineBorder(color, LINE_WIDTH)); 
+	    cursorHorizView.setBackground(color);
+	    cursorVertView.setBackground(color); 
+	    this.repaint();
+	}
 }

@@ -110,8 +110,8 @@ public class DocumentModel {
 	        frameArray.add(new Float(control.getHeight()));
 	        GUIDict.put("frame", frameArray);
 	        
-	        GUIDict.put("color", DocumentModel.RGBAArrayFromColor(control.color));// setObject:[DocumentModel RGBAArrayfromColor:[control color]] forKey:@"color"];
-	        GUIDict.put("highlightColor", DocumentModel.RGBAArrayFromColor(control.highlightColor));
+	        GUIDict.put("color", DocumentModel.RGBAArrayFromColor(control.getColor()));// setObject:[DocumentModel RGBAArrayfromColor:[control color]] forKey:@"color"];
+	        GUIDict.put("highlightColor", DocumentModel.RGBAArrayFromColor(control.getHighlightColor()));
 	        
 	        GUIDict.put("address", control.getAddress());
 	        
@@ -126,7 +126,7 @@ public class DocumentModel {
 	        else if(control instanceof MMPKnob){
 	        	MMPKnob currKnob = (MMPKnob)control;
 	        	GUIDict.put("range", new Integer(currKnob.range));
-	        	GUIDict.put("indicatorColor", DocumentModel.RGBAArrayFromColor(currKnob.indicatorColor) );
+	        	GUIDict.put("indicatorColor", DocumentModel.RGBAArrayFromColor(currKnob.getIndicatorColor()) );
 	        }
 	        
 	      //label
@@ -401,17 +401,15 @@ public class DocumentModel {
 		            }
 		       
 		     //set color
-	            //if([control respondsToSelector:@selector(setColor:)]){//in theory all mecontrol respond to these
+	            // all mecontrol respond to these
 	               control.setColor(color);
-	            //}
-	            //if([control respondsToSelector:@selector(setHighlightColor:)]){
-	                  control.setHighlightColor(highlightColor);
-	            //}
+                   control.setHighlightColor(highlightColor);
+	           
 	        //address
-	            if(guiDict.get("address")!=null){//objectForKey:@"address"])
+	            if(guiDict.get("address")!=null){
 	                control.setAddress( guiDict.get("address").getAsString() );
 	        
-	            model.controlArray.add(control);//] addObject:control];
+	            model.controlArray.add(control);
 	        }
 		   }
 		  }

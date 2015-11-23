@@ -33,8 +33,8 @@ public class MMPLCD extends MMPControl {
 	//copy constructor
 	public MMPLCD(MMPLCD otherLCD){
 		this(otherLCD.getBounds());//normal constructor
-		this.setColor(otherLCD.color);
-		this.setHighlightColor(otherLCD.highlightColor);
+		this.setColor(otherLCD.getColor());
+		this.setHighlightColor(otherLCD.getHighlightColor());
 		this.address=otherLCD.address;//not setAddress, since this doesn't have editingDelegate yet
 	}
 	
@@ -47,8 +47,8 @@ public class MMPLCD extends MMPControl {
 		this.addMouseListener(this);
 		this.addMouseMotionListener(this);
 		
-		this.setColor(this.color);
-		this.setHighlightColor(this.highlightColor);
+		this.setColor(this.getColor());
+		this.setHighlightColor(this.getHighlightColor());
 		this.setBounds(frame);
 		
 		
@@ -329,6 +329,7 @@ public class MMPLCD extends MMPControl {
 	
 	//receive messages from PureData (via [send toGUI], routed through the PdWrapper.pd patch), routed from Document via the address to this object
 	public void receiveList(ArrayList<Object> messageArray){
+		super.receiveList(messageArray);
 	    //preprocess integers into float - java OSC library mixes the two even though PD just sends floats
 		for(int i=1;i<messageArray.size();i++){
 			if (messageArray.get(i) instanceof Integer){
@@ -408,6 +409,23 @@ public class MMPLCD extends MMPControl {
 
 	}
 	
+	public void setEnabled(boolean enabled){
+		super.setEnabled(enabled);
+		this.setBackground(enabled ? getColor() : getDisabledColor());
+		//TODO gray out panel
+		/*if (enabled) {
+		if (_grayOutPanel!=null) {
+			this.remove(_grayOutPanel);
+		}
+	} else {
+		if (_grayOutPanel==null) {
+			_grayOutPanel = new JPanel();
+			_grayOutPanel.setBackground(new Color(128,128,128,64));
+		}
+		this.add(_grayOutPanel);
+		_grayOutPanel.setBounds(0,0,this.getWidth(), this.getHeight());
+	}*/
+	}
 
 }
 

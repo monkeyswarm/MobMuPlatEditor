@@ -218,7 +218,7 @@
 -(void)mouseDown:(NSEvent *)theEvent{
   [super mouseDown:theEvent];
   
-  if(![self.editingDelegate isEditing] && loadedTable){
+  if(![self.editingDelegate isEditing] && self.enabled && loadedTable){
     lastPoint = [self convertPoint:[theEvent locationInWindow] fromView:nil];
     touchDownPoint = lastPoint;
     if(_mode==0) { //select
@@ -281,7 +281,7 @@
 -(void)mouseDragged:(NSEvent *)theEvent{
   [super mouseDragged:theEvent];
   
-  if(![self.editingDelegate isEditing] && loadedTable){
+  if(![self.editingDelegate isEditing] && self.enabled && loadedTable){
     CGPoint dragPoint = [self convertPoint:[theEvent locationInWindow] fromView:nil];
     if(_mode==0) {//select
       float normalizedXA = touchDownPoint.x/self.frame.size.width;
@@ -352,16 +352,7 @@
   }
 }
 
-/*-(void)mouseUp:(NSEvent *)theEvent{
-  [super mouseUp:theEvent];
-  if(![self.editingDelegate isEditing] && loadedTable){
-    
-    
-  }
-}*/
-
-- (void)drawRect:(CGRect)rect
-{
+- (void)drawRect:(CGRect)rect {
   CGContextRef context = [[NSGraphicsContext currentContext] graphicsPort]; //UIGraphicsGetCurrentContext();
   
   CGImageRef cacheImageSelection = CGBitmapContextCreateImage(_cacheContextSelection);
@@ -371,7 +362,6 @@
   CGImageRef cacheImage = CGBitmapContextCreateImage(_cacheContext);
   CGContextDrawImage(context, self.bounds, cacheImage);
   CGImageRelease(cacheImage);
-  
 }
 
 -(void)setSelectionColorUndoable:(NSColor*)inColor{
@@ -422,6 +412,7 @@
 }
 
 -(void)receiveList:(NSArray *)inArray{
+  [super receiveList:inArray];
   if ([inArray count]==1 && [[inArray objectAtIndex:0] isKindOfClass:[NSString class]] && [[inArray objectAtIndex:0] isEqualToString:@"clearSelection"] ){
     CGContextClearRect(_cacheContextSelection, self.bounds);
     [self setNeedsDisplay ];

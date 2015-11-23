@@ -51,8 +51,8 @@ public class MMPMenu extends MMPControl implements ListSelectionListener, Action
 	
 	public MMPMenu(MMPMenu otherMenu){
 		this(otherMenu.getBounds());//normal constructor
-		this.setColor(otherMenu.color);
-		this.setHighlightColor(otherMenu.highlightColor);
+		this.setColor(otherMenu.getColor());
+		this.setHighlightColor(otherMenu.getHighlightColor());
 		this.address=otherMenu.address;
 		this.setTitleString(otherMenu.titleString);
 	}
@@ -63,9 +63,9 @@ public class MMPMenu extends MMPControl implements ListSelectionListener, Action
 		titleString = "Menu";
 		stringList = new ArrayList<String>();
 		
-		borderPanel = new RoundedBorderPanel();
+		borderPanel = new RoundedBorderPanel(this);
 		add(borderPanel);
-		downPanel = new RoundedBorderPanel();
+		downPanel = new RoundedBorderPanel(this);
 		add(downPanel);
 		
 		textField = new JTextField(titleString);
@@ -74,7 +74,7 @@ public class MMPMenu extends MMPControl implements ListSelectionListener, Action
 		
 		add(textField);
 		
-		textField.setForeground(this.color);
+		textField.setForeground(this.getColor());
 		textField.setHorizontalAlignment(SwingConstants.CENTER);
 		textField.setFont(new Font(DEFAULT_FONT, Font.PLAIN, 18));
 		textField.setOpaque(false);
@@ -87,7 +87,7 @@ public class MMPMenu extends MMPControl implements ListSelectionListener, Action
 		
 		this.addMouseListener(this);
 		this.addMouseMotionListener(this);
-		this.setColor(this.color);
+		this.setColor(this.getColor());
 		this.setBounds(frame);
 	}
 	
@@ -183,7 +183,7 @@ public class MMPMenu extends MMPControl implements ListSelectionListener, Action
 	   list.setBackground(this.editingDelegate.patchBackgroundColor());
 	   MyCellRenderer rend = new MyCellRenderer();
 	   MyCellRenderer.color = this.editingDelegate.patchBackgroundColor();
-	   MyCellRenderer.textColor = this.color;
+	   MyCellRenderer.textColor = this.getColor();
 	   list.setCellRenderer(rend); 
 	   
 	   listScroller = new JScrollPane(list);
@@ -224,6 +224,15 @@ public class MMPMenu extends MMPControl implements ListSelectionListener, Action
 	}
    
    public void receiveList(ArrayList<Object> messageArray){
+	   super.receiveList(messageArray);
+	   // Ignore "enable"
+	   if (messageArray.size()>=2 && 
+				(messageArray.get(0) instanceof String) && 
+				messageArray.get(0).equals("enable") && 
+				(messageArray.get(1) instanceof Float)) {
+			return;
+		}
+	   
 		List<String> newDataArray = new ArrayList<String>();
 		
 	 //put all elements in list into a string array
@@ -243,10 +252,18 @@ public class MMPMenu extends MMPControl implements ListSelectionListener, Action
 		canvasPanel.revalidate();*/
    }
    
+   public void setEnabled(boolean enabled){
+		super.setEnabled(enabled);
+		textField.setForeground(enabled ? getColor() : getDisabledColor());
+		borderPanel.repaint();
+		downPanel.repaint();
+   }
+   
    class RoundedBorderPanel extends JPanel{
-		
-		public RoundedBorderPanel(){
+		private MMPMenu _parentMenu;
+		public RoundedBorderPanel(MMPMenu parentMenu){
 			super();
+			_parentMenu = parentMenu;
 			setOpaque(false);
 		}
 		
@@ -255,7 +272,7 @@ public class MMPMenu extends MMPControl implements ListSelectionListener, Action
 	        //System.out.print("\npaintBorder "+borderThickness);
 			int borderThickness = 2;
 			Graphics2D g2 = (Graphics2D)g.create();
-	        g2.setColor(color);
+	        g2.setColor(_parentMenu.isEnabled() ? getColor() : getDisabledColor());
 	        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 	        g2.setStroke(new BasicStroke(borderThickness,BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
 	        g2.drawRoundRect(borderThickness/2, borderThickness/2, getWidth()-borderThickness-1, getHeight()-borderThickness-1, EDGE_RADIUS*2, EDGE_RADIUS*2);

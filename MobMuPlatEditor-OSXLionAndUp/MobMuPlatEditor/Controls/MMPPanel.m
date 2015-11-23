@@ -89,6 +89,7 @@
 //receive messages from PureData (via [send toGUI], routed through the PdWrapper.pd patch), routed from Document via the address to this object
 //it does not respond to "set" anything
 -(void)receiveList:(NSArray *)inArray{
+  [super receiveList:inArray];
     //new image
     if([inArray count]==2 &&[[inArray objectAtIndex:0] isEqualToString:@"image"]  ){
         [self changeImage:[inArray objectAtIndex:1]];

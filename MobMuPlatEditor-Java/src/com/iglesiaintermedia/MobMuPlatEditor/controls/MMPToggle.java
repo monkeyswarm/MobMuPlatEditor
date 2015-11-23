@@ -24,8 +24,8 @@ public class MMPToggle extends MMPControl {
 	
 	public MMPToggle(MMPToggle otherToggle){//copy constructor
 		this(otherToggle.getBounds());//normal constructor
-		this.setColor(otherToggle.color);
-		this.setHighlightColor(otherToggle.highlightColor);
+		this.setColor(otherToggle.getColor());
+		this.setHighlightColor(otherToggle.getHighlightColor());
 		this.address=otherToggle.address;
 		this.setBorderThickness(otherToggle.borderThickness);
 	}
@@ -45,7 +45,7 @@ public class MMPToggle extends MMPControl {
 		
 		this.addMouseListener(this);
 		this.addMouseMotionListener(this);
-		this.setColor(this.color);
+		this.setColor(this.getColor());
 		this.setBounds(frame);
 	}
 	
@@ -65,7 +65,7 @@ public class MMPToggle extends MMPControl {
 	}
 	
 	public void setBorderThickness(int inThick){
-		System.out.print("\nsetbt "+inThick);
+		//System.out.print("\nsetbt "+inThick);
 		borderThickness = inThick;
 		//borderPanel.repaint();
 		this.setBounds(this.getBounds());
@@ -75,7 +75,7 @@ public class MMPToggle extends MMPControl {
 	public void setValue(int inValue){
 		value=inValue;
 		
-		if(value==1)togglePanel.setBackground(highlightColor);//setOpaque(true);
+		if(value==1)togglePanel.setBackground(this.isEnabled() ? getHighlightColor() : getDisabledHighlightColor());//setOpaque(true);
 	      else togglePanel.setBackground(clearColor);
 		//this.repaint();
 		
@@ -86,18 +86,13 @@ public class MMPToggle extends MMPControl {
 		editingDelegate.sendMessage(address, args);
 	}
 	
-	
-	
-	
 	public void mousePressed(MouseEvent e) {
 		//System.out.print(e.getClickCount() + " click(s)");
 		super.mousePressed(e);
 		
 		if(!editingDelegate.isEditing()){
 	      setValue(1-value);
-	      sendValue();
-	      
-	      
+	      sendValue();   
 	    }
 	}
 
@@ -113,7 +108,7 @@ public class MMPToggle extends MMPControl {
 	        //System.out.print("\npaintBorder "+borderThickness);
 			if(borderThickness>0){
 	        Graphics2D g2 = (Graphics2D)g.create();
-	        g2.setColor(color);
+	        g2.setColor(this.isEnabled() ? getColor() : getDisabledColor());
 	        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 	        g2.setStroke(new BasicStroke(borderThickness,BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
 	        g2.drawRoundRect(borderThickness/2, borderThickness/2, getWidth()-borderThickness-1, getHeight()-borderThickness-1, EDGE_RADIUS*2, EDGE_RADIUS*2);
@@ -125,6 +120,7 @@ public class MMPToggle extends MMPControl {
 	
 	//receive messages from PureData (via [send toGUI], routed through the PdWrapper.pd patch), routed from Document via the address to this object
 	public void receiveList(ArrayList<Object> messageArray){
+		super.receiveList(messageArray);
 		boolean sendVal  = true;
 		//if message preceded by "set", then set "sendVal" flag to NO, and strip off set and make new messages array without it
 	    if (messageArray.size()>0 && (messageArray.get(0) instanceof String) && messageArray.get(0).equals("set") ){
@@ -146,6 +142,13 @@ public class MMPToggle extends MMPControl {
 	        if(sendVal)sendValue();
 	    }
 
+	}
+	
+	public void setEnabled(boolean enabled){
+		super.setEnabled(enabled);
+		borderPanel.setEnabled(enabled);
+		this.setValue(this.value); // refresh background color
+		this.repaint(); // refresh border
 	}
 }
 

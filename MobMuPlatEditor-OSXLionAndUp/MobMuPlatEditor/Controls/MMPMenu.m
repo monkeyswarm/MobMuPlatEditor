@@ -165,7 +165,7 @@
 
 -(void)mouseDown:(NSEvent *)event{
   [super mouseDown:event];
-  if(![self.editingDelegate isEditing]){
+  if(![self.editingDelegate isEditing] && self.enabled){
     //[self setValue:1];
     [self showTable];
   }
@@ -282,6 +282,15 @@
 //receive messages from PureData (via [send toGUI], routed through the PdWrapper.pd patch), routed from Document via the address to this object
 
 -(void)receiveList:(NSArray *)inArray{
+  [super receiveList:inArray];
+  // ignore enable message
+  if ([inArray count] >= 2 &&
+      [inArray[0] isKindOfClass:[NSString class]] &&
+      [inArray[0] isEqualToString:@"enable"] &&
+      [inArray[1] isKindOfClass:[NSNumber class]]) {
+    return;
+  }
+  
   NSMutableArray* dataArray = [[NSMutableArray alloc] init];
   
   for(id thing in inArray){

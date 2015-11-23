@@ -55,7 +55,7 @@
 
 -(void)mouseDown:(NSEvent *)event{
     [super mouseDown:event];
-   if(![self.editingDelegate isEditing]){
+   if(![self.editingDelegate isEditing] && self.enabled){
         [self setValue:1-self.value];
        [self sendValue];
     }
@@ -90,6 +90,7 @@
 
 //receive messages from PureData (via [send toGUI], routed through the PdWrapper.pd patch), routed from Document via the address to this object
 -(void)receiveList:(NSArray *)inArray{
+  [super receiveList:inArray];
     BOOL sendVal=YES;
     //if message preceded by "set", then set "sendVal" flag to NO, and strip off set and make new messages array without it
 

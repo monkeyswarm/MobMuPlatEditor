@@ -92,7 +92,7 @@
 -(void)mouseDown:(NSEvent *)theEvent{
   [super mouseDown:theEvent];
   //NSLog(@"down view");
-  if(![self.editingDelegate isEditing]){
+  if(![self.editingDelegate isEditing] && self.enabled){
     
     CGPoint hitTestPoint = [[self superview] convertPoint:[theEvent locationInWindow] fromView:nil];
     CGPoint localPoint = [self convertPoint:[theEvent locationInWindow] fromView:nil];
@@ -197,7 +197,7 @@
 -(void)mouseDragged:(NSEvent *)theEvent{
   [super mouseDragged:theEvent];
   //NSLog(@"drag view");
-  if(![self.editingDelegate isEditing]){
+  if(![self.editingDelegate isEditing] && self.enabled){
     
     //touchview
     CGPoint point = [self convertPoint:[theEvent locationInWindow] fromView:nil];
@@ -235,7 +235,7 @@
 
 -(void)mouseUp:(NSEvent *)theEvent{
   [super mouseUp:theEvent];
-  if(![self.editingDelegate isEditing]){
+  if(![self.editingDelegate isEditing] && self.enabled){
     
     //NSLog(@"click count %d", [theEvent clickCount]);
     if([theEvent clickCount]==1 && _createdTouchOnMouseDown==NO){

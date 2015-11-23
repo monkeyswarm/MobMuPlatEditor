@@ -308,7 +308,8 @@ public class MMPController {
 	    windowDelegate.docCanvasTypeMenu.removeActionListener(windowDelegate.docCanvasTypeMenu.getActionListeners()[0]);
         if(documentModel.canvasType==CanvasType.canvasTypeTallPhone) windowDelegate.docCanvasTypeMenu.setSelectedIndex(1);
         else if(documentModel.canvasType==CanvasType.canvasTypeWideTablet) windowDelegate.docCanvasTypeMenu.setSelectedIndex(2);
-        else windowDelegate.docCanvasTypeMenu.setSelectedIndex(0);
+        else if (documentModel.canvasType==CanvasType.canvasTypeTallTablet) windowDelegate.docCanvasTypeMenu.setSelectedIndex(3);
+        else windowDelegate.docCanvasTypeMenu.setSelectedIndex(0); // wide phone
 	    windowDelegate.docCanvasTypeMenu.addActionListener(windowDelegate);
 	    
 	    windowDelegate.docOrientationMenu.removeActionListener(windowDelegate.docOrientationMenu.getActionListeners()[0]);
@@ -630,8 +631,8 @@ public class MMPController {
 	    }
 		
 		//set color wells to control's color
-	    windowDelegate.propColorWell.setColor(control.color);
-	    windowDelegate.propHighlightColorWell.setColor(control.highlightColor);
+	    windowDelegate.propColorWell.setColor(control.getColor());
+	    windowDelegate.propHighlightColorWell.setColor(control.getHighlightColor());
 	    
 	    //if group selection
 	    if(withShift==true)clearSelection();
@@ -654,7 +655,7 @@ public class MMPController {
 	            windowDelegate.propVarKnobPanel.setVisible(true);// [self.propVarView addSubview:self.propKnobView];
 	            MMPKnob currKnob = (MMPKnob)control;
 	            windowDelegate.propVarKnobRangeTextField.setText(""+currKnob.range);
-	            windowDelegate.propVarKnobIndicatorColorWell.setColor(currKnob.indicatorColor);
+	            windowDelegate.propVarKnobIndicatorColorWell.setColor(currKnob.getIndicatorColor());
 	           
 	        }
 	        else if( control instanceof MMPSlider ){

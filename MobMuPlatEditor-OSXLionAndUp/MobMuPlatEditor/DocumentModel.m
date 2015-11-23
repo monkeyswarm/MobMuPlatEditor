@@ -58,10 +58,10 @@
     //pd file
     if(_pdFile)[topDict setObject:_pdFile forKey:@"pdFile"];
     //canvasType
-    if(_canvasType==canvasTypeIPhone3p5Inch)[topDict setObject:@"iPhone3p5Inch" forKey:@"canvasType"];
-    else if(_canvasType==canvasTypeIPhone4Inch)[topDict setObject:@"iPhone4Inch" forKey:@"canvasType"];
-    else if(_canvasType==canvasTypeIPad)[topDict setObject:@"iPad" forKey:@"canvasType"];
-    else if(_canvasType==canvasTypeAndroid7Inch)[topDict setObject:@"android7Inch" forKey:@"canvasType"];
+    if(_canvasType==canvasTypeIPhone3p5Inch)[topDict setObject:@"widePhone" forKey:@"canvasType"];
+    else if(_canvasType==canvasTypeIPhone4Inch)[topDict setObject:@"tallPhone" forKey:@"canvasType"];
+    else if(_canvasType==canvasTypeIPad)[topDict setObject:@"wideTablet" forKey:@"canvasType"];
+    else if(_canvasType==canvasTypeAndroid7Inch)[topDict setObject:@"tallTablet" forKey:@"canvasType"];
 
 
     
@@ -225,10 +225,22 @@
     if([topDict objectForKey:@"pdFile"])
         [model setPdFile:[topDict objectForKey:@"pdFile"]];
     if([topDict objectForKey:@"canvasType"]){
-        if([[topDict objectForKey:@"canvasType"] isEqualToString:@"iPhone3p5Inch"])[model setCanvasType:canvasTypeIPhone3p5Inch];
-         if([[topDict objectForKey:@"canvasType"] isEqualToString:@"iPhone4Inch"])[model setCanvasType:canvasTypeIPhone4Inch];
-         if([[topDict objectForKey:@"canvasType"] isEqualToString:@"iPad"])[model setCanvasType:canvasTypeIPad];
-      if([[topDict objectForKey:@"canvasType"] isEqualToString:@"android7Inch"])[model setCanvasType:canvasTypeAndroid7Inch];
+      if([[topDict objectForKey:@"canvasType"] isEqualToString:@"iPhone3p5Inch"] ||
+          [[topDict objectForKey:@"canvasType"] isEqualToString:@"widePhone"]) {
+        [model setCanvasType:canvasTypeIPhone3p5Inch];
+      }
+      else if([[topDict objectForKey:@"canvasType"] isEqualToString:@"iPhone4Inch"] ||
+         [[topDict objectForKey:@"canvasType"] isEqualToString:@"tallPhone"]) {
+        [model setCanvasType:canvasTypeIPhone4Inch];
+      }
+      else if([[topDict objectForKey:@"canvasType"] isEqualToString:@"iPad"] ||
+         [[topDict objectForKey:@"canvasType"] isEqualToString:@"wideTablet"]) {
+        [model setCanvasType:canvasTypeIPad];
+      }
+      else if([[topDict objectForKey:@"canvasType"] isEqualToString:@"android7Inch"] ||
+              [[topDict objectForKey:@"canvasType"] isEqualToString:@"tallTablet"]) {
+        [model setCanvasType:canvasTypeAndroid7Inch];
+      }
     }
         
     if([topDict objectForKey:@"isOrientationLandscape"])

@@ -33,12 +33,12 @@
 		DCE2F0331732BB39002B897C /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = DCE2F02D1732BB39002B897C /* main.m */; };
 		DCE2F0341732BB39002B897C /* MMPIcons.iconset in Resources */ = {isa = PBXBuildFile; fileRef = DCE2F02E1732BB39002B897C /* MMPIcons.iconset */; };
 		DCE2F0361732BB39002B897C /* uifontlist.txt in Resources */ = {isa = PBXBuildFile; fileRef = DCE2F0311732BB39002B897C /* uifontlist.txt */; };
+		F90E13401B044FC200B20B04 /* VVBasics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F90E131F1B044EED00B20B04 /* VVBasics.framework */; };
+		F90E13411B044FC200B20B04 /* VVOSC.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F90E13251B044EED00B20B04 /* VVOSC.framework */; };
 		F9109646190DFBC8008707EE /* MMPTable.m in Sources */ = {isa = PBXBuildFile; fileRef = F9109645190DFBC8008707EE /* MMPTable.m */; };
-		F94607E41AA62EE400810D35 /* VVBasics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F94607B71AA62EB700810D35 /* VVBasics.framework */; };
-		F94607E51AA62EE400810D35 /* VVOSC.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F94607C51AA62EB700810D35 /* VVOSC.framework */; };
-		F94607E61AA62F9A00810D35 /* VVBasics.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = F94607B71AA62EB700810D35 /* VVBasics.framework */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
-		F94607E71AA62F9A00810D35 /* VVOSC.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = F94607C51AA62EB700810D35 /* VVOSC.framework */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		F94FB53C18F5A045003BFB18 /* MMPMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = F94FB53B18F5A045003BFB18 /* MMPMenu.m */; };
+		F95450481B127C0700445FE1 /* VVBasics.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = F90E131F1B044EED00B20B04 /* VVBasics.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		F95450491B127C0700445FE1 /* VVOSC.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = F90E13251B044EED00B20B04 /* VVOSC.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		F9BAFD7C19D23E1B001CD2D2 /* LICENSE.txt in CopyFiles */ = {isa = PBXBuildFile; fileRef = F9BAFD5619D236E4001CD2D2 /* LICENSE.txt */; };
 		F9BAFD7D19D23E1B001CD2D2 /* Roboto-Black.ttf in CopyFiles */ = {isa = PBXBuildFile; fileRef = F9BAFD5719D236E4001CD2D2 /* Roboto-Black.ttf */; };
 		F9BAFD7E19D23E1B001CD2D2 /* Roboto-BlackItalic.ttf in CopyFiles */ = {isa = PBXBuildFile; fileRef = F9BAFD5819D236E4001CD2D2 /* Roboto-BlackItalic.ttf */; };
@@ -63,163 +63,100 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		F94607B61AA62EB700810D35 /* PBXContainerItemProxy */ = {
+		F90E131E1B044EED00B20B04 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = F946079A1AA62EB700810D35 /* VVOpenSource.xcodeproj */;
+			containerPortal = F90E130B1B044EED00B20B04 /* VVOpenSource.xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = 961EA8ED100E8565007E6C25;
 			remoteInfo = VVBasics;
 		};
-		F94607B81AA62EB700810D35 /* PBXContainerItemProxy */ = {
+		F90E13201B044EED00B20B04 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = F946079A1AA62EB700810D35 /* VVOpenSource.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 96C8073A19817C1600FA7825;
-			remoteInfo = VVBufferPool;
-		};
-		F94607BA1AA62EB700810D35 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = F946079A1AA62EB700810D35 /* VVOpenSource.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 96C8071219817BFE00FA7825;
-			remoteInfo = DDMathParser;
-		};
-		F94607BC1AA62EB700810D35 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = F946079A1AA62EB700810D35 /* VVOpenSource.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 96C8072619817C0A00FA7825;
-			remoteInfo = JSONKit;
-		};
-		F94607BE1AA62EB700810D35 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = F946079A1AA62EB700810D35 /* VVOpenSource.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 964FF27D1981B5AF00CCC808;
-			remoteInfo = VVISFKit;
-		};
-		F94607C01AA62EB700810D35 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = F946079A1AA62EB700810D35 /* VVOpenSource.xcodeproj */;
+			containerPortal = F90E130B1B044EED00B20B04 /* VVOpenSource.xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = 96B06C1C18BE0ECF000A921C;
 			remoteInfo = VVUIToolbox;
 		};
-		F94607C21AA62EB700810D35 /* PBXContainerItemProxy */ = {
+		F90E13221B044EED00B20B04 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = F946079A1AA62EB700810D35 /* VVOpenSource.xcodeproj */;
+			containerPortal = F90E130B1B044EED00B20B04 /* VVOpenSource.xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = 961745F4100F86B400FB60E6;
 			remoteInfo = VVMIDI;
 		};
-		F94607C41AA62EB700810D35 /* PBXContainerItemProxy */ = {
+		F90E13241B044EED00B20B04 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = F946079A1AA62EB700810D35 /* VVOpenSource.xcodeproj */;
+			containerPortal = F90E130B1B044EED00B20B04 /* VVOpenSource.xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = 9628D0C5100E89F700C3944E;
 			remoteInfo = VVOSC;
 		};
-		F94607C61AA62EB700810D35 /* PBXContainerItemProxy */ = {
+		F90E13261B044EED00B20B04 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = F946079A1AA62EB700810D35 /* VVOpenSource.xcodeproj */;
+			containerPortal = F90E130B1B044EED00B20B04 /* VVOpenSource.xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = 968FAA86108B6141000E470D;
 			remoteInfo = CrashReporterTestApp;
 		};
-		F94607C81AA62EB700810D35 /* PBXContainerItemProxy */ = {
+		F90E13281B044EED00B20B04 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = F946079A1AA62EB700810D35 /* VVOpenSource.xcodeproj */;
+			containerPortal = F90E130B1B044EED00B20B04 /* VVOpenSource.xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = 9656D900100F89BA0064EEA6;
 			remoteInfo = MIDITestApp;
 		};
-		F94607CA1AA62EB700810D35 /* PBXContainerItemProxy */ = {
+		F90E132A1B044EED00B20B04 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = F946079A1AA62EB700810D35 /* VVOpenSource.xcodeproj */;
+			containerPortal = F90E130B1B044EED00B20B04 /* VVOpenSource.xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = 9628D179100E8B4D00C3944E;
 			remoteInfo = OSCTestApp;
 		};
-		F94607CC1AA62EB700810D35 /* PBXContainerItemProxy */ = {
+		F90E132C1B044EED00B20B04 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = F946079A1AA62EB700810D35 /* VVOpenSource.xcodeproj */;
+			containerPortal = F90E130B1B044EED00B20B04 /* VVOpenSource.xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = 96B49302106AEB4C008FB26E;
 			remoteInfo = MIDIviaOSC;
 		};
-		F94607CE1AA62EB700810D35 /* PBXContainerItemProxy */ = {
+		F90E132E1B044EED00B20B04 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = F946079A1AA62EB700810D35 /* VVOpenSource.xcodeproj */;
+			containerPortal = F90E130B1B044EED00B20B04 /* VVOpenSource.xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = 966CCBD81431EFB9006D580F;
 			remoteInfo = OSCQueryTest;
 		};
-		F94607D01AA62EB700810D35 /* PBXContainerItemProxy */ = {
+		F90E13301B044EED00B20B04 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = F946079A1AA62EB700810D35 /* VVOpenSource.xcodeproj */;
+			containerPortal = F90E130B1B044EED00B20B04 /* VVOpenSource.xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = 96ACD7211706416300138AE6;
 			remoteInfo = OSCPingTester;
 		};
-		F94607D21AA62EB700810D35 /* PBXContainerItemProxy */ = {
+		F90E13321B044EED00B20B04 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = F946079A1AA62EB700810D35 /* VVOpenSource.xcodeproj */;
+			containerPortal = F90E130B1B044EED00B20B04 /* VVOpenSource.xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = 96C18C2D185A1A740082DE35;
 			remoteInfo = VVBasicsStatic;
 		};
-		F94607D41AA62EB700810D35 /* PBXContainerItemProxy */ = {
+		F90E13341B044EED00B20B04 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = F946079A1AA62EB700810D35 /* VVOpenSource.xcodeproj */;
+			containerPortal = F90E130B1B044EED00B20B04 /* VVOpenSource.xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = 96C18C3E185A1A7D0082DE35;
 			remoteInfo = VVOSCStatic;
 		};
-		F94607D61AA62EB700810D35 /* PBXContainerItemProxy */ = {
+		F90E13361B044EED00B20B04 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = F946079A1AA62EB700810D35 /* VVOpenSource.xcodeproj */;
+			containerPortal = F90E130B1B044EED00B20B04 /* VVOpenSource.xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = 1A6F726619033A9D00A6FBAD;
 			remoteInfo = VVUIToolboxStatic;
 		};
-		F94607D81AA62EB700810D35 /* PBXContainerItemProxy */ = {
+		F90E13381B044F1400B20B04 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = F946079A1AA62EB700810D35 /* VVOpenSource.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 965C1CAC1983BE7D00111741;
-			remoteInfo = "GLScene Test App";
-		};
-		F94607DA1AA62EB700810D35 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = F946079A1AA62EB700810D35 /* VVOpenSource.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 965C1CC71983BE9A00111741;
-			remoteInfo = "QCGLScene Test App";
-		};
-		F94607DC1AA62EB700810D35 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = F946079A1AA62EB700810D35 /* VVOpenSource.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 965C1CE21983BEA200111741;
-			remoteInfo = "CIGLScene Test App";
-		};
-		F94607DE1AA62EB700810D35 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = F946079A1AA62EB700810D35 /* VVOpenSource.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 965C1CFD198403C300111741;
-			remoteInfo = "ISFGLScene Test App";
-		};
-		F94607E01AA62EB700810D35 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = F946079A1AA62EB700810D35 /* VVOpenSource.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 96140109198AD46D00335292;
-			remoteInfo = "QT and Hap Test App";
-		};
-		F94607E21AA62ED400810D35 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = F946079A1AA62EB700810D35 /* VVOpenSource.xcodeproj */;
+			containerPortal = F90E130B1B044EED00B20B04 /* VVOpenSource.xcodeproj */;
 			proxyType = 1;
 			remoteGlobalIDString = 9658764818CE5C2D003126BC;
 			remoteInfo = "Build Mac Frameworks";
@@ -233,8 +170,8 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				F94607E61AA62F9A00810D35 /* VVBasics.framework in CopyFiles */,
-				F94607E71AA62F9A00810D35 /* VVOSC.framework in CopyFiles */,
+				F95450481B127C0700445FE1 /* VVBasics.framework in CopyFiles */,
+				F95450491B127C0700445FE1 /* VVOSC.framework in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -278,21 +215,21 @@
 		DC5A5ADC18825DFB00FC97D5 /* MMPUnknown.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MMPUnknown.h; path = MobMuPlatEditor/Controls/MMPUnknown.h; sourceTree = SOURCE_ROOT; };
 		DC5A5ADD18825DFB00FC97D5 /* MMPUnknown.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MMPUnknown.m; path = MobMuPlatEditor/Controls/MMPUnknown.m; sourceTree = SOURCE_ROOT; };
 		DC5A5ADF18825E3200FC97D5 /* MMPLCD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MMPLCD.h; path = MobMuPlatEditor/Controls/MMPLCD.h; sourceTree = SOURCE_ROOT; };
-		DC5A5AE018825E3200FC97D5 /* MMPLCD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MMPLCD.m; path = MobMuPlatEditor/Controls/MMPLCD.m; sourceTree = SOURCE_ROOT; };
+		DC5A5AE018825E3200FC97D5 /* MMPLCD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = MMPLCD.m; path = MobMuPlatEditor/Controls/MMPLCD.m; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		DC8146B91732C4E10041F394 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = en; path = MobMuPlatEditor/en.lproj/Credits.rtf; sourceTree = SOURCE_ROOT; };
 		DC8146BB1732C4E10041F394 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = MobMuPlatEditor/en.lproj/InfoPlist.strings; sourceTree = SOURCE_ROOT; };
 		DCE2EFF91732BAA6002B897C /* MMPButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MMPButton.h; path = MobMuPlatEditor/Controls/MMPButton.h; sourceTree = SOURCE_ROOT; };
-		DCE2EFFA1732BAA6002B897C /* MMPButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MMPButton.m; path = MobMuPlatEditor/Controls/MMPButton.m; sourceTree = SOURCE_ROOT; };
+		DCE2EFFA1732BAA6002B897C /* MMPButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = MMPButton.m; path = MobMuPlatEditor/Controls/MMPButton.m; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		DCE2EFFB1732BAA6002B897C /* MMPControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MMPControl.h; path = MobMuPlatEditor/Controls/MMPControl.h; sourceTree = SOURCE_ROOT; };
 		DCE2EFFC1732BAA6002B897C /* MMPControl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MMPControl.m; path = MobMuPlatEditor/Controls/MMPControl.m; sourceTree = SOURCE_ROOT; };
 		DCE2EFFD1732BAA6002B897C /* MMPGrid.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MMPGrid.h; path = MobMuPlatEditor/Controls/MMPGrid.h; sourceTree = SOURCE_ROOT; };
-		DCE2EFFE1732BAA6002B897C /* MMPGrid.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MMPGrid.m; path = MobMuPlatEditor/Controls/MMPGrid.m; sourceTree = SOURCE_ROOT; };
+		DCE2EFFE1732BAA6002B897C /* MMPGrid.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = MMPGrid.m; path = MobMuPlatEditor/Controls/MMPGrid.m; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		DCE2EFFF1732BAA6002B897C /* MMPKnob.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MMPKnob.h; path = MobMuPlatEditor/Controls/MMPKnob.h; sourceTree = SOURCE_ROOT; };
-		DCE2F0001732BAA6002B897C /* MMPKnob.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MMPKnob.m; path = MobMuPlatEditor/Controls/MMPKnob.m; sourceTree = SOURCE_ROOT; };
+		DCE2F0001732BAA6002B897C /* MMPKnob.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = MMPKnob.m; path = MobMuPlatEditor/Controls/MMPKnob.m; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		DCE2F0011732BAA6002B897C /* MMPLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MMPLabel.h; path = MobMuPlatEditor/Controls/MMPLabel.h; sourceTree = SOURCE_ROOT; };
 		DCE2F0021732BAA6002B897C /* MMPLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MMPLabel.m; path = MobMuPlatEditor/Controls/MMPLabel.m; sourceTree = SOURCE_ROOT; };
 		DCE2F0031732BAA6002B897C /* MMPMultiSlider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MMPMultiSlider.h; path = MobMuPlatEditor/Controls/MMPMultiSlider.h; sourceTree = SOURCE_ROOT; };
-		DCE2F0041732BAA6002B897C /* MMPMultiSlider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MMPMultiSlider.m; path = MobMuPlatEditor/Controls/MMPMultiSlider.m; sourceTree = SOURCE_ROOT; };
+		DCE2F0041732BAA6002B897C /* MMPMultiSlider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = MMPMultiSlider.m; path = MobMuPlatEditor/Controls/MMPMultiSlider.m; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		DCE2F0051732BAA6002B897C /* MMPPanel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MMPPanel.h; path = MobMuPlatEditor/Controls/MMPPanel.h; sourceTree = SOURCE_ROOT; };
 		DCE2F0061732BAA6002B897C /* MMPPanel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MMPPanel.m; path = MobMuPlatEditor/Controls/MMPPanel.m; sourceTree = SOURCE_ROOT; };
 		DCE2F0071732BAA6002B897C /* MMPSlider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MMPSlider.h; path = MobMuPlatEditor/Controls/MMPSlider.h; sourceTree = SOURCE_ROOT; };
@@ -319,11 +256,11 @@
 		DCE2F0301732BB39002B897C /* MobMuPlatEditor-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "MobMuPlatEditor-Prefix.pch"; path = "MobMuPlatEditor/MobMuPlatEditor-Prefix.pch"; sourceTree = SOURCE_ROOT; };
 		DCE2F0311732BB39002B897C /* uifontlist.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = uifontlist.txt; path = MobMuPlatEditor/uifontlist.txt; sourceTree = SOURCE_ROOT; };
 		DCE2F0371732BD86002B897C /* infoicon_100x100.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = infoicon_100x100.png; path = MobMuPlatEditor/infoicon_100x100.png; sourceTree = SOURCE_ROOT; };
+		F90E130B1B044EED00B20B04 /* VVOpenSource.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = VVOpenSource.xcodeproj; path = "../../../Documents/vvopensource-master/VVOpenSource.xcodeproj"; sourceTree = "<group>"; };
 		F9109644190DFBC8008707EE /* MMPTable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MMPTable.h; path = MobMuPlatEditor/Controls/MMPTable.h; sourceTree = SOURCE_ROOT; };
 		F9109645190DFBC8008707EE /* MMPTable.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MMPTable.m; path = MobMuPlatEditor/Controls/MMPTable.m; sourceTree = SOURCE_ROOT; };
-		F946079A1AA62EB700810D35 /* VVOpenSource.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = VVOpenSource.xcodeproj; path = "../../../Downloads/vvopensource-master/VVOpenSource.xcodeproj"; sourceTree = "<group>"; };
 		F94FB53A18F5A045003BFB18 /* MMPMenu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MMPMenu.h; path = MobMuPlatEditor/Controls/MMPMenu.h; sourceTree = SOURCE_ROOT; };
-		F94FB53B18F5A045003BFB18 /* MMPMenu.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MMPMenu.m; path = MobMuPlatEditor/Controls/MMPMenu.m; sourceTree = SOURCE_ROOT; };
+		F94FB53B18F5A045003BFB18 /* MMPMenu.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = MMPMenu.m; path = MobMuPlatEditor/Controls/MMPMenu.m; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		F9BAFD5619D236E4001CD2D2 /* LICENSE.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE.txt; sourceTree = "<group>"; };
 		F9BAFD5719D236E4001CD2D2 /* Roboto-Black.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Roboto-Black.ttf"; sourceTree = "<group>"; };
 		F9BAFD5819D236E4001CD2D2 /* Roboto-BlackItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Roboto-BlackItalic.ttf"; sourceTree = "<group>"; };
@@ -352,8 +289,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F94607E41AA62EE400810D35 /* VVBasics.framework in Frameworks */,
-				F94607E51AA62EE400810D35 /* VVOSC.framework in Frameworks */,
+				F90E13401B044FC200B20B04 /* VVBasics.framework in Frameworks */,
+				F90E13411B044FC200B20B04 /* VVOSC.framework in Frameworks */,
 				F9E56AFE1A81EF3F0017851A /* QuartzCore.framework in Frameworks */,
 				DC34E248168BB79800648C2F /* Cocoa.framework in Frameworks */,
 			);
@@ -365,7 +302,7 @@
 		DC34E238168BB79800648C2F = {
 			isa = PBXGroup;
 			children = (
-				F946079A1AA62EB700810D35 /* VVOpenSource.xcodeproj */,
+				F90E130B1B044EED00B20B04 /* VVOpenSource.xcodeproj */,
 				DC34E24D168BB79800648C2F /* MobMuPlatEd */,
 				DC34E246168BB79800648C2F /* Frameworks */,
 				DC34E244168BB79800648C2F /* Products */,
@@ -475,31 +412,22 @@
 			name = Controls;
 			sourceTree = "<group>";
 		};
-		F946079B1AA62EB700810D35 /* Products */ = {
+		F90E130C1B044EED00B20B04 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				F94607B71AA62EB700810D35 /* VVBasics.framework */,
-				F94607B91AA62EB700810D35 /* VVBufferPool.framework */,
-				F94607BB1AA62EB700810D35 /* DDMathParser.framework */,
-				F94607BD1AA62EB700810D35 /* JSONKit.framework */,
-				F94607BF1AA62EB700810D35 /* VVISFKit.framework */,
-				F94607C11AA62EB700810D35 /* VVUIToolbox.framework */,
-				F94607C31AA62EB700810D35 /* VVMIDI.framework */,
-				F94607C51AA62EB700810D35 /* VVOSC.framework */,
-				F94607C71AA62EB700810D35 /* CrashReporterTestApp.app */,
-				F94607C91AA62EB700810D35 /* MIDITestApp.app */,
-				F94607CB1AA62EB700810D35 /* OSCTestApp.app */,
-				F94607CD1AA62EB700810D35 /* MIDIviaOSC.app */,
-				F94607CF1AA62EB700810D35 /* OSCQueryTest.app */,
-				F94607D11AA62EB700810D35 /* OSCPingTester.app */,
-				F94607D31AA62EB700810D35 /* libVVBasics.a */,
-				F94607D51AA62EB700810D35 /* libVVOSC.a */,
-				F94607D71AA62EB700810D35 /* libVVUIToolbox.a */,
-				F94607D91AA62EB700810D35 /* GLScene Test App.app */,
-				F94607DB1AA62EB700810D35 /* QCGLScene Test App.app */,
-				F94607DD1AA62EB700810D35 /* CIGLScene Test App.app */,
-				F94607DF1AA62EB700810D35 /* ISFGLScene Test App.app */,
-				F94607E11AA62EB700810D35 /* QT and Hap Test App.app */,
+				F90E131F1B044EED00B20B04 /* VVBasics.framework */,
+				F90E13211B044EED00B20B04 /* VVUIToolbox.framework */,
+				F90E13231B044EED00B20B04 /* VVMIDI.framework */,
+				F90E13251B044EED00B20B04 /* VVOSC.framework */,
+				F90E13271B044EED00B20B04 /* CrashReporterTestApp.app */,
+				F90E13291B044EED00B20B04 /* MIDITestApp.app */,
+				F90E132B1B044EED00B20B04 /* OSCTestApp.app */,
+				F90E132D1B044EED00B20B04 /* MIDIviaOSC.app */,
+				F90E132F1B044EED00B20B04 /* OSCQueryTest.app */,
+				F90E13311B044EED00B20B04 /* OSCPingTester.app */,
+				F90E13331B044EED00B20B04 /* libVVBasics.a */,
+				F90E13351B044EED00B20B04 /* libVVOSC.a */,
+				F90E13371B044EED00B20B04 /* libVVUIToolbox.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -547,7 +475,7 @@
 			buildRules = (
 			);
 			dependencies = (
-				F94607E31AA62ED400810D35 /* PBXTargetDependency */,
+				F90E13391B044F1400B20B04 /* PBXTargetDependency */,
 			);
 			name = MobMuPlatEditor;
 			productName = MobMuPlatEd1;
@@ -560,7 +488,7 @@
 		DC34E23A168BB79800648C2F /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0450;
+				LastUpgradeCheck = 0630;
 				ORGANIZATIONNAME = "Daniel Iglesia";
 			};
 			buildConfigurationList = DC34E23D168BB79800648C2F /* Build configuration list for PBXProject "MobMuPlatEditor" */;
@@ -575,8 +503,8 @@
 			projectDirPath = "";
 			projectReferences = (
 				{
-					ProductGroup = F946079B1AA62EB700810D35 /* Products */;
-					ProjectRef = F946079A1AA62EB700810D35 /* VVOpenSource.xcodeproj */;
+					ProductGroup = F90E130C1B044EED00B20B04 /* Products */;
+					ProjectRef = F90E130B1B044EED00B20B04 /* VVOpenSource.xcodeproj */;
 				},
 			);
 			projectRoot = "";
@@ -587,158 +515,95 @@
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
-		F94607B71AA62EB700810D35 /* VVBasics.framework */ = {
+		F90E131F1B044EED00B20B04 /* VVBasics.framework */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
 			path = VVBasics.framework;
-			remoteRef = F94607B61AA62EB700810D35 /* PBXContainerItemProxy */;
+			remoteRef = F90E131E1B044EED00B20B04 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		F94607B91AA62EB700810D35 /* VVBufferPool.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = VVBufferPool.framework;
-			remoteRef = F94607B81AA62EB700810D35 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		F94607BB1AA62EB700810D35 /* DDMathParser.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = DDMathParser.framework;
-			remoteRef = F94607BA1AA62EB700810D35 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		F94607BD1AA62EB700810D35 /* JSONKit.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = JSONKit.framework;
-			remoteRef = F94607BC1AA62EB700810D35 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		F94607BF1AA62EB700810D35 /* VVISFKit.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = VVISFKit.framework;
-			remoteRef = F94607BE1AA62EB700810D35 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		F94607C11AA62EB700810D35 /* VVUIToolbox.framework */ = {
+		F90E13211B044EED00B20B04 /* VVUIToolbox.framework */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
 			path = VVUIToolbox.framework;
-			remoteRef = F94607C01AA62EB700810D35 /* PBXContainerItemProxy */;
+			remoteRef = F90E13201B044EED00B20B04 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		F94607C31AA62EB700810D35 /* VVMIDI.framework */ = {
+		F90E13231B044EED00B20B04 /* VVMIDI.framework */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
 			path = VVMIDI.framework;
-			remoteRef = F94607C21AA62EB700810D35 /* PBXContainerItemProxy */;
+			remoteRef = F90E13221B044EED00B20B04 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		F94607C51AA62EB700810D35 /* VVOSC.framework */ = {
+		F90E13251B044EED00B20B04 /* VVOSC.framework */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
 			path = VVOSC.framework;
-			remoteRef = F94607C41AA62EB700810D35 /* PBXContainerItemProxy */;
+			remoteRef = F90E13241B044EED00B20B04 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		F94607C71AA62EB700810D35 /* CrashReporterTestApp.app */ = {
+		F90E13271B044EED00B20B04 /* CrashReporterTestApp.app */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.application;
 			path = CrashReporterTestApp.app;
-			remoteRef = F94607C61AA62EB700810D35 /* PBXContainerItemProxy */;
+			remoteRef = F90E13261B044EED00B20B04 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		F94607C91AA62EB700810D35 /* MIDITestApp.app */ = {
+		F90E13291B044EED00B20B04 /* MIDITestApp.app */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.application;
 			path = MIDITestApp.app;
-			remoteRef = F94607C81AA62EB700810D35 /* PBXContainerItemProxy */;
+			remoteRef = F90E13281B044EED00B20B04 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		F94607CB1AA62EB700810D35 /* OSCTestApp.app */ = {
+		F90E132B1B044EED00B20B04 /* OSCTestApp.app */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.application;
 			path = OSCTestApp.app;
-			remoteRef = F94607CA1AA62EB700810D35 /* PBXContainerItemProxy */;
+			remoteRef = F90E132A1B044EED00B20B04 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		F94607CD1AA62EB700810D35 /* MIDIviaOSC.app */ = {
+		F90E132D1B044EED00B20B04 /* MIDIviaOSC.app */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.application;
 			path = MIDIviaOSC.app;
-			remoteRef = F94607CC1AA62EB700810D35 /* PBXContainerItemProxy */;
+			remoteRef = F90E132C1B044EED00B20B04 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		F94607CF1AA62EB700810D35 /* OSCQueryTest.app */ = {
+		F90E132F1B044EED00B20B04 /* OSCQueryTest.app */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.application;
 			path = OSCQueryTest.app;
-			remoteRef = F94607CE1AA62EB700810D35 /* PBXContainerItemProxy */;
+			remoteRef = F90E132E1B044EED00B20B04 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		F94607D11AA62EB700810D35 /* OSCPingTester.app */ = {
+		F90E13311B044EED00B20B04 /* OSCPingTester.app */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.application;
 			path = OSCPingTester.app;
-			remoteRef = F94607D01AA62EB700810D35 /* PBXContainerItemProxy */;
+			remoteRef = F90E13301B044EED00B20B04 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		F94607D31AA62EB700810D35 /* libVVBasics.a */ = {
+		F90E13331B044EED00B20B04 /* libVVBasics.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
 			path = libVVBasics.a;
-			remoteRef = F94607D21AA62EB700810D35 /* PBXContainerItemProxy */;
+			remoteRef = F90E13321B044EED00B20B04 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		F94607D51AA62EB700810D35 /* libVVOSC.a */ = {
+		F90E13351B044EED00B20B04 /* libVVOSC.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
 			path = libVVOSC.a;
-			remoteRef = F94607D41AA62EB700810D35 /* PBXContainerItemProxy */;
+			remoteRef = F90E13341B044EED00B20B04 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		F94607D71AA62EB700810D35 /* libVVUIToolbox.a */ = {
+		F90E13371B044EED00B20B04 /* libVVUIToolbox.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
 			path = libVVUIToolbox.a;
-			remoteRef = F94607D61AA62EB700810D35 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		F94607D91AA62EB700810D35 /* GLScene Test App.app */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.application;
-			path = "GLScene Test App.app";
-			remoteRef = F94607D81AA62EB700810D35 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		F94607DB1AA62EB700810D35 /* QCGLScene Test App.app */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.application;
-			path = "QCGLScene Test App.app";
-			remoteRef = F94607DA1AA62EB700810D35 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		F94607DD1AA62EB700810D35 /* CIGLScene Test App.app */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.application;
-			path = "CIGLScene Test App.app";
-			remoteRef = F94607DC1AA62EB700810D35 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		F94607DF1AA62EB700810D35 /* ISFGLScene Test App.app */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.application;
-			path = "ISFGLScene Test App.app";
-			remoteRef = F94607DE1AA62EB700810D35 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		F94607E11AA62EB700810D35 /* QT and Hap Test App.app */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.application;
-			path = "QT and Hap Test App.app";
-			remoteRef = F94607E01AA62EB700810D35 /* PBXContainerItemProxy */;
+			remoteRef = F90E13361B044EED00B20B04 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 /* End PBXReferenceProxy section */
@@ -792,10 +657,10 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		F94607E31AA62ED400810D35 /* PBXTargetDependency */ = {
+		F90E13391B044F1400B20B04 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = "Build Mac Frameworks";
-			targetProxy = F94607E21AA62ED400810D35 /* PBXContainerItemProxy */;
+			targetProxy = F90E13381B044F1400B20B04 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -839,7 +704,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_OBJC_ARC = YES;
@@ -870,7 +734,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_OBJC_ARC = YES;

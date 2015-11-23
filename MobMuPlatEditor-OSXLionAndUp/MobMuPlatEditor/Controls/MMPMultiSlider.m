@@ -117,7 +117,7 @@
 
 -(void)mouseDown:(NSEvent *)event{
     [super mouseDown:event];
-    if(![self.editingDelegate isEditing]){
+    if(![self.editingDelegate isEditing] && self.enabled){
         CGPoint point = [self convertPoint:[event locationInWindow] fromView:nil];
             
         int headIndex = (int)(point.x/headWidth);//find out which slider is touched
@@ -145,7 +145,7 @@
 -(void)mouseDragged:(NSEvent *)event
 {
     [super mouseDragged:event];
-    if(![self.editingDelegate isEditing]){
+    if(![self.editingDelegate isEditing] && self.enabled){
         CGPoint point = [self convertPoint:[event locationInWindow] fromView:nil];
         int headIndex = (int)(point.x/headWidth);
         headIndex = MAX(MIN(headIndex, _range-1), 0);
@@ -201,7 +201,7 @@
 
 -(void)mouseUp:(NSEvent *)event  {
     [super mouseUp:event];
-    if(![self.editingDelegate isEditing]){
+    if(![self.editingDelegate isEditing] && self.enabled){
             for(NSView* head in headViewArray) head.layer.backgroundColor=self.color.CGColor;
     
     }
@@ -224,6 +224,15 @@
 
 //receive messages from PureData (via [send toGUI], routed through the PdWrapper.pd patch), routed from Document via the address to this object
 -(void)receiveList:(NSArray *)inArray{
+  [super receiveList:inArray];
+  // ignore enable message
+  if ([inArray count] >= 2 &&
+      [inArray[0] isKindOfClass:[NSString class]] &&
+      [inArray[0] isEqualToString:@"enable"] &&
+      [inArray[1] isKindOfClass:[NSNumber class]]) {
+    return;
+  }
+
     BOOL sendVal=YES;
     //if message preceded by "set", then set "sendVal" flag to NO, and strip off set and make new messages array without it
     if ([inArray count]>0 && [[inArray objectAtIndex:0] isKindOfClass:[NSString class]] && [[inArray objectAtIndex:0] isEqualToString:@"set"]){

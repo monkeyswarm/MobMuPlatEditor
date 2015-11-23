@@ -223,7 +223,7 @@ int osxMinorVersion=-1;
 -(void)mouseDown:(NSEvent *)event{
     [super mouseDown:event];
     
-   if(![self.editingDelegate isEditing]){
+   if(![self.editingDelegate isEditing] && self.enabled){
        knobView.layer.backgroundColor = self.highlightColor.CGColor;
        [self mouseDragged:event];
     }
@@ -232,7 +232,7 @@ int osxMinorVersion=-1;
 //compute the value based on where I am touching
 -(void)mouseDragged:(NSEvent *)event{	
 	[super mouseDragged:event];
-    if(![self.editingDelegate isEditing]){
+    if(![self.editingDelegate isEditing] && self.enabled){
         
         CGPoint point = [self convertPoint:[event locationInWindow] fromView:nil];//[[touches anyObject] locationInView:self];
     
@@ -259,13 +259,14 @@ int osxMinorVersion=-1;
 
 -(void)mouseUp:(NSEvent *)event{
     [super mouseUp:event];
-    if(![self.editingDelegate isEditing]){
+    if(![self.editingDelegate isEditing] && self.enabled){
         knobView.layer.backgroundColor = self.color.CGColor;
     }
 }
 
 //receive messages from PureData (via [send toGUI], routed through the PdWrapper.pd patch), routed from Document via the address to this object
 -(void)receiveList:(NSArray *)inArray{
+  [super receiveList:inArray];
     BOOL sendVal=YES;
     //if message preceded by "set", then set "sendVal" flag to NO, and strip off set and make new messages array without it
     if ([inArray count]>0 && [[inArray objectAtIndex:0] isKindOfClass:[NSString class]] && [[inArray objectAtIndex:0] isEqualToString:@"set"]){

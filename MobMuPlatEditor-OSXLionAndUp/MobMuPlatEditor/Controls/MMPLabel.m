@@ -64,7 +64,7 @@
 
 //ugly hack so that this object doesn't take touches, but passes to controls underneath
 - (NSView *)hitTest:(NSPoint)aPoint{
-    //if I am editing, behave nomrally like any other MMPControl
+    //if I am editing, behave nomrally like any other MMPControl...try super.
     if([self.editingDelegate isEditing]){
         NSPoint convPoint = [self convertPoint:aPoint fromView:[self superview]];
         if(NSPointInRect(convPoint, [[self handle] frame]))
@@ -165,6 +165,15 @@
 
 //receive messages from PureData (via [send toGUI]), routed from ViewController via the address to this object
 -(void)receiveList:(NSArray *)inArray{
+  [super receiveList:inArray];
+  // ignore enable message
+  if ([inArray count] >= 2 &&
+      [inArray[0] isKindOfClass:[NSString class]] &&
+      [inArray[0] isEqualToString:@"enable"] &&
+      [inArray[1] isKindOfClass:[NSNumber class]]) {
+    return;
+  }
+  
     //if "highlight 0/1", set to highlight color
     if(([inArray count]==2) && [[inArray objectAtIndex:0] isKindOfClass:[NSString class]] && [[inArray objectAtIndex:0] isEqualToString:@"highlight"]){
         if([[inArray objectAtIndex:1] isKindOfClass:[NSNumber class]]){

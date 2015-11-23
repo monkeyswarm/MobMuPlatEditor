@@ -27,7 +27,7 @@ public class MMPKnob extends MMPControl implements MouseListener, MouseMotionLis
 	public int range;
 	private ArrayList<RoundedPanel> tickViewArray;
 	float value;
-	public Color indicatorColor;
+	private Color _indicatorColor, _indicatorDisabledColor;
 	
 	private float dim;
 	private float radius;
@@ -38,11 +38,11 @@ public class MMPKnob extends MMPControl implements MouseListener, MouseMotionLis
 	//copy constructor
 	public MMPKnob(MMPKnob otherKnob){
 		this(otherKnob.getBounds());//normal constructor
-		this.setColor(otherKnob.color);
-		this.setHighlightColor(otherKnob.highlightColor);
+		this.setColor(otherKnob.getColor());
+		this.setHighlightColor(otherKnob.getHighlightColor());
 		this.address=otherKnob.address;
 		this.setRange(otherKnob.range);
-		this.setIndicatorColor(otherKnob.indicatorColor);
+		this.setIndicatorColor(otherKnob.getIndicatorColor());
 	}
 	
 	public MMPKnob(Rectangle frame){
@@ -64,7 +64,7 @@ public class MMPKnob extends MMPControl implements MouseListener, MouseMotionLis
 		this.addMouseListener(this);
 		this.addMouseMotionListener(this);
 		this.setIndicatorColor(Color.WHITE);
-		this.setColor(this.color);
+		this.setColor(this.getColor());
 		
 		this.setBounds(frame);
 		
@@ -72,8 +72,13 @@ public class MMPKnob extends MMPControl implements MouseListener, MouseMotionLis
 		
 	}
 	
+	public Color getIndicatorColor() {
+		return _indicatorColor;
+	}
+	
 	public void setIndicatorColor(Color inColor){
-		indicatorColor=inColor;
+		_indicatorColor=inColor;
+		_indicatorDisabledColor = new Color(inColor.getRed(), inColor.getGreen(), inColor.getBlue(), (int)(inColor.getAlpha() * .2)); 
 		indicatorPanel.setBackground(inColor);
 	}
 	
@@ -127,7 +132,7 @@ public class MMPKnob extends MMPControl implements MouseListener, MouseMotionLis
 	   
       for(int i=0;i<range;i++){
     	  RoundedPanel tick = new RoundedPanel();
-	      tick.setBackground(this.color);
+	      tick.setBackground(this.getColor());
 	      tick.setCornerRadius((int)(TICK_DIM/2));
 	      tickViewArray.add(tick);
 	      add(tick);            
@@ -184,10 +189,9 @@ public class MMPKnob extends MMPControl implements MouseListener, MouseMotionLis
 		super.mousePressed(e);
 			
 	    if(!editingDelegate.isEditing()){
-	      knobPanel.setBackground(this.highlightColor);
+	      knobPanel.setBackground(this.getHighlightColor());
 	      mouseDragged(e);
 	    }
-		
 	}
 
 	@Override
@@ -215,7 +219,7 @@ public class MMPKnob extends MMPControl implements MouseListener, MouseMotionLis
 	public void mouseReleased(MouseEvent e) {
 		super.mouseReleased(e);
 	    if(!editingDelegate.isEditing()){
-	    	 knobPanel.setBackground(color);
+	    	 knobPanel.setBackground(getColor());
 		       // indicatorColor.setBackground(indicatorColor);
 		       
 	    }
@@ -260,6 +264,7 @@ public class MMPKnob extends MMPControl implements MouseListener, MouseMotionLis
 	
 	//receive messages from PureData (via [send toGUI], routed through the PdWrapper.pd patch), routed from Document via the address to this object
 	public void receiveList(ArrayList<Object> messageArray){
+		super.receiveList(messageArray);
 		boolean sendVal  = true;
 		//if message preceded by "set", then set "sendVal" flag to NO, and strip off set and make new messages array without it
 	    if (messageArray.size()>0 && (messageArray.get(0) instanceof String) && messageArray.get(0).equals("set") ){
@@ -277,6 +282,14 @@ public class MMPKnob extends MMPControl implements MouseListener, MouseMotionLis
 	        if(sendVal)sendValue();
 	    }
 
+	}
+	
+	public void setEnabled(boolean enabled){
+		super.setEnabled(enabled);
+		Color c = enabled ? getColor() : getDisabledColor();
+		knobPanel.setBackground(c);
+		for(JPanel tick: tickViewArray)tick.setBackground(c);
+		indicatorPanel.setBackground(enabled ? _indicatorColor : _indicatorDisabledColor);
 	}
 
 
@@ -320,5 +333,6 @@ public class MMPKnob extends MMPControl implements MouseListener, MouseMotionLis
     }
 
 }
+	
 
 }

@@ -263,7 +263,7 @@
 -(void)mouseDown:(NSEvent *)theEvent{
   [super mouseDown:theEvent];
 
-  if(![self.editingDelegate isEditing]){
+  if(![self.editingDelegate isEditing] && self.enabled){
 
     CGPoint point = [self convertPoint:[theEvent locationInWindow] fromView:nil];//[[touches anyObject] locationInView:self];
     float valX = point.x/self.frame.size.width;
@@ -280,7 +280,7 @@
 -(void)mouseDragged:(NSEvent *)theEvent{
   [super mouseDragged:theEvent];
 
-  if(![self.editingDelegate isEditing]){
+  if(![self.editingDelegate isEditing] && self.enabled){
 
     CGPoint point = [self convertPoint:[theEvent locationInWindow] fromView:nil];//[[touches anyObject] locationInView:self];
     float valX = point.x/self.frame.size.width;
@@ -294,7 +294,7 @@
 
 -(void)mouseUp:(NSEvent *)theEvent{
   [super mouseUp:theEvent];
-  if(![self.editingDelegate isEditing]){
+  if(![self.editingDelegate isEditing] && self.enabled){
 
     CGPoint point = [self convertPoint:[theEvent locationInWindow] fromView:nil];//[[touches anyObject] locationInView:self];
     float valX = point.x/self.frame.size.width;
@@ -321,6 +321,7 @@
 //receive messages from PureData (via [send toGUI], routed through the PdWrapper.pd patch), routed from Document via the address to this object
 
 -(void)receiveList:(NSArray *)inArray{
+  [super receiveList:inArray];
   if([inArray count]==5 && [[inArray objectAtIndex:0] isEqualToString:@"paintrect"] && [[inArray objectAtIndex:1] isKindOfClass:[NSNumber class]]){
     [self paintRectX:[[inArray objectAtIndex:1] floatValue] Y:[[inArray objectAtIndex:2] floatValue] X2:[[inArray objectAtIndex:3] floatValue] Y2:[[inArray objectAtIndex:4] floatValue]];
   }

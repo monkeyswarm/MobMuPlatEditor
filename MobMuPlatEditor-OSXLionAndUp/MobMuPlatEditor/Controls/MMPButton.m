@@ -30,7 +30,7 @@
 
 -(void)mouseDown:(NSEvent *)event{
     [super mouseDown:event];
-    if(![self.editingDelegate isEditing]){
+    if(![self.editingDelegate isEditing] && self.enabled){
         [self setValue:1];
     }
 }
@@ -38,7 +38,7 @@
 
 -(void)mouseUp:(NSEvent *)event{
     [super mouseUp:event];
-    if(![self.editingDelegate isEditing])
+    if(![self.editingDelegate isEditing] && self.enabled)
         [self setValue:0];
 }
 
@@ -64,6 +64,7 @@
 //for button, any message means a instantaneous touch down and touch up
 //it does not respond to "set" anything
 -(void)receiveList:(NSArray *)inArray{
+  [super receiveList:inArray];
     if ([inArray count]>0 && [[inArray objectAtIndex:0] isKindOfClass:[NSNumber class]]){
         //[self setValue:(int)[(NSNumber*)[inArray objectAtIndex:0] floatValue]];
         [self setValue:1];

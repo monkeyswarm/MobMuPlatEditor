@@ -86,7 +86,7 @@
 -(void)mouseDown:(NSEvent *)theEvent{
     [super mouseDown:theEvent];
     
-    if(![self.editingDelegate isEditing]){
+    if(![self.editingDelegate isEditing] && self.enabled){
         cursorHorizView.layer.backgroundColor=self.highlightColor.CGColor;
         cursorVertView.layer.backgroundColor=self.highlightColor.CGColor;
         borderView.layer.borderColor=self.highlightColor.CGColor;
@@ -96,7 +96,7 @@
 
 -(void)mouseDragged:(NSEvent *)theEvent{
     [super mouseDragged:theEvent];
-    if(![self.editingDelegate isEditing]){
+    if(![self.editingDelegate isEditing] && self.enabled){
         CGPoint point = [self convertPoint:[theEvent locationInWindow] fromView:nil];//[[touches anyObject] locationInView:self];
         float valX = point.x/self.frame.size.width;
         float valY = 1.0-(point.y/self.frame.size.height);
@@ -112,7 +112,7 @@
 
 -(void)mouseUp:(NSEvent *)theEvent{
     [super mouseUp:theEvent];
-    if(![self.editingDelegate isEditing]){
+    if(![self.editingDelegate isEditing] && self.enabled){
         cursorHorizView.layer.backgroundColor=self.color.CGColor;
         cursorVertView.layer.backgroundColor=self.color.CGColor;
         borderView.layer.borderColor=self.color.CGColor;
@@ -122,6 +122,7 @@
 
 //receive messages from PureData (via [send toGUI], routed through the PdWrapper.pd patch), routed from Document via the address to this object
 -(void)receiveList:(NSArray *)inArray{
+  [super receiveList:inArray];
     BOOL sendVal=YES;
     //if message preceded by "set", then set "sendVal" flag to NO, and strip off set and make new messages array without it
     if ([inArray count]>0 && [[inArray objectAtIndex:0] isKindOfClass:[NSString class]] && [[inArray objectAtIndex:0] isEqualToString:@"set"]){

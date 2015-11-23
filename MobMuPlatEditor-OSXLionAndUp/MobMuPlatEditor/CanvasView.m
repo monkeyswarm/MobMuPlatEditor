@@ -8,7 +8,10 @@
 
 #import "CanvasView.h"
 #import "MMPControl.h"
-@implementation CanvasView
+@implementation CanvasView {
+  NSPoint _draggingSelectionStartPoint;
+  NSRect _draggingSelectionRect;
+}
 @synthesize bgColor;
 
 - (id)initWithFrame:(NSRect)frame{
@@ -40,6 +43,40 @@
     if(_editingDelegate && [_editingDelegate respondsToSelector:@selector(canvasClicked)]){
         [self.editingDelegate canvasClicked];
     }
+    NSPoint point = [self convertPoint:[theEvent locationInWindow] fromView:nil];
+    _draggingSelectionStartPoint = point;
+}
+
+- (void)mouseDragged:(NSEvent *)theEvent {
+  [super mouseDragged:theEvent];
+
+  if(!_editingDelegate.isEditing) {
+    return;
+  }
+
+  NSPoint point = [self convertPoint:[theEvent locationInWindow] fromView:nil];
+  _draggingSelectionRect = NSMakeRect(MIN(point.x, _draggingSelectionStartPoint.x),
+                           MIN(point.y, _draggingSelectionStartPoint.y),
+                           fabs(point.x - _draggingSelectionStartPoint.x),
+                           fabs(point.y - _draggingSelectionStartPoint.y));
+
+  for (NSView *view in self.subviews) {
+    if ([view isKindOfClass:[MMPControl class]]) {
+      [((MMPControl *)view) setIsSelected:(NSIntersectsRect(_draggingSelectionRect, view.frame))];
+    }
+  }
+  [self setNeedsDisplay:YES];
+}
+
+- (void)mouseUp:(NSEvent *)theEvent {
+  [super mouseUp:theEvent];
+
+  if(!_editingDelegate.isEditing) {
+    return;
+  }
+
+  _draggingSelectionRect = NSMakeRect(0, 0, 0, 0);
+  [self setNeedsDisplay:YES];
 }
 
 -(void)setPageViewIndex:(int)inIndex{
@@ -127,6 +164,13 @@
   }
   
   [line stroke];
+
+  //draw dragging rect with contrasting color
+  [[NSColor colorWithCalibratedRed:fmod(bgColor.redComponent+.5,1)
+                             green:fmod(bgColor.greenComponent+.5,1)
+                              blue:fmod(bgColor.blueComponent+.5,1)
+                             alpha:1] set];
+  NSFrameRectWithWidth(_draggingSelectionRect, 4);
 }
 
 -(void)setPageCount:(int)pageCount{

@@ -319,8 +319,8 @@ public class MMPWindow implements ChangeListener, ActionListener, FocusListener,
 		docCanvasTypeMenu = new JComboBox();
 		docCanvasTypeMenu.setModel(new DefaultComboBoxModel(new String[] {"Wide Phone: aspect:0.66 (iPhone 3,4)", 
 																		  "Tall Phone: aspect:0.56 (iPhone 5,6,6+)",
-																		  "Wide Tablet: aspect:0.75 (iPad)",
-																		  "Tall Tablet: aspect:0.625 (Most Android tablets)"}));
+																		  "Wide Tablet: aspect:0.75 (iPad, Nexus 9)",
+																		  "Tall Tablet: aspect:0.625 (Nexus 7)"}));
 		docCanvasTypeMenu.setBounds(97, 6, 122, 26);
 		docCanvasTypeMenu.setActionCommand("canvasType");
 		docCanvasTypeMenu.addActionListener(this);

@@ -28,8 +28,8 @@ public class MMPMultiSlider extends MMPControl{
 	public MMPMultiSlider(MMPMultiSlider otherMS){
 		//this.MMPMultiSlider(otherMS.getBounds());
 		this(otherMS.getBounds());//normal constructor
-		this.setColor(otherMS.color);
-		this.setHighlightColor(otherMS.highlightColor);
+		this.setColor(otherMS.getColor());
+		this.setHighlightColor(otherMS.getHighlightColor());
 		this.address=otherMS.address;
 		this.setRange(otherMS.range);
 	}
@@ -46,7 +46,7 @@ public class MMPMultiSlider extends MMPControl{
 		
 		this.addMouseListener(this);
 		this.addMouseMotionListener(this);
-		this.setColor(color);
+		this.setColor(getColor());
 		this.setBounds(frame);
 	}
 	
@@ -69,7 +69,7 @@ public class MMPMultiSlider extends MMPControl{
 	    	valueArray.add(new Float(0));
 	    	RoundedPanel headPanel = new RoundedPanel();
 	    	headPanel.setBounds( (int)(i*headWidth), getHeight()-SLIDER_HEIGHT, (int)headWidth, SLIDER_HEIGHT );
-	    	headPanel.setBackground(color);
+	    	headPanel.setBackground(getColor());
 	    	headPanel.setCornerRadius(CORNER_RADIUS);
 	    	touchPanelArray.add(headPanel);
 	    	add(headPanel);
@@ -154,7 +154,7 @@ public class MMPMultiSlider extends MMPControl{
 	       //update position
 	       RoundedPanel currHead = touchPanelArray.get(headIndex);
 	       currHead.setBounds((int)(headIndex*headWidth), (int)(clippedPointY-SLIDER_HEIGHT/2), (int)headWidth, SLIDER_HEIGHT);
-	        currHead.setBackground(highlightColor);
+	        currHead.setBackground(getHighlightColor());
 	       currHeadIndex=headIndex;
 	        
 	    }
@@ -204,8 +204,8 @@ public class MMPMultiSlider extends MMPControl{
 		       
 		       if(headIndex!=currHeadIndex){//dragged to new head
 		    	   RoundedPanel prevHead = touchPanelArray.get(currHeadIndex);
-		            prevHead.setBackground(color);// .layer.backgroundColor=[MMPControl CGColorFromNSColor:self.color];//change prev head back
-		            currHead.setBackground(highlightColor);//.layer.backgroundColor=[MMPControl CGColorFromNSColor:self.highlightColor];
+		            prevHead.setBackground(getColor());// .layer.backgroundColor=[MMPControl CGColorFromNSColor:self.color];//change prev head back
+		            currHead.setBackground(getHighlightColor());//.layer.backgroundColor=[MMPControl CGColorFromNSColor:self.highlightColor];
 		            currHeadIndex=headIndex;
 		        }
 
@@ -219,13 +219,22 @@ public class MMPMultiSlider extends MMPControl{
 	public void mouseReleased(MouseEvent e) {
 		super.mouseReleased(e);
 	    if(!editingDelegate.isEditing()){
-	    	 for(RoundedPanel rp : touchPanelArray)rp.setBackground(color);//todo: just set currhead?
+	    	 for(RoundedPanel rp : touchPanelArray)rp.setBackground(getColor());//todo: just set currhead?
 	    }
 		
 	}
 	
 	//receive messages from PureData (via [send toGUI], routed through the PdWrapper.pd patch), routed from Document via the address to this object
 	public void receiveList(ArrayList<Object> messageArray){
+		super.receiveList(messageArray);
+		// Ignore "enable"
+		if (messageArray.size()>=2 && 
+				(messageArray.get(0) instanceof String) && 
+				messageArray.get(0).equals("enable") && 
+				(messageArray.get(1) instanceof Float)) {
+			return;
+		}
+		
 		boolean sendVal  = true;
 		//if message preceded by "set", then set "sendVal" flag to NO, and strip off set and make new messages array without it
 	    if (messageArray.size()>0 && (messageArray.get(0) instanceof String) && messageArray.get(0).equals("set") ){
@@ -266,7 +275,13 @@ public class MMPMultiSlider extends MMPControl{
 	    	if(sendVal)sendValue();
 	    	
 	    }
-	    
+	}
+	
+	public void setEnabled(boolean enabled){
+		super.setEnabled(enabled);
+		Color c = enabled ? getColor() : getDisabledColor();
+		boxPanel.setBorder(BorderFactory.createLineBorder(c, BORDER_WIDTH));
+		for(RoundedPanel rp: touchPanelArray)rp.setBackground(c);
 	}
 
 }

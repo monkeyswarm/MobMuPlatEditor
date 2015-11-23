@@ -35,8 +35,8 @@ public class MMPLabel extends MMPControl {
 	//copy constructor
 	public MMPLabel(MMPLabel otherLabel){
 		this(otherLabel.getBounds());//normal constructor
-		this.setColor(otherLabel.color);
-		this.setHighlightColor(otherLabel.highlightColor);
+		this.setColor(otherLabel.getColor());
+		this.setHighlightColor(otherLabel.getHighlightColor());
 		this.address=otherLabel.address;
 		this.setTextSize(otherLabel.textSize);
 		this.setFontFamilyAndName(otherLabel.fontFamily, otherLabel.fontName);
@@ -63,7 +63,7 @@ public class MMPLabel extends MMPControl {
 		
 		textView = new JTextArea(stringValue);
 		//textView.setBounds(0,0,getWidth(), getHeight());
-		textView.setForeground(color);
+		textView.setForeground(getColor());
 		textView.setFont(new Font(DEFAULT_FONT, Font.PLAIN, textSize));
 		textView.setOpaque(false);
 		textView.setBackground(new Color(0,0,0,0));//redundant on aqua, neccesary on nimubs
@@ -78,7 +78,7 @@ public class MMPLabel extends MMPControl {
 		
 		
 		
-		this.setColor(this.color);
+		this.setColor(this.getColor());
 		this.setBounds(frame);
 		
 		//textview was intercepting mouse, so set its listener to me
@@ -169,7 +169,7 @@ public class MMPLabel extends MMPControl {
 		textView.setFont(newFont);
 	}
 	
-	public void mouseClicked(MouseEvent e) {
+	/*public void mouseClicked(MouseEvent e) {
     	super.mouseClicked(e);
     	mouseHelper(e);
     	
@@ -263,27 +263,37 @@ public class MMPLabel extends MMPControl {
 	        
 		}
 		underControl=null;
+	}*/
+	
+	// Ignore touches
+	public boolean contains(int x, int y) {
+		return editingDelegate.isEditing() ? super.contains(x, y) : false;
 	}
 	
 	public void receiveList(ArrayList<Object> messageArray){
+		super.receiveList(messageArray);
 		//System.out.print("label rec on edt? "+SwingUtilities.isEventDispatchThread());
 		
+		// Ignore "enable"
+		if (messageArray.size()>=2 && 
+				(messageArray.get(0) instanceof String) && 
+				messageArray.get(0).equals("enable") && 
+				(messageArray.get(1) instanceof Float)) {
+			return;
+		}
 		//if message preceded by "set", then set "sendVal" flag to NO, and strip off set and make new messages array without it
 	    if (messageArray.size()==2 && (messageArray.get(0) instanceof String) && messageArray.get(0).equals("highlight")){
 	    	
 	    	if(messageArray.get(1) instanceof Float ){
 	    		float val = ((Float)(messageArray.get(1))).floatValue();
-	    		if(val>0)textView.setForeground(highlightColor);
-	    		else textView.setForeground(color);
+	    		if(val>0)textView.setForeground(getHighlightColor());
+	    		else textView.setForeground(getColor());
 	    	}
 	    	else if (messageArray.get(1) instanceof Integer){
 	    		int val = ((Integer)(messageArray.get(1))).intValue();
-	    		if(val>0)textView.setForeground(highlightColor);
-	    		else textView.setForeground(color);
-	    	}
-	    	
-	    	
-	    
+	    		if(val>0)textView.setForeground(getHighlightColor());
+	    		else textView.setForeground(getColor());
+	    	} 
 	    }
 	    
 	    else{ //otherwise it is a new text...concatenate all elements in list into a string
@@ -297,5 +307,10 @@ public class MMPLabel extends MMPControl {
 	    	//System.out.print("\n"+newString);
 	    	setStringValue(newString);
 	    }
+	}
+	
+	public void setEnabled(boolean enabled){
+		super.setEnabled(enabled);
+		textView.setForeground(this.isEnabled() ? getColor() : getDisabledColor());
 	}
 }
