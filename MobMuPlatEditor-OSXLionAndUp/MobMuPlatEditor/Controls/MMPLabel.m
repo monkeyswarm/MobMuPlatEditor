@@ -67,7 +67,7 @@
     //if I am editing, behave nomrally like any other MMPControl...try super.
     if([self.editingDelegate isEditing]){
         NSPoint convPoint = [self convertPoint:aPoint fromView:[self superview]];
-        if(NSPointInRect(convPoint, [[self handle] frame]))
+        if(NSPointInRect(convPoint, [[self handle] frame]) && !self.handle.isHidden)
             return [self handle];
         else if(NSPointInRect(aPoint, [self frame])){
             return self;

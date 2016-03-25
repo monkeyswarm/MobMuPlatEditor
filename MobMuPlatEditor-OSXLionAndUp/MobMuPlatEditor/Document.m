@@ -301,7 +301,7 @@
 
         [documentScrollView setFrame:CGRectMake(0, 0, documentView.frame.size.width, documentView.frame.size.height)];
         [documentScrollView.documentView setFrameSize:documentScrollView.contentSize];
-        [canvasOuterView setFrame:CGRectMake(CANVAS_LEFT,documentView.frame.size.height-56002-CANVAS_TOP, 960, 600)];
+        [canvasOuterView setFrame:CGRectMake(CANVAS_LEFT,documentView.frame.size.height-600-CANVAS_TOP, 960, 600)];
 
       }
     }

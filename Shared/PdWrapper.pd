@@ -1,7 +1,7 @@
-#N canvas 631 22 774 717 10;
+#N canvas 701 23 774 717 10;
 #X msg 46 172 listen 54300;
 #X obj 47 198 netreceive -u -b;
-#N canvas 0 22 450 300 oscparse-mobmuplat 0;
+#N canvas 62 222 699 674 oscparse-mobmuplat 0;
 #X obj 58 127 oscparse;
 #X obj 39 155 list tosymbol;
 #X obj 75 199 list split 1;
