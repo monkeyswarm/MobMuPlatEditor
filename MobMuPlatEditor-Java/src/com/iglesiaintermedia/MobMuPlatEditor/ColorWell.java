@@ -45,12 +45,12 @@ public class ColorWell extends JButton implements MouseListener, ChangeListener{
 		System.out.print("\ncurrColor "+currColor.getRed()+" "+currColor.getGreen()+" "+currColor.getBlue() );
 		colorChooser = new JColorChooser(colorPanel.getBackground());
 		if(hasAlpha==true){
-			AlphaPanel gsp = new AlphaPanel();
+			/*AlphaPanel gsp = new AlphaPanel();
 			colorChooser.addChooserPanel(gsp);
 			gsp.scale.setValue(currColor.getAlpha());
 			//System.out.print("\ngsp set alpha slider "+alpha);
-			gsp.scale.addChangeListener(this);
-			
+			gsp.scale.addChangeListener(this);*/
+			//TODO add a transarency slider to the "swatches" page.
 		}
 		
 	    ColorSelectionModel model = colorChooser.getSelectionModel();	      
@@ -64,16 +64,10 @@ public class ColorWell extends JButton implements MouseListener, ChangeListener{
 	public void stateChanged(ChangeEvent changeEvent) {
 		//System.out.print("!");
 		Color chooserColor = colorChooser.getColor();
-		int alpha = 255;
-		if(hasAlpha){
-			int panelcount = colorChooser.getChooserPanels().length;
-			AlphaPanel ap = (AlphaPanel)(colorChooser.getChooserPanels()[panelcount-1]);
-			alpha = ap.scale.getValue() ;//0-255
-		}
 		
 		//System.out.print("\nalpha "+ alpha);
 		
-		Color newColor = new Color(chooserColor.getRed(), chooserColor.getGreen(), chooserColor.getBlue(), alpha );
+		Color newColor = new Color(chooserColor.getRed(), chooserColor.getGreen(), chooserColor.getBlue(), hasAlpha ? chooserColor.getAlpha() : 255);
 		colorPanel.setBackground(newColor);
 		this.repaint();
 		if(delegate!=null)delegate.colorWellChanged(this, newColor);
@@ -107,7 +101,7 @@ public class ColorWell extends JButton implements MouseListener, ChangeListener{
 
 
 
-class AlphaPanel extends AbstractColorChooserPanel  {
+/*class AlphaPanel extends AbstractColorChooserPanel  {
 	
 	public JSlider scale;
 
@@ -128,13 +122,6 @@ class AlphaPanel extends AbstractColorChooserPanel  {
 		jp.add(new JLabel("Opaque"));
 		add(jp);
 
-		/*JPanel jp2 = new JPanel();
-		percentField = new JTextField(3);
-		percentField.setHorizontalAlignment(SwingConstants.RIGHT);
-		percentField.addActionListener(this);
-		jp2.add(percentField);
-		jp2.add(new JLabel("%"));
-		add(jp2);*/
 	}
 
 	// We did this work in the constructor so we can skip it here.
@@ -161,7 +148,7 @@ return null;
 
 public Icon getLargeDisplayIcon() {
 return null;
-}
+}*/
 
 // And lastly, update the selection model as our slider changes.
 /*public void stateChanged(ChangeEvent ce) {
@@ -172,4 +159,4 @@ return null;
 }*/
 
 	
-}
+/*}*/

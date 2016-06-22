@@ -74,7 +74,7 @@ public class CanvasPanel extends JPanel implements MouseListener{
 	            offset = (isOrientationLandscape ? 1024:768);
 	            break;
 	        case canvasTypeTallTablet:
-	            offset = (isOrientationLandscape ? 900:600);
+	            offset = (isOrientationLandscape ? 960:600);
 	            break;
 	        case canvasTypeWatch:
 	            offset = 140;
