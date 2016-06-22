@@ -89,16 +89,40 @@ public class MMPController {
 				
 		//osc out
 		
-		if(MMPController.sender==null){
-			try{
-			MMPController.sender = new OSCPortOut(InetAddress.getLocalHost(), 54300);	
-			}catch(UnknownHostException e){
-				System.out.print("unknown host exception");
-			}catch(SocketException e){
-				System.out.print("sender socket exception");	
-				JOptionPane.showMessageDialog(null, "Unable to create OSC sender on port 54300. \nI won't be able to send messages to PD. \nPerhaps another application, or instance of this editor, is on this port.");			
+		if (MMPController.sender == null) {
+			// Get address
+			InetAddress address = null;
+			try {
+				address = InetAddress.getLocalHost();
+			} catch (UnknownHostException e) {
+				System.out.print("unknown host exception:"+e.getMessage());
+				// getLocalHost failed (as it does on OSX and Java 7), so try again with a manual localhost address
+				try {
+					byte[] ipAddr = new byte[]{127, 0, 0, 1};
+					address = InetAddress.getByAddress(ipAddr);
+				} catch (UnknownHostException e2) {
+					System.out.print("unknown host exception2:"+e2.getMessage());
+				}
+			} finally {
+				if (address == null) {
+					JOptionPane.showMessageDialog(
+							null,
+							"Unable to create a local host address. \nCheck your networking configuration.\nI won't be able to send messages to Pd.");
+				}
+			}
+			
+			// create osc port
+			try {
+				MMPController.sender = new OSCPortOut(address, 54300);
+			} catch (SocketException e) {
+				System.out.print("sender socket exception");
+				JOptionPane
+						.showMessageDialog(
+								null,
+								"Unable to create OSC sender on port 54300. \nI won't be able to send messages to PD. \nPerhaps another application, or instance of this editor, is on this port.");
 			}
 		}
+		
 		if(MMPController.receiver==null){
 			//System.out.print("\ncreate receiver");
 				try{
@@ -522,10 +546,6 @@ public class MMPController {
 		      // Here, we can safely update the GUI
 		      // because we'll be called from the
 		      // event dispatch thread
-		      
-		    	
-		    
-		
 		
 		Object[] args = message.getArguments();
 		ArrayList<Object> newList = new ArrayList<Object>();
@@ -539,34 +559,78 @@ public class MMPController {
 			if(ob instanceof String) newString = newString+(String)ob;
 			else if(ob instanceof Float) newString+=(String.format("%.3f",((Float)(ob)).floatValue()) );
 			else if(ob instanceof Integer) newString+=(String.format("%d",((Integer)(ob)).intValue()) );
-			newString = newString+" ";
+			newString = newString+" "; // TODO this is slow, use string builder
 		}
 		log(newString);
 		
 		//to control - now on EDT
-		
-		//if(newList.size()==1 && ((String)newList.get(0)).equals("/system/tableResponse")){
-		if(message.getAddress().equals("/system") && newList.get(0).equals("requestPort")){
-			Object[] portArgs = new Object[]{new Integer(documentModel.port)};
-			sendMessage("/system/port", portArgs);
-		}
-		else if(newList.size()==1 && message.getAddress().equals("/system/setPage") && (newList.get(0) instanceof Integer)){
-			int page = ((Integer)newList.get(0)).intValue();
-			setCurrentPage(page);
-		}
-		else if(newList.size()>1 && message.getAddress().equals("/system/tableResponse")){
-			String address = (String) newList.get(0);
-			for(MMPControl control : documentModel.controlArray){
-				if((control instanceof MMPTable) && control.getAddress().equals(address)){
-					ArrayList<Object> subList = new ArrayList<Object>();//have to manually make, as subList only returns List<E>
-					for(int i=1;i<newList.size();i++){
-						subList.add(newList.get(i));
-					}				
-					control.receiveList(subList);
+		if(message.getAddress().equals("/system")) {
+			if(newList.get(0).equals("requestPort")){
+				Object[] portArgs = new Object[]{new Integer(documentModel.port)};
+				sendMessage("/system/port", portArgs);
+			} else if(newList.size()==2 && newList.get(0).equals("/setPage") && (newList.get(1) instanceof Float)){
+				int page = ((Float)newList.get(1)).intValue();
+				setCurrentPage(page);
+			} else if(newList.size()>2 && newList.get(0).equals("/tableResponse")){
+				String address = (String) newList.get(1);
+				for(MMPControl control : documentModel.controlArray){
+					if((control instanceof MMPTable) && control.getAddress().equals(address)){
+						ArrayList<Object> subList = new ArrayList<Object>();//have to manually make, as subList only returns List<E>
+						for(int i=2;i<newList.size();i++){
+							subList.add(newList.get(i));
+						}				
+						control.receiveList(subList);
+					}
 				}
+			} else if(newList.size()==1 && newList.get(0).equals("/requestTables")){
+				for(MMPControl control : documentModel.controlArray){
+					if(control instanceof MMPTable){			
+						((MMPTable)control).loadTable(); //request data from pd.
+					}
+				}
+			} else if (newList.size()>=2 && newList.get(0).equals("/textDialog") && newList.get(1) instanceof String){
+				// /textDialog tag title title title...
+				String tag = (String)newList.get(1);
+				
+				StringBuilder builder = new StringBuilder();
+                for(int i=2; i<newList.size(); i++) {
+                	Object s = newList.get(i);
+                    builder.append(s);
+                    builder.append(" ");
+                }
+                
+				String s = (String)JOptionPane.showInputDialog(builder.toString());
+
+				//If a string was returned, say so.
+				if ((s != null) && (s.length() > 0)) {
+					Object[] outArgs = new Object[]{tag, s};
+            		sendMessage("/system/textDialog", outArgs);
+				}
+			} else if (newList.size()>=2 && newList.get(0).equals("/confirmationDialog") && newList.get(1) instanceof String){
+				// /textDialog tag title title title...
+				String tag = (String)newList.get(1);
+				StringBuilder builder = new StringBuilder();
+                for(int i=2; i<newList.size(); i++) {
+                	Object s = newList.get(i);
+                    builder.append(s);
+                    builder.append(" ");
+                }
+                
+                //TODO blocking dialog drops click releases, e.g. buttons stay highlighted
+                int result = JOptionPane.showConfirmDialog(null,
+                	    builder.toString(),
+                	    null,
+                	    JOptionPane.YES_NO_OPTION);
+                if (result == 0) { // YES
+                	Object[] outArgs = new Object[]{tag, Integer.valueOf(1)};
+            		sendMessage("/system/confirmationDialog", outArgs);
+                } else { //NO
+                	Object[] outArgs = new Object[]{tag, Integer.valueOf(0)};
+            		sendMessage("/system/confirmationDialog", outArgs);
+                }
 			}
-		}
-		else {//SEND TO OBJECT!
+		} else {//SEND TO OBJECT!
+			// TODO: hash table
 			for(MMPControl control : documentModel.controlArray){
 				if(control.getAddress().equals(message.getAddress())){
 					control.receiveList(newList);

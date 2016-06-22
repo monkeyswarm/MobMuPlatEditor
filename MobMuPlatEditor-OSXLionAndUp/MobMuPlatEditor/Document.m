@@ -422,7 +422,7 @@
     
     // Display the dialog.  If the OK button was pressed,
     // process the files.
-    if ( [openDlg runModal] == NSOKButton ){
+    if ( [openDlg runModal] == NSModalResponseOK ){
         NSString* fileName = [[openDlg URL] absoluteString];
       
         [documentModel setPdFile:[fileName lastPathComponent]];
@@ -1685,24 +1685,85 @@
 }
 
 -(void)receiveOSCHelper:(NSMutableArray*)msgArray{
-    // Messages I respond to:
-    if([msgArray count]==2 && [[msgArray objectAtIndex:0] isEqualToString:@"/system/setPage"] && [[msgArray objectAtIndex:1] isKindOfClass:[NSNumber class]]){
-      int page = [[msgArray objectAtIndex:1] intValue];
+  // pick out /system
+  if ([msgArray count]>1 && [[msgArray objectAtIndex:0] isEqualToString:@"/system"]) {
+
+    if([msgArray count]==3 && [[msgArray objectAtIndex:1] isEqualToString:@"/setPage"] && [[msgArray objectAtIndex:2] isKindOfClass:[NSNumber class]]){
+      int page = [[msgArray objectAtIndex:2] intValue];
       if(page<0)page=0; if (page>documentModel.pageCount-1)page=documentModel.pageCount-1;
       [self setCurrentPage:page];
-    }
-    else if([msgArray count]>2 && [[msgArray objectAtIndex:0] isEqualToString:@"/system/tableResponse"] && [[msgArray objectAtIndex:1] isKindOfClass:[NSString class]]){
+    } else if([msgArray count]>3 && [[msgArray objectAtIndex:1] isEqualToString:@"/tableResponse"] && [[msgArray objectAtIndex:2] isKindOfClass:[NSString class]]){
       
-        NSString *address =[msgArray objectAtIndex:1];
+        NSString *address =[msgArray objectAtIndex:2];
       for(MMPControl* currControl in [documentModel controlArray]){//TODO HASH TABLE!!! and/or table of MMPTables!
         if([currControl isKindOfClass:[MMPTable class]] && [currControl.address isEqualToString:address]){
-          [currControl receiveList: [msgArray subarrayWithRange:NSMakeRange(2, [msgArray count]-2)]];
+          [currControl receiveList: [msgArray subarrayWithRange:NSMakeRange(3, [msgArray count]-3)]];
         }
       }
-      
+    } else if([msgArray count]==2 && [[msgArray objectAtIndex:1] isEqualToString:@"/requestTables"]) {
+
+      for(MMPControl* currControl in [documentModel controlArray]){//TODO HASH TABLE!!! and/or table of MMPTables!
+        if([currControl isKindOfClass:[MMPTable class]]){
+          [(MMPTable *)currControl loadTable]; //sends request to patch
+        }
+      }
+    } else if ([msgArray count]>=3 && [[msgArray objectAtIndex:1] isEqualToString:@"/textDialog"]) {
+      // /textDialog tag title title title...
+      NSString *tag = [msgArray objectAtIndex:2];
+      NSString *title =
+          [[msgArray subarrayWithRange:NSMakeRange(3, [msgArray count] - 3)] componentsJoinedByString:@" "];
+
+      NSAlert *alert = [NSAlert alertWithMessageText:title
+                                       defaultButton:@"OK"
+                                     alternateButton:@"Cancel"
+                                         otherButton:nil
+                           informativeTextWithFormat:@""];
+
+      NSTextField *input = [[NSTextField alloc] initWithFrame:NSMakeRect(0, 0, 200, 24)];
+      [alert setAccessoryView:input];
+      NSInteger button = [alert runModal];
+      if (button == NSAlertDefaultReturn) { //ok
+        [input validateEditing];
+
+        NSMutableArray* formattedMessageArray = [[NSMutableArray alloc]init];
+        [formattedMessageArray addObject:@"/system/textDialog"];
+        [formattedMessageArray addObject:tag];
+        [formattedMessageArray addObject:[input stringValue]];
+        [self sendFormattedMessageArray:formattedMessageArray];
+      } else if (button == NSAlertAlternateReturn) { //cancel
+        // No-op
+      } else {
+        //NSAssert1(NO, @"Invalid input dialog button %d", button);
+      }
+    } else if ([msgArray count]>=3 && [[msgArray objectAtIndex:1] isEqualToString:@"/confirmationDialog"]) {
+      // /confirmationDialog tag title title title...
+      NSString *tag = [msgArray objectAtIndex:2];
+      NSString *title =
+          [[msgArray subarrayWithRange:NSMakeRange(3, [msgArray count] - 3)] componentsJoinedByString:@" "];
+
+      NSAlert *alert = [NSAlert alertWithMessageText:title
+                                       defaultButton:@"OK"
+                                     alternateButton:@"Cancel"
+                                         otherButton:nil
+                           informativeTextWithFormat:@""];
+
+      NSMutableArray* formattedMessageArray = [[NSMutableArray alloc]init];
+      [formattedMessageArray addObject:@"/system/confirmationDialog"];
+      [formattedMessageArray addObject:tag];
+
+      NSInteger button = [alert runModal];
+      if (button == NSAlertDefaultReturn) { //ok
+
+        [formattedMessageArray addObject:@(1)];
+        [self sendFormattedMessageArray:formattedMessageArray];
+      } else if (button == NSAlertAlternateReturn) { //cancel
+        [formattedMessageArray addObject:@(0)];
+        [self sendFormattedMessageArray:formattedMessageArray];
+      } else {
+        //NSAssert1(NO, @"Invalid input dialog button %d", button);
+      }
     }
-  
-    else {
+  } else { // not /system
       //otherwise SEND TO OBJECT!!!
       for(MMPControl* currControl in [documentModel controlArray]){//TODO HASH TABLE!!!
         if([currControl.address isEqualToString:[msgArray objectAtIndex:0]]) {

@@ -1345,10 +1345,12 @@ public class MMPWindow implements ChangeListener, ActionListener, FocusListener,
 	
 	void closeWindowHelper(){
 		System.out.println("close window");
+		//remove from MMPController.controllerArrayList
 		
 		if(controller.dirtyBit==false){
 			frame.dispose();
 			openWindows--;
+			MMPController.controllerArrayList.remove(controller);
 			if (openWindows == 0) {
 		         System.exit(0);  // Terminate when the last window is closed.
 		    }
@@ -1366,6 +1368,7 @@ public class MMPWindow implements ChangeListener, ActionListener, FocusListener,
  				//assuming saved
  				frame.dispose();
  				openWindows--;
+ 				MMPController.controllerArrayList.remove(controller);
  				if (openWindows == 0) {
  		            System.exit(0);  // Terminate when the last window is closed.
  		        }
@@ -1375,6 +1378,7 @@ public class MMPWindow implements ChangeListener, ActionListener, FocusListener,
  				//System.out.print("\nno");
  				frame.dispose();
  				openWindows--;
+ 				MMPController.controllerArrayList.remove(controller);
  				if (openWindows == 0) {
  		            System.exit(0);  // Terminate when the last window is closed.
  		        }
@@ -1645,8 +1649,10 @@ public class MMPWindow implements ChangeListener, ActionListener, FocusListener,
         }
         else if(cmd.equals("Quit")){//todo: not being called
         	//System.out.println("quit command");
-        	for(MMPController c : MMPController.controllerArrayList){
-        		c.windowDelegate.closeWindowHelper();
+        	for(MMPController controller : MMPController.controllerArrayList){
+        		if (controller != null) {
+        			controller.windowDelegate.closeWindowHelper();
+        		}
         	}
         }
         else if(cmd.equals("pageDown")){

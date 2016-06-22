@@ -8,7 +8,10 @@
 
 #import "DocumentModel.h"
 
-@implementation DocumentModel
+@implementation DocumentModel {
+  // Temp hold weargui to not clobber on save.
+  NSArray *_watchPageDictArray;
+}
 
 //@synthesize isCanvasIPad, isOrientationLandscape, isPageScrollShortEnd, backgroundColor, pdFilePath, pageCount, startPageIndex, controlArray;
 
@@ -198,6 +201,11 @@
       [jsonWatchPageDictArray addObject:watchPageDict];
     }
     [topDict setObject:jsonWatchPageDictArray forKey:@"wearGui"];*/
+
+  // Temp to not clobber wear gui
+  if (_watchPageDictArray) {
+    [topDict setObject:_watchPageDictArray forKey:@"wearGui"];
+  }
 
     NSData *jsonData = [NSJSONSerialization dataWithJSONObject:topDict
                                                      options:0
@@ -408,6 +416,11 @@
             [[model controlArray] addObject:control];
         }
 // WATCH
+  // Temp to not clobber wear gui
+  if([topDict objectForKey:@"wearGui"]) {
+    model->_watchPageDictArray = [topDict objectForKey:@"wearGui"];
+  }
+
   /* wear NSArray* watchControlPageDictArray;
 
   if([topDict objectForKey:@"wearGui"]) {
