@@ -1,0 +1,3 @@
+[submodule "vvopensource"]
+	path = vvopensource
+	url = https://github.com/mrRay/vvopensource.git
