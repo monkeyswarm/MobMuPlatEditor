@@ -18,4 +18,4 @@ $ git submodule update --init --recursive
 ```
 
 Note that you may get errors on various VV frameworks "There is no SDK with the name or path... ".
-To fix, go to each affected VV framework target (VVBasics-mac, MultiClassXPC, etc), click Build Settings -> Base SDK, and set it to something valid (i.e. "Latest OSX").
+To fix, go to each affected VV framework target (VVBasics-mac, MultiClassXPC, VVOSC-mac, VVMIDI), click Build Settings -> Base SDK, and set it to something valid (i.e. "Latest OSX").

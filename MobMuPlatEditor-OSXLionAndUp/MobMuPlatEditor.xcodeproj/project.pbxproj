@@ -34,6 +34,8 @@
 		DCE2F0341732BB39002B897C /* MMPIcons.iconset in Resources */ = {isa = PBXBuildFile; fileRef = DCE2F02E1732BB39002B897C /* MMPIcons.iconset */; };
 		DCE2F0361732BB39002B897C /* uifontlist.txt in Resources */ = {isa = PBXBuildFile; fileRef = DCE2F0311732BB39002B897C /* uifontlist.txt */; };
 		F9109646190DFBC8008707EE /* MMPTable.m in Sources */ = {isa = PBXBuildFile; fileRef = F9109645190DFBC8008707EE /* MMPTable.m */; };
+		F92483FF1D24A03E00A23568 /* VVBasics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F9D255C91D22343B003CEFE6 /* VVBasics.framework */; };
+		F92484001D24A03E00A23568 /* VVBasics.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = F9D255C91D22343B003CEFE6 /* VVBasics.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		F94FB53C18F5A045003BFB18 /* MMPMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = F94FB53B18F5A045003BFB18 /* MMPMenu.m */; };
 		F9BAFD7C19D23E1B001CD2D2 /* LICENSE.txt in CopyFiles */ = {isa = PBXBuildFile; fileRef = F9BAFD5619D236E4001CD2D2 /* LICENSE.txt */; };
 		F9BAFD7D19D23E1B001CD2D2 /* Roboto-Black.ttf in CopyFiles */ = {isa = PBXBuildFile; fileRef = F9BAFD5719D236E4001CD2D2 /* Roboto-Black.ttf */; };
@@ -61,6 +63,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		F92484011D24A03E00A23568 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F9D255981D22343A003CEFE6 /* VVOpenSource.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 961EA8EC100E8565007E6C25;
+			remoteInfo = "VVBasics-mac";
+		};
 		F9D255C81D22343B003CEFE6 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = F9D255981D22343A003CEFE6 /* VVOpenSource.xcodeproj */;
@@ -358,6 +367,7 @@
 			dstSubfolderSpec = 10;
 			files = (
 				F9D2561D1D223483003CEFE6 /* VVOSC.framework in CopyFiles */,
+				F92484001D24A03E00A23568 /* VVBasics.framework in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -478,6 +488,7 @@
 				F9D2561B1D223475003CEFE6 /* VVOSC.framework in Frameworks */,
 				F9E56AFE1A81EF3F0017851A /* QuartzCore.framework in Frameworks */,
 				DC34E248168BB79800648C2F /* Cocoa.framework in Frameworks */,
+				F92483FF1D24A03E00A23568 /* VVBasics.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -688,6 +699,7 @@
 			);
 			dependencies = (
 				F9D256191D22344E003CEFE6 /* PBXTargetDependency */,
+				F92484021D24A03E00A23568 /* PBXTargetDependency */,
 			);
 			name = MobMuPlatEditor;
 			productName = MobMuPlatEd1;
@@ -1058,6 +1070,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		F92484021D24A03E00A23568 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "VVBasics-mac";
+			targetProxy = F92484011D24A03E00A23568 /* PBXContainerItemProxy */;
+		};
 		F9D256191D22344E003CEFE6 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = "Build Mac Frameworks";
@@ -1166,6 +1183,9 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "MobMuPlatEditor/MobMuPlatEditor-Prefix.pch";
 				INFOPLIST_FILE = "$(SRCROOT)/MobMuPlatEditor/MobMuPlatEditor-Info.plist";
+				INSTALL_GROUP = "";
+				INSTALL_MODE_FLAG = "";
+				INSTALL_OWNER = "";
 				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks @executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				PRODUCT_NAME = MobMuPlatEditor;
@@ -1185,6 +1205,9 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "MobMuPlatEditor/MobMuPlatEditor-Prefix.pch";
 				INFOPLIST_FILE = "$(SRCROOT)/MobMuPlatEditor/MobMuPlatEditor-Info.plist";
+				INSTALL_GROUP = "";
+				INSTALL_MODE_FLAG = "";
+				INSTALL_OWNER = "";
 				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks @executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				PRODUCT_NAME = MobMuPlatEditor;
