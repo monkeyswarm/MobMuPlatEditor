@@ -8,6 +8,8 @@
 
 #import "DocumentModel.h"
 
+const NSUInteger kMMPDocumentModelCurrentVersion = 2;
+
 @implementation DocumentModel {
   // Temp hold weargui to not clobber on save.
   NSArray *_watchPageDictArray;
@@ -25,10 +27,14 @@
     _pageCount = 1;
     _startPageIndex = 0;//zero index!
     _backgroundColor = [NSColor colorWithCalibratedRed:.5 green:.5 blue:.5 alpha:1];
-    _canvasType=canvasTypeIPhone3p5Inch;
+    _canvasType=canvasTypeIPhone4Inch;
     _port=54321;
-    
-    _version=[[[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"] floatValue ];
+
+  // Version now refers to a layout spec. Increment when there are breaking changes.
+  // Old was 0-1.64, which will round down to 0-1. Start at "2" for breaking change: slider range of 2.
+  // 
+  _version = kMMPDocumentModelCurrentVersion;
+  // Old was bundle.[[[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"] floatValue ];
 
     // watch
     /* wear _watchPageCount = 0;*/
@@ -67,14 +73,12 @@
     else if(_canvasType==canvasTypeAndroid7Inch)[topDict setObject:@"tallTablet" forKey:@"canvasType"];
 
 
-    
     [topDict setObject:[NSNumber numberWithBool:_isOrientationLandscape] forKey:@"isOrientationLandscape"];
     [topDict setObject:[NSNumber numberWithBool:_isPageScrollShortEnd] forKey:@"isPageScrollShortEnd"];
     [topDict setObject:[NSNumber numberWithInt:_pageCount] forKey:@"pageCount"];
     [topDict setObject:[NSNumber numberWithInt:_startPageIndex] forKey:@"startPageIndex"];
     [topDict setObject:[NSNumber numberWithInt:_port] forKey:@"port"];
-    //[topDict setObject:[NSNumber numberWithFloat:_version] forKey:@"version"];
-    [topDict setObject:[NSNumber numberWithFloat:_version] forKey:@"version"];//save as Global version, not as this objects version (in case it was loaded from an older version
+    [topDict setObject:[NSNumber numberWithUnsignedInteger:kMMPDocumentModelCurrentVersion] forKey:@"version"];
     
     NSMutableArray* jsonControlDictArray = [[NSMutableArray alloc]init];//array of dictionaries
    
@@ -261,9 +265,12 @@
         [model setStartPageIndex:[[topDict objectForKey:@"startPageIndex"] intValue] ];
     if([topDict objectForKey:@"port"])
         [model setPort:[[topDict objectForKey:@"port"] intValue] ];
-    if([topDict objectForKey:@"version"])
-        [model setVersion:[[topDict objectForKey:@"version"] floatValue] ];
-    
+  NSUInteger version = kMMPDocumentModelCurrentVersion;
+  if([topDict objectForKey:@"version"]) {
+    version = [[topDict objectForKey:@"version"] unsignedIntegerValue];
+    [model setVersion:version ];
+  }
+
     NSArray* controlDictArray;
     
     if([topDict objectForKey:@"gui"])
@@ -305,8 +312,14 @@
                 control = [[MMPSlider alloc] initWithFrame:newFrame];
                 if([guiDict objectForKey:@"isHorizontal"])
                     [(MMPSlider*)control setIsHorizontal:[[guiDict objectForKey:@"isHorizontal"] boolValue] ];
-                if([guiDict objectForKey:@"range"])
-                    [(MMPSlider*)control setRange:[[guiDict objectForKey:@"range"] intValue] ];
+              if([guiDict objectForKey:@"range"]) {
+                int range = [[guiDict objectForKey:@"range"] intValue];
+                if (version < 2) {  // Legacy mode, for slider ranges.
+                  [(MMPSlider*)control setLegacyRange:range ];
+                } else {
+                  [(MMPSlider*)control setRange:range];
+                }
+              }
             }
             else if([classString isEqualToString:@"MMPKnob"]){
                 control = [[MMPKnob alloc] initWithFrame:newFrame];
@@ -314,8 +327,14 @@
                 if([guiDict objectForKey:@"indicatorColor"])
                     indicatorColor = [DocumentModel colorFromRGBAArray:[guiDict objectForKey:@"indicatorColor"]];
                 [(MMPKnob*)control setIndicatorColor:indicatorColor];
-                if([guiDict objectForKey:@"range"])
-                    [(MMPKnob*)control setRange:[[guiDict objectForKey:@"range"] intValue] ];
+              if([guiDict objectForKey:@"range"]) {
+                int range = [[guiDict objectForKey:@"range"] intValue];
+                if (version < 2) {  // Legacy mode, for slider ranges.
+                  [(MMPKnob*)control setLegacyRange:range ];
+                } else {
+                  [(MMPKnob*)control setRange:range];
+                }
+              }
             }
             else if([classString isEqualToString:@"MMPButton"]){
                 control = [[MMPButton alloc] initWithFrame:newFrame];

@@ -32,6 +32,8 @@ typedef enum{
     canvasTypeWatch
 } canvasType;
 
+extern const NSUInteger kMMPDocumentModelCurrentVersion;
+
 @interface DocumentModel : NSObject
 
 @property int canvasType;
@@ -43,7 +45,7 @@ typedef enum{
 /* wear @property NSUInteger watchPageCount;*/
 @property int startPageIndex;//def 0
 @property int port;
-@property float version;
+@property NSUInteger version; //version of opened patch. new patches use kMMPDocumentModelCurrentVersion.
 
 @property NSMutableArray* controlArray; //of type MMPControl
 /* wear @property NSMutableArray* watchControlDupleArray;*/ //of duple title label, control

@@ -27,4 +27,6 @@
 //get which osx version is runnning (returns 7 for 10.7, 8 for 10.8). Lion and Mountain Lion handle angles/rotation differently
 +(int)osxMinorVersion;
 
+- (void)setLegacyRange:(int)range;
+
 @end

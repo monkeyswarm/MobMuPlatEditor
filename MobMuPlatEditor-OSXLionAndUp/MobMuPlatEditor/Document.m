@@ -859,7 +859,7 @@
     [[self undoManager] registerUndoWithTarget:self selector:@selector(setPropSliderRange:) object:[NSNumber numberWithInt:[currSlider range] ]];
     
     NSInteger val = [sender integerValue];
-    if(val<2)val=2;
+    if(val<1)val=1;
     if(val>128)val=128;
     [(MMPSlider*)currentSingleSelection setRange:(int)val];
 }
@@ -875,7 +875,7 @@
     [[self undoManager] registerUndoWithTarget:currKnob selector:@selector(setRangeObjectUndoable:) object:[NSNumber numberWithInt:[currKnob range]]];
     [[self undoManager] registerUndoWithTarget:self selector:@selector(setPropKnobRange:) object:[NSNumber numberWithInt:[currKnob range] ]];
     NSInteger val = [sender integerValue];
-    if(val<2)val=2;
+    if(val<1)val=1;
     if(val>128)val=128;
     
     [currKnob setRange:(int)val];

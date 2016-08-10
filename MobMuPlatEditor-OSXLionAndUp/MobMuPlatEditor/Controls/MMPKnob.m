@@ -42,7 +42,7 @@ int osxMinorVersion=-1;
     if (self) {
         self.address=@"/myKnob";
         
-        [self setRange:2];//default
+        [self setRange:1];//default
         
         knobView = [[NSView alloc]init];//create, don't set frame until setFrame
         [knobView setWantsLayer:YES];
@@ -87,7 +87,7 @@ int osxMinorVersion=-1;
     [self updateIndicator];
 }
 
-- (void)resizeSubviewsWithOldSize:(NSSize)oldBoundsSize{
+- (void)resizeSubviewsWithOldSize:(NSSize)oldBoundsSize{ //TODO use layoutSubviews.
   [super resizeSubviewsWithOldSize:oldBoundsSize];
 
 
@@ -108,7 +108,7 @@ int osxMinorVersion=-1;
 
   //tickmarks
   for(NSView* dot in tickViewArray){
-    float angle= /*M_PI/2+M_PI-*/((float)[tickViewArray indexOfObject:dot]/(_range-1)* (M_PI*2-ROTATION_PAD_RAD*2)+ROTATION_PAD_RAD+M_PI/2);/**/
+    float angle= /*M_PI/2+M_PI-*/((float)[tickViewArray indexOfObject:dot]/(tickViewArray.count - 1) * (M_PI*2-ROTATION_PAD_RAD*2)+ROTATION_PAD_RAD+M_PI/2);/**/
     float xPos=(dim/2+EXTRA_RADIUS+TICK_DIM/2)*cos(angle);
     float yPos=(dim/2+EXTRA_RADIUS+TICK_DIM/2)*sin(angle);
     [dot setFrame:CGRectMake(centerPoint.x+xPos-(TICK_DIM/2),centerPoint.y+yPos-(TICK_DIM/2), TICK_DIM, TICK_DIM)];
@@ -135,10 +135,16 @@ int osxMinorVersion=-1;
     [self setRange:[inRangeObject intValue] ];
 }
 
+-(void)setLegacyRange:(int)range {
+  // old mode, default range is 2, which is range 0 to 1 float. translate that to new range of "1".
+  if (range == 2) range = 1;
+  [self setRange:range];
+}
+
 -(void)setRange:(int)inRange{
     
     _range=inRange;
-    if(_range<2)_range=2;
+    if(_range<1)_range=1;
     if(_range>1000)_range=1000;
     
     //remove and remake the tickViewArray
@@ -146,8 +152,9 @@ int osxMinorVersion=-1;
         [dot removeFromSuperview];
     }
     tickViewArray = [[NSMutableArray alloc]init];
-    
-    for(int i=0;i<_range;i++){
+
+    NSUInteger tickRange = _range == 1 ? 2 : _range;
+    for(int i=0;i<tickRange;i++){
         NSView* dot = [[NSView alloc]init];
         [dot setWantsLayer:YES];
         dot.layer.backgroundColor=self.color.CGColor;
@@ -163,7 +170,7 @@ int osxMinorVersion=-1;
 -(void)setValue:(float)inVal{
     if(inVal!=_value){//only on change
 
-        if(_range==2){//if range is two, clip value to 0.-1.
+        if(_range==1){//if range is 1, clip value to 0.-1.
             if(inVal>1)inVal=1;
             if(inVal<0)inVal=0;
         }
@@ -184,7 +191,7 @@ int osxMinorVersion=-1;
 -(void)sendValue{
     NSMutableArray* formattedMessageArray = [[NSMutableArray alloc]init];
     [formattedMessageArray addObject:self.address];
-    if(_range>2){
+    if(_range>1){
         [formattedMessageArray addObject:[NSNumber numberWithInt:(int)self.value]];
     }
     else{
@@ -198,13 +205,13 @@ int osxMinorVersion=-1;
 -(void)updateIndicator{
 	float newRad=0; //the angle of the indicatorView's rotation
     CGPoint newOrigin;
-    
-    if(_range==2){
+
+    if(_range==1){
         if ([MMPKnob osxMinorVersion]>=8) newRad= M_PI-((1.0-_value)*(M_PI*2-ROTATION_PAD_RAD*2)+ROTATION_PAD_RAD+M_PI/2);
         else newRad= M_PI-(_value*(M_PI*2-ROTATION_PAD_RAD*2)+ROTATION_PAD_RAD+M_PI/2);
     }
     
-    else if (_range>2){
+    else if (_range>1){
         if ([MMPKnob osxMinorVersion]>=8) newRad= M_PI-(((_range-_value-1)/(_range-1))*(M_PI*2-ROTATION_PAD_RAD*2)+ROTATION_PAD_RAD+M_PI/2);
         else newRad= M_PI-((_value/(_range-1))*(M_PI*2-ROTATION_PAD_RAD*2)+ROTATION_PAD_RAD+M_PI/2);
     }
@@ -242,13 +249,13 @@ int osxMinorVersion=-1;
     
         double updatedTheta = fmod( theta+M_PI/2+M_PI, (M_PI*2) );//theta =0 at 6pm going positive clockwise
    
-        if(_range==2){
+        if(_range==1){
             if(updatedTheta<ROTATION_PAD_RAD)[self setValue:0];
             else if(updatedTheta>(M_PI*2-ROTATION_PAD_RAD)) [self setValue:1];
             else [self setValue:(updatedTheta-ROTATION_PAD_RAD)/(M_PI*2-2*ROTATION_PAD_RAD) ];
         
         }
-        else if (_range>2){
+        else if (_range>1){
             if(updatedTheta<ROTATION_PAD_RAD)[self setValue:0];
             else if(updatedTheta>(M_PI*2-ROTATION_PAD_RAD)) [self setValue:_range-1];
             else [self setValue:(float) (  (int)((updatedTheta-ROTATION_PAD_RAD)/(M_PI*2-2*ROTATION_PAD_RAD)*(_range-1)+.5)  ) ];//round to nearest tick!

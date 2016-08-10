@@ -21,7 +21,7 @@
     if (self){
        
         self.address=@"/mySlider";
-        [self setRange:2];
+        [self setRange:1];
         
         //the "rail"
         troughView=[[NSView alloc]init ];
@@ -87,13 +87,19 @@
     [self setRange:[inRangeObject intValue] ];
 }
 
--(void)setRange:(int)range{
+-(void)setLegacyRange:(int)range {
+  // old mode, default range is 2, which is range 0 to 1 float. translate that to new range of "1".
+  if (range == 2) range = 1;
+  [self setRange:range];
+}
+
+-(void)setRange:(int)range {
     _range=range;
-    if(_range<2)_range=2;
+    if(_range<1)_range=1;
     
     if(tickViewArray)for(NSView* tick in tickViewArray)[tick removeFromSuperview];
     tickViewArray = [[NSMutableArray alloc]init];
-    if(_range>2){
+    if(_range>1){
         for(int i=0;i<_range;i++){
             NSView* tick = [[NSView alloc]init];
             [tick setWantsLayer:YES];
@@ -102,12 +108,11 @@
             [self addSubview:tick];
         }
     }
-    //[self setNeedsLayout:YES];
     [self resizeSubviewsWithOldSize:self.frame.size];
 }
 
 -(void)setValue:(float)inVal{
-    if(_range==2){//clip 0.-1.
+    if(_range==1){//clip 0.-1.
         if(inVal>1)inVal=1;
         if(inVal<0)inVal=0;
     }
@@ -131,10 +136,11 @@
 
 -(void)updateThumb{
 	CGRect newFrame;
-    
+  NSUInteger effectiveRange = _range == 1 ? 1 : _range -1 ; // range == 1 handled differently
+
     if(!_isHorizontal)
-        newFrame = CGRectMake( 0, (1.0-(self.value/(_range-1)))*(self.frame.size.height-(SLIDER_TROUGH_TOPINSET*2)), self.frame.size.width, SLIDER_THUMB_HEIGHT );
-    else  newFrame = CGRectMake( (self.value/(_range-1))*(self.frame.size.width-(SLIDER_TROUGH_TOPINSET*2)),0, SLIDER_THUMB_HEIGHT, self.frame.size.height  );
+        newFrame = CGRectMake( 0, (1.0-(self.value/effectiveRange))*(self.frame.size.height-(SLIDER_TROUGH_TOPINSET*2)), self.frame.size.width, SLIDER_THUMB_HEIGHT );
+    else  newFrame = CGRectMake( (self.value/(effectiveRange))*(self.frame.size.width-(SLIDER_TROUGH_TOPINSET*2)),0, SLIDER_THUMB_HEIGHT, self.frame.size.height  );
     
 	thumbView.frame=newFrame;
 }
@@ -159,12 +165,12 @@
         if(!_isHorizontal) tempFloatValue=1.0-(float)((point.y-SLIDER_TROUGH_TOPINSET)/(self.frame.size.height-(SLIDER_TROUGH_TOPINSET*2)));//0-1
         else tempFloatValue=(float)((point.x-SLIDER_TROUGH_TOPINSET)/(self.frame.size.width-(SLIDER_TROUGH_TOPINSET*2)));//0-1
         
-        if(_range==2 && tempFloatValue<=_range-1 && tempFloatValue>=0  && tempFloatValue!=self.value){
+        if(_range==1 && tempFloatValue<=1 && tempFloatValue>=0  && tempFloatValue!=self.value){
             [self setValue: tempFloatValue ];
             [self sendValue];
         }
         float tempValue = (float)(int)((tempFloatValue*(_range-1))+.5);//round to 0-4
-        if(_range>2 && tempValue<=_range-1 && tempValue>=0  && tempValue!=self.value){
+        if(_range>1 && tempValue<=_range-1 && tempValue>=0  && tempValue!=self.value){
             [self setValue: tempValue ];
             [self sendValue];
         }
@@ -185,12 +191,14 @@
         if(!_isHorizontal)tempFloatValue=1.0-(float)((point.y-SLIDER_TROUGH_TOPINSET)/(self.frame.size.height-(SLIDER_TROUGH_TOPINSET*2)));
         else tempFloatValue=(float)((point.x-SLIDER_TROUGH_TOPINSET)/(self.frame.size.width-(SLIDER_TROUGH_TOPINSET*2)));
         
-        if(_range==2 && tempFloatValue<=_range-1 && tempFloatValue>=0 && tempFloatValue!=self.value){
+        if(_range==1 && tempFloatValue<=1 && tempFloatValue>=0 && tempFloatValue!=self.value){
             [self setValue: tempFloatValue ];
             [self sendValue];
+          return;
         }
+
         float tempValue = (float)(int)((tempFloatValue*(_range-1))+.5);
-        if(_range>2 && tempValue<=_range-1 && tempValue>=0 && tempValue!=self.value){
+        if(_range>1 && tempValue<=_range-1 && tempValue>=0 && tempValue!=self.value){
             [self setValue: tempValue ];
             [self sendValue];
         }

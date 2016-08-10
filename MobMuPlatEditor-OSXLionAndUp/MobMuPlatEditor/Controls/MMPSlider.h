@@ -17,5 +17,7 @@
 @property (nonatomic) BOOL isHorizontal;
 @property (nonatomic) float value;
 @property (nonatomic) int range;
+// Only used when reading from file.
+- (void)setLegacyRange:(int)range;
 
 @end
