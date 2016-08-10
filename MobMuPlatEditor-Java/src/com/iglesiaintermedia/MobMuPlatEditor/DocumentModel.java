@@ -65,7 +65,7 @@ public class DocumentModel {
 	    pageCount = 1;
 	    startPageIndex = 0;
 	    backgroundColor = new Color(128,128,128);
-	    canvasType=CanvasType.canvasTypeWidePhone;
+	    canvasType=CanvasType.canvasTypeTallPhone;
 	    port=54321;
 	    version=VERSION;
 	}

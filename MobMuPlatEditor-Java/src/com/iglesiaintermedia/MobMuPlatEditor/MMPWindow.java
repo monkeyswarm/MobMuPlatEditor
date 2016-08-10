@@ -738,8 +738,8 @@ public class MMPWindow implements ChangeListener, ActionListener, FocusListener,
 		lblNewLabel_7.setBounds(16, 57, 102, 16);
 		propVarSliderPanel.add(lblNewLabel_7);
 		
-		JLabel lblARangeOf = new JLabel("<html>A range of 2 sends 0-1 float. <br>A range of >2 sends integers.</html>");
-		lblARangeOf.setFont(new Font("Lucida Grande", Font.PLAIN, 11));
+		JLabel lblARangeOf = new JLabel("<html>A range of 1 sends 0-1 float. <br>A range of N>1 sends integers 0 to N-1.</html>");
+		lblARangeOf.setFont(new Font("Lucida Grande", Font.PLAIN, 9));
 		lblARangeOf.setBounds(26, 85, 176, 31);
 		propVarSliderPanel.add(lblARangeOf);
 		
@@ -763,8 +763,8 @@ public class MMPWindow implements ChangeListener, ActionListener, FocusListener,
 		propVarKnobRangeLabel.setBounds(16, 7, 102, 16);
 		propVarKnobPanel.add(propVarKnobRangeLabel);
 		
-		JLabel propVarKnobRangeInfoLabel = new JLabel("<html>A range of 2 sends 0-1 float. <br>A range of >2 sends integers.</html>");
-		propVarKnobRangeInfoLabel.setFont(new Font("Lucida Grande", Font.PLAIN, 11));
+		JLabel propVarKnobRangeInfoLabel = new JLabel("<html>A range of 1 sends 0-1 float. <br>A range of N>1 sends integers 0 to N-1.</html>");
+		propVarKnobRangeInfoLabel.setFont(new Font("Lucida Grande", Font.PLAIN, 9));
 		propVarKnobRangeInfoLabel.setBounds(16, 35, 176, 31);
 		propVarKnobPanel.add(propVarKnobRangeInfoLabel);
 		
