@@ -11,7 +11,7 @@ import java.lang.reflect.Type;
 
 import com.iglesiaintermedia.MobMuPlatEditor.controls.*;
 public class DocumentModel {
-	public final static float VERSION = 1.64f;//matching ios version.
+	public final static int VERSION = 2;//spec version for incrementing on breaking changes.no longer matching client release version
 	public enum CanvasType{ 
 		canvasTypeWidePhone,
 		canvasTypeTallPhone, 
@@ -27,7 +27,7 @@ public class DocumentModel {
 	int pageCount;
 	int startPageIndex;
 	int port;
-	float version;
+	int version;
 	
 	static Gson gson;
 	
@@ -118,14 +118,14 @@ public class DocumentModel {
 	        //slider
 	        if(control instanceof MMPSlider){
 	        	MMPSlider currSlider = (MMPSlider)control;
-	        	GUIDict.put("range", new Integer(currSlider.range));
+	        	GUIDict.put("range", new Integer(currSlider.getRange()));
 	        	GUIDict.put("isHorizontal", new Boolean(currSlider.isHorizontal));
 	        }
 	        
 	      //knob
 	        else if(control instanceof MMPKnob){
 	        	MMPKnob currKnob = (MMPKnob)control;
-	        	GUIDict.put("range", new Integer(currKnob.range));
+	        	GUIDict.put("range", new Integer(currKnob.getRange()));
 	        	GUIDict.put("indicatorColor", DocumentModel.RGBAArrayFromColor(currKnob.getIndicatorColor()) );
 	        }
 	        
@@ -219,7 +219,7 @@ public class DocumentModel {
 		 
 		 if(topDict.get("pdFile")!=null) 
 		    model.pdFile=topDict.get("pdFile").getAsString();// objectForKey:@"pdFile"]];
-		    if(topDict.get("canvasType")!=null){
+		 if(topDict.get("canvasType")!=null){
 		    	String canvasTypeString = topDict.get("canvasType").getAsString();
 		        if(canvasTypeString.equals("iPhone3p5Inch") ||
 		           canvasTypeString.equals("widePhone")) {
@@ -249,8 +249,11 @@ public class DocumentModel {
 		    	model.startPageIndex=topDict.get("startPageIndex").getAsInt();
 		    if(topDict.get("port")!=null)
 		    	model.port=topDict.get("port").getAsInt();
-		    if(topDict.get("version")!=null)
-		    	model.version=topDict.get("version").getAsFloat();
+		    int version = VERSION;
+		    if(topDict.get("version")!=null) {
+		    	version = topDict.get("version").getAsInt();
+		    	model.version=version;
+		    }
 		    
 		    JsonArray controlDictArray;//array of dictionaries, one for each gui element
 		    
@@ -297,8 +300,14 @@ public class DocumentModel {
 		                control = new MMPSlider(newFrame);
 		                if(guiDict.get("isHorizontal")!=null) 
 		                    ((MMPSlider)control).setIsHorizontal( guiDict.get("isHorizontal").getAsBoolean() );
-		                if(guiDict.get("range")!=null)
-		                    ((MMPSlider)control).setRange( guiDict.get("range").getAsInt()  );
+		                if(guiDict.get("range")!=null) {
+		                	int range = guiDict.get("range").getAsInt();
+		                	if (version < 2) {
+		                		 ((MMPSlider)control).setLegacyRange(range);
+		                	} else {
+		                		 ((MMPSlider)control).setRange(range);
+		                	}
+		                }
 		            }
 		            else if(classString.equals("MMPKnob")){
 		                control = new MMPKnob(newFrame);
@@ -307,8 +316,14 @@ public class DocumentModel {
 		                	indicatorColor = DocumentModel.colorFromRGBAArray(guiDict.get("indicatorColor").getAsJsonArray());
 		                    ((MMPKnob)control).setIndicatorColor(indicatorColor);
 		                }
-		                if(guiDict.get("range")!=null)
-		                    ((MMPKnob)control).setRange( guiDict.get("range").getAsInt()  );
+		                if(guiDict.get("range")!=null) {
+		                	int range = guiDict.get("range").getAsInt();
+		                	if (version < 2) {
+		                		 ((MMPKnob)control).setLegacyRange(range);
+		                	} else {
+		                		 ((MMPKnob)control).setRange(range);
+		                	}
+		                }
 		            }
 		            else if(classString.equals("MMPButton")){
 		                control = new MMPButton(newFrame);

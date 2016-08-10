@@ -24,7 +24,7 @@ public class MMPKnob extends MMPControl implements MouseListener, MouseMotionLis
 	private RoundedPanel knobPanel;
 	private IndicatorPanel indicatorPanel;
 	
-	public int range;
+	private int range;
 	private ArrayList<RoundedPanel> tickViewArray;
 	float value;
 	private Color _indicatorColor, _indicatorDisabledColor;
@@ -50,17 +50,12 @@ public class MMPKnob extends MMPControl implements MouseListener, MouseMotionLis
 		address="/myKnob";
 		
 		indicatorPanel = new IndicatorPanel();
-		//troughPanel.setCornerRadius(3);
-		//indicatorPanel.setBackground(Color.WHITE);
 		this.add(indicatorPanel);
 		
 		knobPanel = new RoundedPanel();	
-		//knobPanel.setCornerRadius(5);
 		this.add(knobPanel);
 		
-		
-		setRange(2);
-		
+		setRange(1);
 		this.addMouseListener(this);
 		this.addMouseMotionListener(this);
 		this.setIndicatorColor(Color.WHITE);
@@ -104,7 +99,7 @@ public class MMPKnob extends MMPControl implements MouseListener, MouseMotionLis
 	    
 	    
 	    for(RoundedPanel dot : tickViewArray){
-	    	float angle= (float)((float)tickViewArray.indexOf(dot)/(range-1)* (Math.PI*2-ROTATION_PAD_RAD*2)+ROTATION_PAD_RAD+Math.PI/2);
+	    	float angle= (float)((float)tickViewArray.indexOf(dot)/(tickViewArray.size()-1)* (Math.PI*2-ROTATION_PAD_RAD*2)+ROTATION_PAD_RAD+Math.PI/2);
 	    	float xPos=(float) ( (dim/2+EXTRA_RADIUS+TICK_DIM/2)*Math.cos(angle) );
 	    	float yPos=(float) ( (dim/2+EXTRA_RADIUS+TICK_DIM/2)*Math.sin(angle) );
 	    	dot.setBounds(new Rectangle((int)(centerPoint.x+xPos-(TICK_DIM/2) ), (int)(centerPoint.y+yPos-(TICK_DIM/2) ), TICK_DIM, TICK_DIM) );
@@ -119,9 +114,15 @@ public class MMPKnob extends MMPControl implements MouseListener, MouseMotionLis
 		for(JPanel tick: tickViewArray)tick.setBackground(newColor);
 	}
 	
+	public void setLegacyRange(int range) {
+		// translate old range value into new
+		if(range == 2) range = 1;
+		setRange(range);
+	}
+	
 	public void setRange(int inRange){
 	    range=inRange;
-	    if(range<2)range=2;
+	    if(range<1)range=1;
 	    if(range>1000)range=1000;
 	    
 	    if(tickViewArray!=null )
@@ -129,8 +130,8 @@ public class MMPKnob extends MMPControl implements MouseListener, MouseMotionLis
 	    
 	    tickViewArray = new ArrayList<RoundedPanel>();
 	    
-	   
-      for(int i=0;i<range;i++){
+	  int effectiveRange = range == 1 ? 2 : range; 
+      for(int i=0;i<effectiveRange;i++){
     	  RoundedPanel tick = new RoundedPanel();
 	      tick.setBackground(this.getColor());
 	      tick.setCornerRadius((int)(TICK_DIM/2));
@@ -142,11 +143,13 @@ public class MMPKnob extends MMPControl implements MouseListener, MouseMotionLis
 	   this.repaint();
 	}
 
-	
+	public int getRange() {
+		return range;
+	}
 	
 	void setValue(float inVal){
 		if(inVal!=value){
-			if(range==2){//clip 0.-1.
+			if(range==1){//clip 0.-1.
 		        if(inVal>1)inVal=1;
 		        if(inVal<0)inVal=0;
 		    }
@@ -172,10 +175,10 @@ public class MMPKnob extends MMPControl implements MouseListener, MouseMotionLis
 	
 	void updateIndicator(){
 		double newRad=0;
-		if(range==2)
+		if(range==1)
 	        newRad= value*(Math.PI*2-ROTATION_PAD_RAD*2)+ROTATION_PAD_RAD;
 		
-		 else if (range>2)
+		 else if (range>1)
 		     newRad=(value/(range-1))*(Math.PI*2-ROTATION_PAD_RAD*2)+ROTATION_PAD_RAD;
 		
 	    indicatorPanel.setRotation(newRad);
@@ -238,13 +241,13 @@ public class MMPKnob extends MMPControl implements MouseListener, MouseMotionLis
 	        
 	        double updatedTheta = (theta-Math.PI/2+(Math.PI*2)) % (Math.PI*2) ;//theta (0 to 2pi) =0 at 6pm going positive clockwise
 	        //System.out.print("\ntheta "+theta+" update "+updatedTheta);
-	        if(range==2){
+	        if(range==1){
 	            if(updatedTheta<ROTATION_PAD_RAD)setValue(0);
 	            else if(updatedTheta>(Math.PI*2-ROTATION_PAD_RAD)) setValue(1);
 	            else  setValue( (float)( (updatedTheta-ROTATION_PAD_RAD)/(Math.PI*2-2*ROTATION_PAD_RAD) ));
 	        
 	        }
-	        else if (range>2){
+	        else if (range>1){
 	            if(updatedTheta<ROTATION_PAD_RAD)setValue(0);
 	            else if(updatedTheta>(Math.PI*2-ROTATION_PAD_RAD)) setValue(range-1);
 	            else setValue( (float) (  (int)((updatedTheta-ROTATION_PAD_RAD)/(Math.PI*2-2*ROTATION_PAD_RAD)*(range-1)+.5)  ) );//round to nearest tick!
@@ -268,7 +271,6 @@ public class MMPKnob extends MMPControl implements MouseListener, MouseMotionLis
 		boolean sendVal  = true;
 		//if message preceded by "set", then set "sendVal" flag to NO, and strip off set and make new messages array without it
 	    if (messageArray.size()>0 && (messageArray.get(0) instanceof String) && messageArray.get(0).equals("set") ){
-	        //NSRange newRange = (NSRange){1, [inArray count]-1};
 	    	messageArray = new ArrayList<Object>(messageArray.subList(1, messageArray.size() ) );
 	    	sendVal=false;
 	    }

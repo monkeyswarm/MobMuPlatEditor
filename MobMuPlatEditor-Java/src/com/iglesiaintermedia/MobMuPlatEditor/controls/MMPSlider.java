@@ -14,7 +14,7 @@ public class MMPSlider extends MMPControl implements MouseListener, MouseMotionL
 	private RoundedPanel thumbPanel;
 	private RoundedPanel troughPanel;
 	
-	public int range;
+	private int range;
 	public boolean isHorizontal;
 	private ArrayList<JPanel> tickViewArray;
 	float value;
@@ -47,7 +47,7 @@ public class MMPSlider extends MMPControl implements MouseListener, MouseMotionL
 		this.add(troughPanel);
 		
 		address="/mySlider";
-		setRange(2);
+		setRange(1);
 		
 		this.addMouseListener(this);
 		this.addMouseMotionListener(this);
@@ -73,10 +73,8 @@ public class MMPSlider extends MMPControl implements MouseListener, MouseMotionL
 	    else{//horizontal
 	        for(int i=0;i<tickViewArray.size();i++){
 	        	JPanel tick = tickViewArray.get(i);
-	            //[tick setFrame:CGRectMake(SLIDER_TROUGH_TOPINSET+i*(frameRect.size.width-SLIDER_TROUGH_TOPINSET*2)/(_range-1)-1,  (frameRect.size.height-10)/4, 2, (frameRect.size.height-10)/2+10)];
 	            tick.setBounds( SLIDER_TROUGH_TOPINSET+i*(getBounds().width-SLIDER_TROUGH_TOPINSET*2)/(range-1)-1, (getBounds().height-10)/4 , 2, (getBounds().height-10)/2+10);
 	        }
-	        //[troughView setFrame: CGRectMake(SLIDER_TROUGH_TOPINSET, (frameRect.size.height-10)/2, frameRect.size.width-(SLIDER_TROUGH_TOPINSET*2), SLIDER_TROUGH_WIDTH)];
 	        troughPanel.setBounds( SLIDER_TROUGH_TOPINSET, (getBounds().height-10)/2,   getBounds().width-(SLIDER_TROUGH_TOPINSET*2), SLIDER_TROUGH_WIDTH ); //setFrame: CGRectMake((frameRect.size.width-10)/2, SLIDER_TROUGH_TOPINSET, SLIDER_TROUGH_WIDTH, frameRect.size.height-(SLIDER_TROUGH_TOPINSET*2))];
 	 	   
 	    }
@@ -84,18 +82,24 @@ public class MMPSlider extends MMPControl implements MouseListener, MouseMotionL
 	   updateThumb();
 	}
 	
+	public void setLegacyRange(int range) {
+		// Old mode range=2 was 0-1 float, now that's range=1.
+		if (range == 2) range = 1;
+		setRange(range);
+	}
 	
 	public void setRange(int inRange){
 	    range=inRange;
-	    if(range<2)range=2;
+	    if(range<1)range=1;
 	    
 	    //if(tickViewArray)for(NSView* tick in tickViewArray)[tick removeFromSuperview];
 	    if(tickViewArray!=null )
 	    	for(JPanel tick:tickViewArray)tick.getParent().remove(tick);
 	    
-	    tickViewArray = new ArrayList<JPanel>();//[[NSMutableArray alloc]init];
-	    if(range>2){
-	        for(int i=0;i<range;i++){
+	    tickViewArray = new ArrayList<JPanel>();
+	    if(range>1){
+	    	int effectiveRange = range == 1 ? 2 : range;
+	        for(int i=0;i<effectiveRange;i++){
 	           JPanel tick = new JPanel();
 	            tick.setBackground(getColor());
 	            tickViewArray.add(tick);
@@ -105,6 +109,10 @@ public class MMPSlider extends MMPControl implements MouseListener, MouseMotionL
 	    }
 	   setBounds(this.getBounds());
 	   this.repaint();
+	}
+	
+	public int getRange() {
+		return range;
 	}
 
 	public void setIsHorizontal(boolean inIsHoriz){
@@ -127,10 +135,10 @@ public class MMPSlider extends MMPControl implements MouseListener, MouseMotionL
 	
 	void updateThumb(){
 		Rectangle newFrame;
-	    
+	    int effectiveRange = range == 1 ? 1 : range - 1;
 	    if(!isHorizontal)
-	        newFrame = new Rectangle( 0, (int)((1.0-(value/(range-1)))*(getBounds().height-(SLIDER_TROUGH_TOPINSET*2))), getBounds().width, SLIDER_THUMB_HEIGHT );
-	    else  newFrame = new Rectangle( (int)((value/(range-1))*(getBounds().width-(SLIDER_TROUGH_TOPINSET*2))),0, SLIDER_THUMB_HEIGHT, getBounds().height  );
+	        newFrame = new Rectangle( 0, (int)((1.0-(value/effectiveRange))*(getBounds().height-(SLIDER_TROUGH_TOPINSET*2))), getBounds().width, SLIDER_THUMB_HEIGHT );
+	    else  newFrame = new Rectangle( (int)((value/effectiveRange)*(getBounds().width-(SLIDER_TROUGH_TOPINSET*2))),0, SLIDER_THUMB_HEIGHT, getBounds().height  );
 	    //System.out.print("\nnewFrame "+newFrame.getY()+" "+ (1.0-(value/(range-1))) );
 		thumbPanel.setBounds(newFrame);
 	
@@ -138,7 +146,7 @@ public class MMPSlider extends MMPControl implements MouseListener, MouseMotionL
 	
 	void setValue(float inVal){
 		//System.out.print("\nsetval "+inVal);
-	    if(range==2){//clip 0.-1.
+	    if(range==1){//clip 0.-1.
 	        if(inVal>1)inVal=1;
 	        if(inVal<0)inVal=0;
 	    }
@@ -167,12 +175,12 @@ public class MMPSlider extends MMPControl implements MouseListener, MouseMotionL
 	        if(!isHorizontal) tempFloatValue=1.0f-(((float)e.getY()-SLIDER_TROUGH_TOPINSET)/(getBounds().height-(SLIDER_TROUGH_TOPINSET*2)));//0-1
 	        else tempFloatValue=(((float)e.getX()-SLIDER_TROUGH_TOPINSET)/(getBounds().width-(SLIDER_TROUGH_TOPINSET*2)));//0-1
 	        
-	        if(range==2 && tempFloatValue<=range-1 && tempFloatValue>=0  && tempFloatValue!=value){
+	        if(range==1 && tempFloatValue<=1 && tempFloatValue>=0  && tempFloatValue!=value){
 	            setValue(tempFloatValue);
 	           sendValue();
 	        }
 	        float tempValue = (float)(int)((tempFloatValue*(range-1))+.5);//round to 0-4
-	        if(range>2 && tempValue<=range-1 && tempValue>=0  && tempValue!=value){
+	        if(range>1 && tempValue<=range-1 && tempValue>=0  && tempValue!=value){
 	        	setValue(tempValue);
 		           sendValue();
 	        }
@@ -238,13 +246,12 @@ public class MMPSlider extends MMPControl implements MouseListener, MouseMotionL
 		        if(!isHorizontal) tempFloatValue=1.0f-(((float)e.getY()-SLIDER_TROUGH_TOPINSET)/(getBounds().height-(SLIDER_TROUGH_TOPINSET*2)));//0-1
 		        else tempFloatValue=(((float)e.getX()-SLIDER_TROUGH_TOPINSET)/(getBounds().width-(SLIDER_TROUGH_TOPINSET*2)));//0-1
 		        
-		        if(range==2 && tempFloatValue<=range-1 && tempFloatValue>=0  && tempFloatValue!=value){
+		        if(range==1 && tempFloatValue<=1 && tempFloatValue>=0  && tempFloatValue!=value){
 		            setValue(tempFloatValue);
 		           sendValue();
 		        }
 		        float tempValue = (float)(int)((tempFloatValue*(range-1))+.5);//round to 0-4
-		        //System.out.("\ntempval "+tempValue);
-		        if(range>2 && tempValue<=range-1 && tempValue>=0  && tempValue!=value){
+		        if(range>1 && tempValue<=range-1 && tempValue>=0  && tempValue!=value){
 		        	setValue(tempValue);
 			           sendValue();
 		        }

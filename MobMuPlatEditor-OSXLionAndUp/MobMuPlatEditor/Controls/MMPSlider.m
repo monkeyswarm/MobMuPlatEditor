@@ -194,7 +194,6 @@
         if(_range==1 && tempFloatValue<=1 && tempFloatValue>=0 && tempFloatValue!=self.value){
             [self setValue: tempFloatValue ];
             [self sendValue];
-          return;
         }
 
         float tempValue = (float)(int)((tempFloatValue*(_range-1))+.5);

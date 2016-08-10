@@ -2030,11 +2030,11 @@ public class MMPWindow implements ChangeListener, ActionListener, FocusListener,
 	void updateSliderRange(){
 		MMPSlider currSlider = (MMPSlider)controller.currentSingleSelection;
     	String text = propVarSliderRangeTextField.getText();
-    	int oldRange = currSlider.range;
+    	int oldRange = currSlider.getRange();
     	try{
     		int newRange = Integer.parseInt(text);
-    		if(newRange<2)
-    			newRange=2;
+    		if(newRange<1)
+    			newRange=1;
     		if(newRange>1000)
     			newRange = 1000;
     			
@@ -2043,7 +2043,7 @@ public class MMPWindow implements ChangeListener, ActionListener, FocusListener,
     		currSlider.setRange(newRange);
     	}
     	catch(NumberFormatException e){
-    		propVarSliderRangeTextField.setText(""+currSlider.range);
+    		propVarSliderRangeTextField.setText(""+currSlider.getRange());
     	}
 	}
 		
@@ -2054,8 +2054,8 @@ public class MMPWindow implements ChangeListener, ActionListener, FocusListener,
     	//int oldRange = currKnob.range;
     	try{
     		int newRange = Integer.parseInt(text);
-    		if(newRange<2)
-    			newRange=2;
+    		if(newRange<1)
+    			newRange=1;
     		if(newRange>1000)
     			newRange = 1000;
     			
@@ -2065,7 +2065,7 @@ public class MMPWindow implements ChangeListener, ActionListener, FocusListener,
     		currKnob.setRange(newRange);
     	}
     	catch(NumberFormatException e){
-    		propVarSliderRangeTextField.setText(""+currKnob.range);
+    		propVarSliderRangeTextField.setText(""+currKnob.getRange());
     	}
 	}
 

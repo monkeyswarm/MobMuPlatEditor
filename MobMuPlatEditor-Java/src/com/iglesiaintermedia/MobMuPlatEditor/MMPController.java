@@ -718,14 +718,14 @@ public class MMPController {
 	        if(control instanceof MMPKnob){
 	            windowDelegate.propVarKnobPanel.setVisible(true);// [self.propVarView addSubview:self.propKnobView];
 	            MMPKnob currKnob = (MMPKnob)control;
-	            windowDelegate.propVarKnobRangeTextField.setText(""+currKnob.range);
+	            windowDelegate.propVarKnobRangeTextField.setText(""+currKnob.getRange());
 	            windowDelegate.propVarKnobIndicatorColorWell.setColor(currKnob.getIndicatorColor());
 	           
 	        }
 	        else if( control instanceof MMPSlider ){
 	            windowDelegate.propVarSliderPanel.setVisible(true);//add(windowDelegate.propVarSliderPanel);//  [self.propVarView addSubview:self.propSliderView];
 	            MMPSlider currSlider = (MMPSlider)control;
-	            windowDelegate.propVarSliderRangeTextField.setText(""+currSlider.range);
+	            windowDelegate.propVarSliderRangeTextField.setText(""+currSlider.getRange());
 	            
 	            windowDelegate.propVarSliderOrientationBox.removeActionListener(windowDelegate);
 	            if(currSlider.isHorizontal==true)windowDelegate.propVarSliderOrientationBox.setSelectedIndex(1);
