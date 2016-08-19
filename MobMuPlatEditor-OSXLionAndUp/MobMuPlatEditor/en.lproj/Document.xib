@@ -143,7 +143,7 @@
                                                             <popUpButton verticalHuggingPriority="750" id="100152">
                                                                 <rect key="frame" x="97" y="320" width="122" height="26"/>
                                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                                                <popUpButtonCell key="cell" type="push" title="Tall Tablet: aspect:0.625 (Most Android tablets)" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" selectedItem="UuM-jE-1Ku" id="100153">
+                                                                <popUpButtonCell key="cell" type="push" title="Wide Tablet: aspect:0.75 (iPad, Nexus 9)" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" selectedItem="100156" id="100153">
                                                                     <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
                                                                     <font key="font" metaFont="menu"/>
                                                                     <menu key="menu" title="OtherViews" id="100154">
@@ -152,8 +152,8 @@
                                                                             <menuItem title="Tall Phone: aspect:0.56 (iPhone 5,6,6+)" id="101119">
                                                                                 <modifierMask key="keyEquivalentModifierMask"/>
                                                                             </menuItem>
-                                                                            <menuItem title="Wide Tablet: aspect:0.75 (iPad)" id="100156"/>
-                                                                            <menuItem title="Tall Tablet: aspect:0.625 (Most Android tablets)" state="on" id="UuM-jE-1Ku"/>
+                                                                            <menuItem title="Wide Tablet: aspect:0.75 (iPad, Nexus 9)" state="on" id="100156"/>
+                                                                            <menuItem title="Tall Tablet: aspect:0.625 (Nexus 7)" id="UuM-jE-1Ku"/>
                                                                         </items>
                                                                     </menu>
                                                                 </popUpButtonCell>

@@ -38,7 +38,7 @@ public class MMPController {
 	static OSCPortOut sender;
 	static List<Map> fontArray;
 	static List<String> androidFontFileArray;
-	public static Map<String, String> androidFontFileToNameMap;
+	public static Map<String, Font> androidFontFileToFontMap;
 	
 	//defines
 	final static int DEFAULT_PORT_NUMBER=54321;
@@ -220,8 +220,7 @@ public class MMPController {
                     "RobotoCondensed-Italic",
                     "RobotoCondensed-BoldItalic");
 			//install fonts 
-			//androidFontNameArray = new ArrayList<String>();
-			androidFontFileToNameMap = new HashMap<String, String>();
+			androidFontFileToFontMap = new HashMap<String, Font>();
 			for (String fontFilename : androidFontFileArray) {
 				try {
 					InputStream is = this.getClass().getResourceAsStream("androidfonts/"+fontFilename+".ttf");
@@ -229,8 +228,7 @@ public class MMPController {
 							GraphicsEnvironment.getLocalGraphicsEnvironment();
 					Font f = Font.createFont(Font.TRUETYPE_FONT, is);
 					ge.registerFont(f);
-					String fontName = f.getName();
-					androidFontFileToNameMap.put(fontFilename, fontName);
+					androidFontFileToFontMap.put(fontFilename, f);
 				} catch (IOException e) {
 					//Handle exception
 					System.out.print("NO FONT");
@@ -239,8 +237,7 @@ public class MMPController {
 				}
 			}
 		}
-		
-		
+
 		System.out.print("\nadd controller instance to arraylist "+ this);
 		MMPController.controllerArrayList.add(this);
 			
@@ -352,6 +349,8 @@ public class MMPController {
 	    windowDelegate.docStartPageField.setText(Integer.toString(documentModel.startPageIndex+1));// ;) [self.docPageCountField setIntValue:[documentModel pageCount]];
 	    //windowDelegate.canvasPanel.setPageViewIndex(documentModel.startPageIndex) ;
 	    setCurrentPage(documentModel.startPageIndex);
+	    // font display
+	    windowDelegate.propLabelTabbedPane.setSelectedIndex(documentModel.preferAndroidFontDisplay ? 1 : 0);
 	  
 	}
 	

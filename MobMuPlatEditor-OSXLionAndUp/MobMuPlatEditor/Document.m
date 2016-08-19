@@ -88,7 +88,9 @@
 
     // load
     [self loadFromModel];
-    
+
+  //update font display
+  [self.labelTabView selectTabViewItemAtIndex:(documentModel.preferAndroidFontDisplay ? 1 : 0)];
     //default values
     [self.propColorWell setColor:[NSColor blueColor]];
     [self.propHighlightColorWell setColor:[NSColor redColor]];
@@ -767,6 +769,7 @@
     else [self setIsEditing:YES];
   } else if (tabView == _labelTabView) {
     BOOL showAndroid = ([tabView indexOfTabViewItem:tabViewItem] == 1);
+    documentModel.preferAndroidFontDisplay = showAndroid;
     for (MMPControl *control in documentModel.controlArray) {
       if ([control isKindOfClass:[MMPLabel class]])
         ((MMPLabel*)control).isShowingAndroidFonts = showAndroid;

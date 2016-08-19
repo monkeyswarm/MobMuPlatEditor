@@ -28,6 +28,7 @@ public class DocumentModel {
 	int startPageIndex;
 	int port;
 	int version;
+	public boolean preferAndroidFontDisplay;
 	
 	static Gson gson;
 	
@@ -90,6 +91,7 @@ public class DocumentModel {
 	    topDict.put("startPageIndex", new Integer(startPageIndex));
 	    topDict.put("port", new Integer(port));
 	    topDict.put("version", new Float(VERSION));
+	    topDict.put("preferAndroidFontDisplayInEditor", new Boolean(preferAndroidFontDisplay));
 	    
 	    
 	    ArrayList<Map<String, Object>> jsonControlDictArray = new ArrayList<Map<String, Object>>();//array of dictionaries
@@ -253,6 +255,9 @@ public class DocumentModel {
 		    if(topDict.get("version")!=null) {
 		    	version = topDict.get("version").getAsInt();
 		    	model.version=version;
+		    }
+		    if(topDict.get("preferAndroidFontDisplayInEditor")!=null) {
+		    	model.preferAndroidFontDisplay = topDict.get("preferAndroidFontDisplayInEditor").getAsBoolean();
 		    }
 		    
 		    JsonArray controlDictArray;//array of dictionaries, one for each gui element

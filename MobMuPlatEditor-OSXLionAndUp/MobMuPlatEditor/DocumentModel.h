@@ -46,7 +46,7 @@ extern const NSUInteger kMMPDocumentModelCurrentVersion;
 @property int startPageIndex;//def 0
 @property int port;
 @property NSUInteger version; //version of opened patch. new patches use kMMPDocumentModelCurrentVersion.
-
+@property BOOL preferAndroidFontDisplay;
 @property NSMutableArray* controlArray; //of type MMPControl
 /* wear @property NSMutableArray* watchControlDupleArray;*/ //of duple title label, control
 

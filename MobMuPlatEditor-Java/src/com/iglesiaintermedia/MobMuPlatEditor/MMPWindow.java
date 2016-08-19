@@ -851,7 +851,7 @@ public class MMPWindow implements ChangeListener, ActionListener, FocusListener,
 		propLabelAndroidPanel.add(lblFontType2);
 		
 		propLabelAndroidFontTypeBox = new JComboBox();
-		propLabelAndroidFontTypeBox.setBounds(70, 0, 126, 27);
+		propLabelAndroidFontTypeBox.setBounds(70, 0, 300, 27);
 		propLabelAndroidFontTypeBox.setActionCommand("androidFontType");
 		propLabelAndroidFontTypeBox.addActionListener(this);
 		//propVarLabelPanel.add(propLabelFontTypeBox);
@@ -1449,6 +1449,7 @@ public class MMPWindow implements ChangeListener, ActionListener, FocusListener,
         }
         else if (e.getSource().equals(propLabelTabbedPane)){
         	boolean isAndroid = (propLabelTabbedPane.getSelectedIndex()==1);
+        	controller.documentModel.preferAndroidFontDisplay = isAndroid;
         	for (MMPControl control : controller.documentModel.controlArray) {
         		if (control instanceof MMPLabel) {
         			((MMPLabel)control).showAndroidFont(isAndroid);
@@ -1812,10 +1813,10 @@ public class MMPWindow implements ChangeListener, ActionListener, FocusListener,
         }
         
         else if(cmd.equals("androidFontType")) {
-        	String androidFontName = (String)propLabelAndroidFontTypeBox.getSelectedItem();
+        	String androidFontFileName = (String)propLabelAndroidFontTypeBox.getSelectedItem();
         	MMPLabel currLabel = (MMPLabel)controller.currentSingleSelection;
         	if(currLabel!=null){
-        		currLabel.setAndroidFontFileName(androidFontName);
+        		currLabel.setAndroidFontFileName(androidFontFileName);
         	}
         }
      

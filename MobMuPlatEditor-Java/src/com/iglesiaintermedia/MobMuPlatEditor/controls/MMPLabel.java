@@ -25,8 +25,7 @@ public class MMPLabel extends MMPControl {
 	public String stringValue;
 	public String fontName;
 	public String fontFamily;
-	public String androidFontFileName; //keep track of both the file name ("Roboto-Regular") and the possibly-different font name ("Roboto-Regular"from eclipse, "Roberto REgular" from jar!)
-	public String androidFontName;
+	public String androidFontFileName; //keep track of the file name ("Roboto-Regular"), which is the key to grab the font
 	private boolean _showAndroidFont;
 	JPanel overPanel;
 	
@@ -51,8 +50,7 @@ public class MMPLabel extends MMPControl {
 		address="/myLabel";
 		fontFamily="Default";
 		fontName = "";
-		androidFontFileName = "Roboto-Regular";
-		androidFontName = MMPController.androidFontFileToNameMap.get(androidFontFileName);//get font name, which can be different than file name
+		setAndroidFontFileName("Roboto-Regular");
 		textSize = 16;
 		stringValue = "my text goes here";
 		setLayout(null);
@@ -112,7 +110,8 @@ public class MMPLabel extends MMPControl {
 			if(fontFamily.equals("Default"))textView.setFont(new Font(DEFAULT_FONT, Font.PLAIN, textSize));
 			else textView.setFont(new Font(fontName, Font.PLAIN, textSize));
 		} else { //android
-			textView.setFont(new Font(androidFontName, Font.PLAIN, textSize));
+			Font f = MMPController.androidFontFileToFontMap.get(androidFontFileName).deriveFont(Font.PLAIN,  textSize);
+			textView.setFont(f);
 		}
 		
 	}
@@ -155,115 +154,24 @@ public class MMPLabel extends MMPControl {
 	
 	public void setAndroidFontFileName(String fontFileName) {
 		androidFontFileName = fontFileName;
-		androidFontName = MMPController.androidFontFileToNameMap.get(fontFileName);
 		if (_showAndroidFont) { //this is called on patch load...?
-			Font newFont = new Font(androidFontName, Font.PLAIN, textSize);
-			textView.setFont(newFont);
+			Font f = MMPController.androidFontFileToFontMap.get(fontFileName).deriveFont(Font.PLAIN,  textSize);
+			textView.setFont(f);
 		}
 	}
 	
 	public void showAndroidFont(boolean showAndroidFont) {
 		_showAndroidFont = showAndroidFont;
 		
-		Font newFont = new Font(_showAndroidFont ? androidFontName : fontName, Font.PLAIN, textSize);
-		textView.setFont(newFont);
-	}
-	
-	/*public void mouseClicked(MouseEvent e) {
-    	super.mouseClicked(e);
-    	mouseHelper(e);
-    	
-	}
-	
-	public void mousePressed(MouseEvent e) {
-		//System.out.print(e.getClickCount() + " click(s)");
-		super.mousePressed(e);
-		mouseHelper(e);
-	}
-	
-	void mouseHelper(MouseEvent e){
-		if(!editingDelegate.isEditing()){
-			Point labelPoint = e.getPoint();
-	        Container container = getParent();
-	        Point containerPoint = SwingUtilities.convertPoint(this,
-	        		labelPoint, container);
-	        //System.out.print("\ncontainerPoint "+containerPoint.x+" "+containerPoint.y );
-	       
-	        //awful, scroll through all controls...SO WASTEFUL
-	        //also, do it in REVERSE order in order to get the view that is underneath...
-	        //for(MMPControl control : editingDelegate.documentModel.controlArray){
-	        int len = editingDelegate.documentModel.controlArray.size();
-	        for (int i = len-1; i >= 0; i--) {
-	        	MMPControl control = editingDelegate.documentModel.controlArray.get(i);
-	         	if(control==this)continue;//ignore me
-	        	//System.out.print("\nother bounds "+control.getX()+" "+control.getY()+" "+control.getWidth()+" "+control.getHeight());
-	        	if(control.getBounds().contains(containerPoint)){
-	        		//System.out.print("\nfind control "+control.address);
-	        		Point componentPoint = SwingUtilities.convertPoint(
-	                        container, containerPoint, control);
-	                control.dispatchEvent(new MouseEvent(control, e
-	                        .getID(), e.getWhen(), e.getModifiers(),
-	                        componentPoint.x, componentPoint.y, e
-	                                .getClickCount(), e.isPopupTrigger()));
-	                underControl=control;
-	                break;
-	        	}
-	        }
-	        
+		//TODO package this along with similar logic.
+		if (!_showAndroidFont) {
+			if(fontFamily.equals("Default"))textView.setFont(new Font(DEFAULT_FONT, Font.PLAIN, textSize));
+			else textView.setFont(new Font(fontName, Font.PLAIN, textSize));
+		} else { //android
+			Font f = MMPController.androidFontFileToFontMap.get(androidFontFileName).deriveFont(Font.PLAIN,  textSize);
+			textView.setFont(f);//new Font(androidFontName, Font.PLAIN, textSize));
 		}
 	}
-	
-	public void mouseDragged(MouseEvent e) {
-		//System.out.print(e.getClickCount() + " click(s)");
-		//System.out.print("\nlabel drag src "+e.getSource().getClass().getName());
-		super.mouseDragged(e);
-		
-		if(!editingDelegate.isEditing()){
-			if(underControl!=null){
-			Point labelPoint = e.getPoint();
-	        Container container = getParent();
-	        Point containerPoint = SwingUtilities.convertPoint(this,
-	        		labelPoint, container);
-	        //System.out.print("\ncontainerPoint "+containerPoint.x+" "+containerPoint.y );
-	       
-	        //awful, scroll through all controls...SO WASTEFUL
-	        		//System.out.print("\nfind control "+control.address);
-	        		Point componentPoint = SwingUtilities.convertPoint(
-	                        container, containerPoint, underControl);
-	        		underControl.dispatchEvent(new MouseEvent(underControl, e
-	                        .getID(), e.getWhen(), e.getModifiers(),
-	                        componentPoint.x, componentPoint.y, e
-	                                .getClickCount(), e.isPopupTrigger()));
-	        	}
-		}
-	        
-	        
-		
-	}
-	
-	public void mouseReleased(MouseEvent e) {
-		//System.out.print(e.getClickCount() + " click(s)");
-		super.mouseReleased(e);
-		
-		if(!editingDelegate.isEditing()){
-			if(underControl!=null){
-			Point labelPoint = e.getPoint();
-	        Container container = getParent();
-	        Point containerPoint = SwingUtilities.convertPoint(this,
-	        		labelPoint, container);
-	       
-	        	Point componentPoint = SwingUtilities.convertPoint(
-	                        container, containerPoint, underControl);
-	        	underControl.dispatchEvent(new MouseEvent(underControl, e
-	                        .getID(), e.getWhen(), e.getModifiers(),
-	                        componentPoint.x, componentPoint.y, e
-	                                .getClickCount(), e.isPopupTrigger()));
-	        	}
-	        
-	        
-		}
-		underControl=null;
-	}*/
 	
 	// Ignore touches
 	public boolean contains(int x, int y) {

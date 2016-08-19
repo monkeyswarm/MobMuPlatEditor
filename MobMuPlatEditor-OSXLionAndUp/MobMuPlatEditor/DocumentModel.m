@@ -79,7 +79,7 @@ const NSUInteger kMMPDocumentModelCurrentVersion = 2;
     [topDict setObject:[NSNumber numberWithInt:_startPageIndex] forKey:@"startPageIndex"];
     [topDict setObject:[NSNumber numberWithInt:_port] forKey:@"port"];
     [topDict setObject:[NSNumber numberWithUnsignedInteger:kMMPDocumentModelCurrentVersion] forKey:@"version"];
-    
+    [topDict setObject:@(_preferAndroidFontDisplay) forKey:@"preferAndroidFontDisplayInEditor"];
     NSMutableArray* jsonControlDictArray = [[NSMutableArray alloc]init];//array of dictionaries
    
     //step through all gui controls
@@ -269,6 +269,9 @@ const NSUInteger kMMPDocumentModelCurrentVersion = 2;
   if([topDict objectForKey:@"version"]) {
     version = [[topDict objectForKey:@"version"] unsignedIntegerValue];
     [model setVersion:version ];
+  }
+  if([topDict objectForKey:@"preferAndroidFontDisplayInEditor"]) {
+    model.preferAndroidFontDisplay = [[topDict objectForKey:@"preferAndroidFontDisplayInEditor"] boolValue];
   }
 
     NSArray* controlDictArray;
