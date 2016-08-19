@@ -109,6 +109,7 @@
         }
     }
     [self resizeSubviewsWithOldSize:self.frame.size];
+  [self bringUpHandle]; //keep new view from being on top of edithandle, which can cause undo issues.
 }
 
 -(void)setValue:(float)inVal{

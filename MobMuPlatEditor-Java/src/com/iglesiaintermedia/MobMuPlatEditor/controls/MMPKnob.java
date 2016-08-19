@@ -103,7 +103,6 @@ public class MMPKnob extends MMPControl implements MouseListener, MouseMotionLis
 	    	float xPos=(float) ( (dim/2+EXTRA_RADIUS+TICK_DIM/2)*Math.cos(angle) );
 	    	float yPos=(float) ( (dim/2+EXTRA_RADIUS+TICK_DIM/2)*Math.sin(angle) );
 	    	dot.setBounds(new Rectangle((int)(centerPoint.x+xPos-(TICK_DIM/2) ), (int)(centerPoint.y+yPos-(TICK_DIM/2) ), TICK_DIM, TICK_DIM) );
-        
 	    }
 	}
 	    
@@ -193,6 +192,8 @@ public class MMPKnob extends MMPControl implements MouseListener, MouseMotionLis
 			
 	    if(!editingDelegate.isEditing()){
 	      knobPanel.setBackground(this.getHighlightColor());
+	      // TODO handle enable/disable changes with color/highlightcolor changes
+	      for(JPanel tick: tickViewArray)tick.setBackground(this.getHighlightColor());
 	      mouseDragged(e);
 	    }
 	}
@@ -223,6 +224,7 @@ public class MMPKnob extends MMPControl implements MouseListener, MouseMotionLis
 		super.mouseReleased(e);
 	    if(!editingDelegate.isEditing()){
 	    	 knobPanel.setBackground(getColor());
+	    	 for(JPanel tick: tickViewArray)tick.setBackground(getColor());
 		       // indicatorColor.setBackground(indicatorColor);
 		       
 	    }

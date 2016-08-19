@@ -133,8 +133,6 @@
   }
 }
 
-
-
 -(void)setIsSelected:(BOOL)newSelected{
 
   isSelected=newSelected;

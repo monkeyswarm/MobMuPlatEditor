@@ -165,6 +165,7 @@ int osxMinorVersion=-1;
     }
   //[self setNeedsLayout:YES];
   [self resizeSubviewsWithOldSize:self.frame.size];
+  [self bringUpHandle]; // keep new view from being on top of edithandle, which can cause undo issues.
 }
 
 -(void)setValue:(float)inVal{
@@ -232,6 +233,7 @@ int osxMinorVersion=-1;
     
    if(![self.editingDelegate isEditing] && self.enabled){
        knobView.layer.backgroundColor = self.highlightColor.CGColor;
+     for(NSView* dot in tickViewArray)dot.layer.backgroundColor = self.highlightColor.CGColor;
        [self mouseDragged:event];
     }
 }
@@ -268,6 +270,8 @@ int osxMinorVersion=-1;
     [super mouseUp:event];
     if(![self.editingDelegate isEditing] && self.enabled){
         knobView.layer.backgroundColor = self.color.CGColor;
+      for(NSView* dot in tickViewArray)dot.layer.backgroundColor = self.color.CGColor;
+
     }
 }
 
