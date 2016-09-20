@@ -1,38 +1,38 @@
 package com.iglesiaintermedia.MobMuPlatEditor.controls;
 
 import java.awt.Color;
-import java.awt.Container;
 import java.awt.Font;
-import java.awt.Point;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Rectangle;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
+import java.awt.RenderingHints;
+import java.awt.font.FontRenderContext;
+import java.awt.font.LineBreakMeasurer;
+import java.awt.font.TextAttribute;
+import java.awt.font.TextLayout;
+import java.text.AttributedCharacterIterator;
+import java.text.AttributedString;
 import java.util.ArrayList;
 
-import javax.swing.BorderFactory;
-import javax.swing.JPanel;
-import javax.swing.JTextArea;
-import javax.swing.SwingUtilities;
 
 import com.iglesiaintermedia.MobMuPlatEditor.MMPController;
 
 public class MMPLabel extends MMPControl {
 	static final String DEFAULT_FONT = "HelveticaNeue";
-	static final int PAD = 5;
-	JTextArea textView;
+	static final int HORIZONTAL_PAD = 4;
+	static final int VERTICAL_PAD = 1;
 	public int textSize;
-	public String stringValue;
+	private String stringValue;
 	public String fontName;
 	public String fontFamily;
 	public String androidFontFileName; //keep track of the file name ("Roboto-Regular"), which is the key to grab the font
-	private boolean _showAndroidFont;
-	JPanel overPanel;
-	
-	MMPControl underControl;
-	
+	private boolean showAndroidFont;
+	private Font visibleFont;
+	private int hAlign, vAlign;
+	boolean isHighlighted;
+
 	//copy constructor
-	public MMPLabel(MMPLabel otherLabel){
+	public MMPLabel(MMPLabel otherLabel){ //TODO move stuff to super.
 		this(otherLabel.getBounds());//normal constructor
 		this.setColor(otherLabel.getColor());
 		this.setHighlightColor(otherLabel.getHighlightColor());
@@ -41,8 +41,11 @@ public class MMPLabel extends MMPControl {
 		this.setFontFamilyAndName(otherLabel.fontFamily, otherLabel.fontName);
 		this.setAndroidFontFileName(otherLabel.androidFontFileName);
 		this.setStringValue(otherLabel.stringValue);
-		
-		
+		this.visibleFont = otherLabel.visibleFont;
+		this.isHighlighted = otherLabel.isHighlighted;
+		this.vAlign = otherLabel.vAlign;
+		this.hAlign = otherLabel.hAlign;
+		this.showAndroidFont = otherLabel.showAndroidFont;
 	}
 	
 	public MMPLabel(Rectangle frame){
@@ -52,125 +55,100 @@ public class MMPLabel extends MMPControl {
 		fontName = "";
 		setAndroidFontFileName("Roboto-Regular");
 		textSize = 16;
-		stringValue = "my text goes here";
 		setLayout(null);
-		
-		overPanel = new JPanel();//hack: textView was sending constant mouse dragged events (on mouse held still while dragging), rather than just one per drag
-		overPanel.setOpaque(false);
-		add(overPanel);
-		
-		textView = new JTextArea(stringValue);
-		//textView.setBounds(0,0,getWidth(), getHeight());
-		textView.setForeground(getColor());
-		textView.setFont(new Font(DEFAULT_FONT, Font.PLAIN, textSize));
-		textView.setOpaque(false);
-		textView.setBackground(new Color(0,0,0,0));//redundant on aqua, neccesary on nimubs
-		textView.setBorder(BorderFactory.createEmptyBorder());//redundant on aqua, neceesary on nimbus
-		textView.setWrapStyleWord(true);
-		textView.setLineWrap(true);
-		textView.setEditable(false);
-		for(MouseListener ml: textView.getMouseListeners())textView.removeMouseListener(ml);
-		for(MouseMotionListener ml: textView.getMouseMotionListeners())textView.removeMouseMotionListener(ml);
-		
-		add(textView);
-		
-		
+		visibleFont = new Font(DEFAULT_FONT, Font.PLAIN, textSize);
+		setStringValue("my text goes here"); //default text
 		
 		this.setColor(this.getColor());
 		this.setBounds(frame);
-		
-		//textview was intercepting mouse, so set its listener to me
-		//textView.addMouseListener(this);
-		//textView.addMouseMotionListener(this);
-		overPanel.addMouseListener(this);
-		overPanel.addMouseMotionListener(this);
-		
+		this.addMouseListener(this);
+		this.addMouseMotionListener(this);
 	}
 	
 	public void setColor(Color newColor){
 		super.setColor(newColor);
-		textView.setForeground(newColor);
+		this.repaint();
 	}
 		
 	public void setBounds(Rectangle frame){
 		super.setBounds(frame);
-		textView.setBounds(PAD,0,this.getWidth()-PAD, this.getHeight());
-		overPanel.setBounds(0,0,getWidth(), getHeight());
 	}
 	
 	public void setStringValue(String inString){
 		stringValue = inString;
-		textView.setText(stringValue);
+		this.repaint();
+	}
+
+	public String getStringValue() {
+		return stringValue;
+	}
+	
+	public void setHorizontalAlignment(int hAlign) { //0 -2 
+		this.hAlign = hAlign;
+		this.repaint();
+	}
+	
+	public int getHorizontalAlignment() {
+		return hAlign;
+	}
+	
+	public void setVerticalAlignment(int vAlign) { //0 -2 
+		this.vAlign = vAlign;
+		this.repaint();
+	}
+	
+	public int getVerticalAlignment() {
+		return vAlign;
 	}
 	
 	public void setTextSize(int inSize){
-		//System.out.print("\nlab setText fam:"+fontFamily);
 		textSize = inSize;
-		if (!_showAndroidFont) {
-			if(fontFamily.equals("Default"))textView.setFont(new Font(DEFAULT_FONT, Font.PLAIN, textSize));
-			else textView.setFont(new Font(fontName, Font.PLAIN, textSize));
+		if (!showAndroidFont) {
+			if(fontFamily.equals("Default")){
+				visibleFont = new Font(DEFAULT_FONT, Font.PLAIN, textSize);
+			} else {
+				visibleFont = new Font(fontName, Font.PLAIN, textSize);
+			}
 		} else { //android
-			Font f = MMPController.androidFontFileToFontMap.get(androidFontFileName).deriveFont(Font.PLAIN,  textSize);
-			textView.setFont(f);
+			visibleFont = MMPController.androidFontFileToFontMap.get(androidFontFileName).deriveFont(Font.PLAIN,  textSize);
 		}
-		
+		this.repaint();
 	}
 	
-	public void setFontFamilyAndName(String inFontFamily, String inFontName){
+	public void setFontFamilyAndName(String inFontFamily, String inFontName){ //IOS
 		fontName = inFontName;
 		fontFamily = inFontFamily;
-		//System.out.print("\nlab setFontfamandname fam:"+fontFamily);
-		if(fontFamily.equals("Default"))textView.setFont(new Font(DEFAULT_FONT, Font.PLAIN, textSize));
-		else{
-			//System.out.print("\nHERE");
-			Font newFont = new Font(fontName, Font.PLAIN, textSize);
-			textView.setFont(newFont);
-			
-			//exists on system
-			/*if(newFont!=null) textView.setFont(new Font(fontName, Font.PLAIN, textSize));
-			
-			else{
-				
-			
-				try{
-					InputStream is = this.getClass().getResourceAsStream("Zapfino.ttf");
-					System.out.print("\ninputstream nonnull? "+(is!=null));
-					Font uniFont=Font.createFont(Font.TRUETYPE_FONT,is);
-					Font f = uniFont.deriveFont(24f);
-					
-					textView.setFont(f);
-					System.out.print("\nsucess setting, font object nonnull? "+(f!=null));
-				}
-				catch(Exception e){
-					System.out.print("\nexception setting");
-					}
-			//}
-			 */
-			
+		if(fontFamily.equals("Default")) {
+			visibleFont = (new Font(DEFAULT_FONT, Font.PLAIN, textSize));
+		} else{
+			visibleFont = new Font(fontName, Font.PLAIN, textSize);
 		}
+		this.repaint();
 	}
-	
-	
 	
 	public void setAndroidFontFileName(String fontFileName) {
 		androidFontFileName = fontFileName;
-		if (_showAndroidFont) { //this is called on patch load...?
-			Font f = MMPController.androidFontFileToFontMap.get(fontFileName).deriveFont(Font.PLAIN,  textSize);
-			textView.setFont(f);
+		if (showAndroidFont) { //this is called on patch load...?
+			visibleFont = MMPController.androidFontFileToFontMap.get(fontFileName).deriveFont(Font.PLAIN,  textSize);
+			this.repaint();
 		}
 	}
 	
 	public void showAndroidFont(boolean showAndroidFont) {
-		_showAndroidFont = showAndroidFont;
+		this.showAndroidFont = showAndroidFont;
 		
 		//TODO package this along with similar logic.
-		if (!_showAndroidFont) {
-			if(fontFamily.equals("Default"))textView.setFont(new Font(DEFAULT_FONT, Font.PLAIN, textSize));
-			else textView.setFont(new Font(fontName, Font.PLAIN, textSize));
+		if (!showAndroidFont) {
+			if(fontFamily.equals("Default")) {
+				visibleFont = new Font(DEFAULT_FONT, Font.PLAIN, textSize);
+			} else {
+				visibleFont = new Font(fontName, Font.PLAIN, textSize);
+			}
 		} else { //android
-			Font f = MMPController.androidFontFileToFontMap.get(androidFontFileName).deriveFont(Font.PLAIN,  textSize);
-			textView.setFont(f);//new Font(androidFontName, Font.PLAIN, textSize));
+			visibleFont = MMPController.androidFontFileToFontMap.get(androidFontFileName).deriveFont(Font.PLAIN,  textSize);
+			//new Font(androidFontName, Font.PLAIN, textSize));
 		}
+		this.repaint();
 	}
 	
 	// Ignore touches
@@ -180,8 +158,7 @@ public class MMPLabel extends MMPControl {
 	
 	public void receiveList(ArrayList<Object> messageArray){
 		super.receiveList(messageArray);
-		//System.out.print("label rec on edt? "+SwingUtilities.isEventDispatchThread());
-		
+
 		// Ignore "enable"
 		if (messageArray.size()>=2 && 
 				(messageArray.get(0) instanceof String) && 
@@ -189,18 +166,17 @@ public class MMPLabel extends MMPControl {
 				(messageArray.get(1) instanceof Float)) {
 			return;
 		}
-		//if message preceded by "set", then set "sendVal" flag to NO, and strip off set and make new messages array without it
-	    if (messageArray.size()==2 && (messageArray.get(0) instanceof String) && messageArray.get(0).equals("highlight")){
+		if (messageArray.size()==2 && (messageArray.get(0) instanceof String) && messageArray.get(0).equals("highlight")){
 	    	
 	    	if(messageArray.get(1) instanceof Float ){
 	    		float val = ((Float)(messageArray.get(1))).floatValue();
-	    		if(val>0)textView.setForeground(getHighlightColor());
-	    		else textView.setForeground(getColor());
+	    		isHighlighted = (val > 0);
+	    		this.repaint();
 	    	}
 	    	else if (messageArray.get(1) instanceof Integer){
 	    		int val = ((Integer)(messageArray.get(1))).intValue();
-	    		if(val>0)textView.setForeground(getHighlightColor());
-	    		else textView.setForeground(getColor());
+	    		isHighlighted = (val > 0);
+	    		this.repaint();
 	    	} 
 	    }
 	    
@@ -212,13 +188,111 @@ public class MMPLabel extends MMPControl {
 	    		else if(ob instanceof Integer) newString+=(String.format("%d",((Integer)(ob)).intValue()) );
 	    		newString = newString+" ";
 	    	}
-	    	//System.out.print("\n"+newString);
 	    	setStringValue(newString);
 	    }
 	}
 	
-	public void setEnabled(boolean enabled){
-		super.setEnabled(enabled);
-		textView.setForeground(this.isEnabled() ? getColor() : getDisabledColor());
-	}
+	public void paint(Graphics g) {
+	    AttributedString attributedString = new AttributedString(stringValue);
+	    attributedString.addAttribute(TextAttribute.FONT, visibleFont);
+	    // color based on enabled, highlight state
+	    Color color = this.isEnabled() ? 
+	    			(isHighlighted ? this.getHighlightColor() : this.getColor()) :
+	    			(isHighlighted ? this.getDisabledHighlightColor() : this.getDisabledColor());
+	    attributedString.addAttribute(TextAttribute.FOREGROUND, color);
+
+	    super.paint(g);
+	    Graphics2D g2d = (Graphics2D) g;
+	    
+	    g2d.setRenderingHint( //todo move?
+	            RenderingHints.KEY_ANTIALIASING,
+	            RenderingHints.VALUE_ANTIALIAS_ON);
+	    g2d.setRenderingHint(
+	            RenderingHints.KEY_TEXT_ANTIALIASING,
+	            RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+
+	    int width = getSize().width - (2*HORIZONTAL_PAD);
+	    
+	    FontRenderContext fontRenderContext = g2d.getFontRenderContext();
+	    //derive height
+	    float totalHeight = 0;
+	    AttributedCharacterIterator characterIterator;
+    	LineBreakMeasurer measurer;
+ 
+	    if (vAlign > 0) { //derive total height if vAlign is center or bottom.
+	    	characterIterator = attributedString.getIterator();
+	    	measurer = new LineBreakMeasurer(characterIterator, fontRenderContext);
+	    	while (measurer.getPosition() < characterIterator.getEndIndex()) {
+	    		// check for newline
+	    		int next = measurer.nextOffset(width);
+	    		int limit = next;
+	    		boolean didEndInSpace = false;
+	    		if (limit <= stringValue.length()) {
+	    			for (int i = measurer.getPosition(); i < next; ++i) {
+	    				char c = stringValue.charAt(i);
+	    				if (c == '\n') {
+	    					limit = i + 1;
+	    					break;
+	    				}
+	    			}
+	    		}
+	    		// if last character is a space, strip it off.
+		    	  if (stringValue.charAt(next-1)==' ') {
+		    		  limit--;
+		    		  didEndInSpace = true;
+		    	  }
+		    	  
+	    		// get layout for next line
+	    		TextLayout textLayout = measurer.nextLayout(width, limit, false);
+	    		if (didEndInSpace) measurer.setPosition(measurer.getPosition()+1); // consume space
+	    		totalHeight += textLayout.getAscent() + textLayout.getDescent() + textLayout.getLeading();
+	    	}
+	    }
+	  
+		//actual layout
+	    float currentY = VERTICAL_PAD;
+	    switch(vAlign) {
+	    case 0: currentY=VERTICAL_PAD;break; //top
+	    case 1: currentY=(getHeight()-(2*VERTICAL_PAD)-totalHeight)/2.0f + VERTICAL_PAD; break; //center
+	    case 2: currentY=getHeight()-VERTICAL_PAD-totalHeight;break; //bottom
+	    }
+	    // if placed above top, clip to top.
+	    if (currentY < VERTICAL_PAD )currentY = VERTICAL_PAD;
+	    
+	    characterIterator = attributedString.getIterator();
+	    measurer = new LineBreakMeasurer(characterIterator, fontRenderContext);
+	    while (measurer.getPosition() < characterIterator.getEndIndex()) {
+	    	// check for newline
+	    	int next = measurer.nextOffset(width);
+	    	int limit = next;
+	    	boolean didEndInSpace = false;
+	    	if (limit <= stringValue.length()) {
+	    	  for (int i = measurer.getPosition(); i < next; ++i) {
+	    	    char c = stringValue.charAt(i);
+	    	    if (c == '\n') {
+	    	      limit = i + 1;
+	    	      break;
+	    	    }
+	    	  }
+	    	  // if last character is a space, strip it off.
+	    	  if (stringValue.charAt(next-1)==' ') {
+	    		  limit--;
+	    		  didEndInSpace = true;
+	    	  }
+	    	}
+	    	
+	     // get layout for next line
+	      TextLayout textLayout = measurer.nextLayout(width, limit, false);
+	      if (didEndInSpace) measurer.setPosition(measurer.getPosition()+1); // consume space
+	      currentY += textLayout.getAscent();
+	      float x = HORIZONTAL_PAD;
+	      switch(hAlign) {
+	      	case 0: x = HORIZONTAL_PAD; break; //left
+	      	case 1: x = (width - textLayout.getAdvance())/2 + HORIZONTAL_PAD; break; //center
+	      	case 2: x = width - textLayout.getAdvance() + HORIZONTAL_PAD; break; //right
+	      }
+	      textLayout.draw(g2d, x, currentY);
+	      currentY += textLayout.getDescent() + textLayout.getLeading();
+	    }
+	  }
 }

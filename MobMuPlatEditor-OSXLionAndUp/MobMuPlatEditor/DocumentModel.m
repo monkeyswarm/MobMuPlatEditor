@@ -111,6 +111,8 @@ const NSUInteger kMMPDocumentModelCurrentVersion = 2;
             [GUIDict setObject:[(MMPLabel*)control fontFamily] forKey:@"textFontFamily"] ;
             [GUIDict setObject:[(MMPLabel*)control fontName] forKey:@"textFont"] ;
             [GUIDict setObject:[(MMPLabel*)control androidFontName] forKey:@"androidFont"] ;
+          [GUIDict setObject:@(((MMPLabel*)control).horizontalTextAlignment) forKey:@"hAlign"];
+          [GUIDict setObject:@(((MMPLabel*)control).verticalTextAlignment) forKey:@"vAlign"];
         }
         //grid
         else if([control isKindOfClass:[MMPGrid class]]){
@@ -358,6 +360,12 @@ const NSUInteger kMMPDocumentModelCurrentVersion = 2;
                 if([guiDict objectForKey:@"androidFont"]) {
                   [(MMPLabel*)control setAndroidFontName:[guiDict objectForKey:@"androidFont"]];
                 }
+              if ([guiDict[@"hAlign"] isKindOfClass:[NSNumber class]]) {
+                ((MMPLabel*)control).horizontalTextAlignment = [guiDict[@"hAlign"] integerValue];
+              }
+              if ([guiDict[@"vAlign"] isKindOfClass:[NSNumber class]]) {
+                ((MMPLabel*)control).verticalTextAlignment = [guiDict[@"vAlign"] integerValue];
+              }
             }
             else if([classString isEqualToString:@"MMPXYSlider"]){
                 control = [[MMPXYSlider alloc] initWithFrame:newFrame];

@@ -7,6 +7,10 @@
 //
 
 #import "MMPLabel.h"
+
+//https://github.com/jerrykrinock/CategoriesObjC
+#import "NS(Attributed)String+Geometrics.h"
+
 #define DEFAULT_IOS_FONT @"HelveticaNeue"
 #define DEFAULT_ANDROID_FONT @"Roboto-Regular"
 #define DEFAULT_FONTSIZE 16
@@ -42,21 +46,19 @@
 
     [textView setEditable:NO];
     [textView setTextColor:self.color];
-    //TODO just use one text view and swap the font...geez.
-    /*androidTextView = [[NSTextView alloc]initWithFrame:CGRectMake(0, 0, self.frame.size.width, self.frame.size.height)];
-     androidTextView.backgroundColor=[NSColor clearColor];
-     androidTextView.hidden = YES;*/
 
-    /*[androidTextView setEditable:NO];
-     [androidTextView setTextColor:self.color];*/
-    //[self setAndroidFontName:@"Roboto-Regular"];
     [self setStringValue:@"my text goes here"];
     [self setTextSize:DEFAULT_FONTSIZE];
     [self addSubview:textView];
-    //[self addSubview:androidTextView];
+
+    //DEI temp
+    /*[self setHorizontalTextAlignment:kMMPHorizontalTextAlignmentCenter];
+    _verticalTextAlignment = kMMPVerticalTextAlignmentBottom;
+    textView.backgroundColor = [NSColor colorWithRed:1 green:0 blue:0 alpha:.3];*/
     
     [self addHandles];
-    [self resizeSubviewsWithOldSize:self.frame.size];
+    [self resizeSubviewsWithOldSize:self.frame.size]; //aka setNeedsLayout...why necc?
+
   }
   return self;
 }
@@ -95,6 +97,7 @@
 -(void)setStringValue:(NSString *)aString{
     _stringValue = aString;
     [textView setString:aString];
+  [self resizeSubviewsWithOldSize:self.frame.size];
 }
 
 -(void)setTextSizeUndoable:(NSNumber*)inNumber{
@@ -117,6 +120,7 @@
   }
   // kick
   textView.font = _isShowingAndroidFonts ? _androidFont : _iOSFont;
+  [self resizeSubviewsWithOldSize:self.frame.size];
 }
 
 -(void)setColor:(NSColor *)color{
@@ -135,6 +139,7 @@
 
   if (!_isShowingAndroidFonts) {
     textView.font = _iOSFont;
+    [self resizeSubviewsWithOldSize:self.frame.size];
   }
 }
 
@@ -146,6 +151,7 @@
     _androidFont = [NSFont fontWithName:fontName size:_textSize];
     if (_isShowingAndroidFonts) { //if showing, set font
       textView.font = _androidFont;
+      [self resizeSubviewsWithOldSize:self.frame.size];
     }
   }
 }
@@ -154,13 +160,65 @@
   _isShowingAndroidFonts = isShowingAndroidFonts;
   // kick
   textView.font = _isShowingAndroidFonts ? _androidFont : _iOSFont;
+  [self resizeSubviewsWithOldSize:self.frame.size];
 }
 
 - (void)resizeSubviewsWithOldSize:(NSSize)oldBoundsSize{
   [super resizeSubviewsWithOldSize:oldBoundsSize];
 
+  CGFloat width = self.frame.size.width;
+  CGFloat height = [_stringValue heightForWidth:self.frame.size.width
+                                     attributes:@{NSFontAttributeName : textView.font}];
+  //[textView setFrame:CGRectMake(0, 0, self.frame.size.width, height)];
 
-  [textView setFrame:CGRectMake(0, 0, self.frame.size.width, self.frame.size.height)];
+  if (_verticalTextAlignment == kMMPVerticalTextAlignmentTop) {
+    [textView setFrame:CGRectMake(0,
+                                  0,
+                                  width,
+                                  height)];
+  } else if (_verticalTextAlignment == kMMPVerticalTextAlignmentCenter) {
+    [textView setFrame:CGRectMake(0,
+                                  MAX((self.frame.size.height - height) / 2, 0),
+                                  width,
+                                  height)];
+  } else if (_verticalTextAlignment == kMMPVerticalTextAlignmentBottom) {
+    [textView setFrame:CGRectMake(0,
+                                  MAX(self.frame.size.height - height, 0),
+                                  width,
+                                  height)];
+  }
+}
+
+-(void)setVerticalTextAlignmentUndoable:(NSNumber*)inVal {
+  [[self undoManager] registerUndoWithTarget:self selector:@selector(setVerticalTextAlignmentUndoable:)
+                                      object:[NSNumber numberWithInteger:_verticalTextAlignment]];
+  [self setVerticalTextAlignment:[inVal integerValue]];
+}
+
+- (void)setVerticalTextAlignment:(MMPVerticalTextAlignment)verticalTextAlignment {
+  _verticalTextAlignment = verticalTextAlignment;
+  [self resizeSubviewsWithOldSize:self.frame.size];
+}
+
+-(void)setHorizontalTextAlignmentUndoable:(NSNumber*)inVal {
+  [[self undoManager] registerUndoWithTarget:self selector:@selector(setHorizontalTextAlignmentUndoable:)
+                                      object:[NSNumber numberWithInteger:_horizontalTextAlignment]];
+  [self setHorizontalTextAlignment:[inVal integerValue]];
+}
+
+- (void)setHorizontalTextAlignment:(MMPHorizontalTextAlignment)horizontalTextAlignment {
+  _horizontalTextAlignment = horizontalTextAlignment;
+  switch (horizontalTextAlignment) {
+    case kMMPHorizontalTextAlignmentLeft:
+      textView.alignment = NSTextAlignmentLeft;
+      break;
+    case kMMPHorizontalTextAlignmentCenter:
+      textView.alignment = NSTextAlignmentCenter;
+      break;
+    case kMMPHorizontalTextAlignmentRight:
+      textView.alignment = NSTextAlignmentRight;
+      break;
+  }
 }
 
 //receive messages from PureData (via [send toGUI]), routed from ViewController via the address to this object
@@ -217,6 +275,8 @@
     [coder encodeObject:self.fontFamily forKey:@"fontFamily"];
     [coder encodeObject:self.fontName forKey:@"fontName"];
     [coder encodeObject:self.androidFontName forKey:@"androidFontName"];
+  [coder encodeInteger:self.horizontalTextAlignment forKey:@"hAlign"];
+  [coder encodeInteger:self.verticalTextAlignment forKey:@"vAlign"];
 
 }
 
@@ -227,6 +287,8 @@
         [self setFontFamily:[coder decodeObjectForKey:@"fontFamily"] fontName:[coder decodeObjectForKey:@"fontName"]];
         [self setAndroidFontName:[coder decodeObjectForKey:@"androidFontName"]];
         [self setTextSize:[coder decodeIntForKey:@"textSize"]];
+      [self setHorizontalTextAlignment:[coder decodeIntegerForKey:@"hAlign"]];
+      [self setVerticalTextAlignment:[coder decodeIntegerForKey:@"vAlign"]];
     }
     return self;
 }

@@ -122,6 +122,8 @@ public class MMPWindow implements ChangeListener, ActionListener, FocusListener,
 	JComboBox propLabelFontBox;
 	JComboBox propLabelFontTypeBox;
 	JComboBox propLabelAndroidFontTypeBox;
+	JComboBox propLabelPanelHAlignComboBox;
+	JComboBox propLabelPanelVAlignComboBox;
 	JTextFieldDirty propToggleThicknessTextField;
 	
 	JTextFieldDirty propGridDimXTextField;
@@ -278,7 +280,7 @@ public class MMPWindow implements ChangeListener, ActionListener, FocusListener,
 		tabbedPane = new JTabbedPane(JTabbedPane.TOP);
 		scrollContentPanel.add(tabbedPane);
 		tabbedPane.setLocation(4, 10);
-		tabbedPane.setSize(245, 374);
+		tabbedPane.setSize(245, 420);
 		tabbedPane.addChangeListener(this);
 		Font defaultFont = UIManager.getDefaults().getFont("TabbedPane.font");
 		tabbedPane.setFont( new Font( defaultFont.getName(), Font.PLAIN, 10 ) );
@@ -321,6 +323,7 @@ public class MMPWindow implements ChangeListener, ActionListener, FocusListener,
 																		  "Tall Phone: aspect:0.56 (iPhone 5,6,6+)",
 																		  "Wide Tablet: aspect:0.75 (iPad, Nexus 9)",
 																		  "Tall Tablet: aspect:0.625 (Nexus 7)"}));
+		docCanvasTypeMenu.setSelectedIndex(1); //start on "tall phone"
 		docCanvasTypeMenu.setBounds(97, 6, 122, 26);
 		docCanvasTypeMenu.setActionCommand("canvasType");
 		docCanvasTypeMenu.addActionListener(this);
@@ -542,7 +545,7 @@ public class MMPWindow implements ChangeListener, ActionListener, FocusListener,
 		propPanel.add(lblNewLabel_4);
 		
 		propVarPanel = new JPanel();
-		propVarPanel.setBounds(0, 110, 217, 162);
+		propVarPanel.setBounds(0, 110, 217, 210);
 		propVarPanel.setLayout(null);
 		propPanel.add(propVarPanel);
 		
@@ -780,7 +783,7 @@ public class MMPWindow implements ChangeListener, ActionListener, FocusListener,
 	
 		//PROPVAR LABEL
 		propVarLabelPanel = new JPanel();
-		propVarLabelPanel.setBounds(0, 0, 217, 162);
+		propVarLabelPanel.setBounds(0, 0, 217, 210);
 		propVarLabelPanel.setVisible(false);
 		propVarLabelPanel.setLayout(null);
 		propVarPanel.add(propVarLabelPanel);
@@ -859,7 +862,30 @@ public class MMPWindow implements ChangeListener, ActionListener, FocusListener,
 		
 		fillFontPop();
 		
-		
+		// Label Alignment
+		propLabelPanelHAlignComboBox = new JComboBox();
+		propLabelPanelHAlignComboBox.setBounds(6, 177, 96, 27);
+		propLabelPanelHAlignComboBox.setModel(new DefaultComboBoxModel(new String[] {"Left", "Center", "Right"}));
+		propLabelPanelHAlignComboBox.setActionCommand("labelHAlign");
+		propLabelPanelHAlignComboBox.addActionListener(this);
+		propVarLabelPanel.add(propLabelPanelHAlignComboBox);
+
+		propLabelPanelVAlignComboBox = new JComboBox();
+		propLabelPanelVAlignComboBox.setBounds(115, 177, 96, 27);
+		propLabelPanelVAlignComboBox.setModel(new DefaultComboBoxModel(new String[] {"Top", "Center", "Bottom"}));
+		propLabelPanelVAlignComboBox.setActionCommand("labelVAlign");
+		propLabelPanelVAlignComboBox.addActionListener(this);
+		propVarLabelPanel.add(propLabelPanelVAlignComboBox);
+
+		JLabel lblHorizontalAlign = new JLabel("Horizontal");
+		lblHorizontalAlign.setBounds(20, 162, 82, 16);
+		propVarLabelPanel.add(lblHorizontalAlign);
+
+		JLabel lblVertical = new JLabel("Vertical");
+		lblVertical.setBounds(129, 162, 82, 16);
+		propVarLabelPanel.add(lblVertical);
+
+
 		//PROPVAR - PANEL
 		propVarPanelPanel = new JPanel();
 		propVarPanelPanel.setBounds(0, 0, 217, 162);
@@ -894,7 +920,6 @@ public class MMPWindow implements ChangeListener, ActionListener, FocusListener,
 		propPanelShouldPassTouchesCheckBox.setActionCommand("panelShouldPassTouchesChanged");
 		propPanelShouldPassTouchesCheckBox.addActionListener(this);
 		propVarPanelPanel.add(propPanelShouldPassTouchesCheckBox);
-		
 		
 		
 		//PROPVAR - Toggle
@@ -944,7 +969,7 @@ public class MMPWindow implements ChangeListener, ActionListener, FocusListener,
 		
 		JButton propDeleteButton = new JButton("Delete");
 		propDeleteButton.setFont(new Font("Lucida Grande", Font.PLAIN, 12));
-		propDeleteButton.setBounds(50, 272, 117, 29);
+		propDeleteButton.setBounds(50, 321, 117, 29);
 		propDeleteButton.addActionListener(this);
 		propDeleteButton.setActionCommand("deleteButtonPressed");
 		propPanel.add(propDeleteButton);
@@ -953,12 +978,12 @@ public class MMPWindow implements ChangeListener, ActionListener, FocusListener,
 		propBringBackwardButton.setFont(new Font("Lucida Grande", Font.PLAIN, 11));
 		propBringBackwardButton.addActionListener(this);
 		propBringBackwardButton.setActionCommand("bringBackward");
-		propBringBackwardButton.setBounds(0, 299, 110, 29);
+		propBringBackwardButton.setBounds(0, 348, 110, 29);
 		propPanel.add(propBringBackwardButton);
 		
 		JButton propBringForwardButton = new JButton("Bring Forward");
 		propBringForwardButton.setFont(new Font("Lucida Grande", Font.PLAIN, 11));
-		propBringForwardButton.setBounds(110, 299, 110, 29);
+		propBringForwardButton.setBounds(110, 348, 110, 29);
 		propPanel.add(propBringForwardButton);
 		propBringForwardButton.addActionListener(this);
 		propBringForwardButton.setActionCommand("bringForward");
@@ -1117,27 +1142,27 @@ public class MMPWindow implements ChangeListener, ActionListener, FocusListener,
 		JButton pageDownButton = new JButton("Down");
 		pageDownButton.setActionCommand("pageDown");
 		pageDownButton.addActionListener(this);
-		pageDownButton.setBounds(4, 385, 76, 32);
+		pageDownButton.setBounds(4, 418, 76, 32);
 		scrollContentPanel.add(pageDownButton);
 		
 		JButton pageUpButton = new JButton("Up");
-		pageUpButton.setBounds(165, 385, 76, 32);
+		pageUpButton.setBounds(165, 418, 76, 32);
 		pageUpButton.setActionCommand("pageUp");
 		pageUpButton.addActionListener(this);
 		scrollContentPanel.add(pageUpButton);
 		
 		pageIndexLabel = new JLabel("Page 1/1");
-		pageIndexLabel.setBounds(92, 392, 73, 16);
+		pageIndexLabel.setBounds(92, 425, 73, 16);
 		scrollContentPanel.add(pageIndexLabel);
 		
 		controlGuideLabel = new JLabel("");
 		controlGuideLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		controlGuideLabel.setFont(new Font("Lucida Grande", Font.PLAIN, 11));
-		controlGuideLabel.setBounds(4, 462, 238, 16);
+		controlGuideLabel.setBounds(4, 474, 238, 16);
 		scrollContentPanel.add(controlGuideLabel);
 		
 		JButton layoutGridButton = new JButton("Layout Grid");
-		layoutGridButton.setBounds(41, 431, 166, 29);
+		layoutGridButton.setBounds(41, 447, 166, 29);
 		layoutGridButton.setActionCommand("openLayoutGrid");
 		layoutGridButton.addActionListener(this);
 		scrollContentPanel.add(layoutGridButton);
@@ -1818,33 +1843,33 @@ public class MMPWindow implements ChangeListener, ActionListener, FocusListener,
         	if(currLabel!=null){
         		currLabel.setAndroidFontFileName(androidFontFileName);
         	}
-        }
-     
-        else if(cmd.equals("propVarGridDimXChanged")){
+        } else if (cmd.equals("labelHAlign")) {
+        	int hAlign = propLabelPanelHAlignComboBox.getSelectedIndex(); // 0 - 2
+        	MMPLabel currLabel = (MMPLabel)controller.currentSingleSelection;
+        	if(currLabel!=null){
+        		currLabel.setHorizontalAlignment(hAlign);
+        	}
+        }  else if (cmd.equals("labelVAlign")) {
+        	int vAlign = propLabelPanelVAlignComboBox.getSelectedIndex(); // 0 - 2
+        	MMPLabel currLabel = (MMPLabel)controller.currentSingleSelection;
+        	if(currLabel!=null){
+        		currLabel.setVerticalAlignment(vAlign);
+        	}
+        } else if(cmd.equals("propVarGridDimXChanged")){
         	updateGridX();
-        }
-        else if(cmd.equals("propVarGridDimYChanged")){
+        } else if(cmd.equals("propVarGridDimYChanged")){
         	updateGridY();
-        }
-        else if(cmd.equals("propVarGridBorderThicknessChanged")){
+        } else if(cmd.equals("propVarGridBorderThicknessChanged")){
         	updateGridBorderThickness();
-        }
-        else if(cmd.equals("propVarGridCellPaddingChanged")){
+        } else if(cmd.equals("propVarGridCellPaddingChanged")){
         	updateGridCellPadding();
-        }
-        else if(cmd.equals("propVarPanelFileChanged")){
+        } else if(cmd.equals("propVarPanelFileChanged")){
         	updatePanelFile();
-        	
-        }
-        else if (cmd.equals("panelShouldPassTouchesChanged")){
+        } else if (cmd.equals("panelShouldPassTouchesChanged")){
         	updatePanelShouldPassTouches();
-        }
-        
-        else if(cmd.equals("propVarMultiCountChanged")){
+        } else if(cmd.equals("propVarMultiCountChanged")){
         	updateMultiSliderCount();
-        }
-        
-        else if (cmd.equals("propMultiOutputModeChanged")){
+        } else if (cmd.equals("propMultiOutputModeChanged")){
         	MMPMultiSlider currMultiSlider = (MMPMultiSlider)controller.currentSingleSelection;
         	currMultiSlider.outputMode = propMultiOutputModeBox.getSelectedIndex();
         }

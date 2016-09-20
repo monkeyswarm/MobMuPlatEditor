@@ -99,7 +99,7 @@
     NSTextField *_propLabelSizeTextField;
     NSPopUpButton *_propLabelFontPopButton;
     NSPopUpButton *_propLabelFontTypeButton;
-    
+
     NSView *_propGridView;
     NSTextField *_propGridDimXField;
     NSTextField *_propGridDimYField;
@@ -186,7 +186,8 @@
 - (IBAction)propLabelFontChanged:(NSPopUpButton *)sender;
 - (IBAction)propLabelFontTypeChanged:(NSPopUpButton *)sender;
 - (IBAction)propLabelAndroidFontTypeChanged:(NSPopUpButton *)sender;
-
+- (IBAction)propLabelVAlignChanged:(NSPopUpButton *)sender;
+- (IBAction)propLabelHAlignChanged:(NSPopUpButton *)sender;
 - (IBAction)propToggleThicknessChanged:(NSTextField *)sender;
 - (IBAction)propGridDimXChanged:(NSTextField *)sender;
 - (IBAction)propGridDimYChanged:(NSTextField *)sender;
@@ -298,6 +299,8 @@
 @property (strong) IBOutlet NSButton *propPanelPassTouchesButton;
 @property (strong) IBOutlet NSPopUpButtonCell *propLabelFontType;
 @property (strong) IBOutlet NSPopUpButton *propLabelFontTypeButton;
+@property (strong) IBOutlet NSPopUpButton *propLabelVAlignPopButton;
+@property (strong) IBOutlet NSPopUpButton *propLabelHAlignPopButton;
 @property (strong) IBOutlet NSColorWell *propKnobIndicatorColorWell;
 @property (strong) IBOutlet NSButton *addMultiSliderButton;
 @property (strong) IBOutlet NSButton *addLCDButton;

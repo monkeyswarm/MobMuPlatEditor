@@ -56,6 +56,7 @@
 		F9BAFD8C19D23E1B001CD2D2 /* RobotoCondensed-Light.ttf in CopyFiles */ = {isa = PBXBuildFile; fileRef = F9BAFD6619D236E4001CD2D2 /* RobotoCondensed-Light.ttf */; };
 		F9BAFD8D19D23E1B001CD2D2 /* RobotoCondensed-LightItalic.ttf in CopyFiles */ = {isa = PBXBuildFile; fileRef = F9BAFD6719D236E4001CD2D2 /* RobotoCondensed-LightItalic.ttf */; };
 		F9BAFD8E19D23E1B001CD2D2 /* RobotoCondensed-Regular.ttf in CopyFiles */ = {isa = PBXBuildFile; fileRef = F9BAFD6819D236E4001CD2D2 /* RobotoCondensed-Regular.ttf */; };
+		F9BE7A9B1D70B76C00B1DAA6 /* NS(Attributed)String+Geometrics.m in Sources */ = {isa = PBXBuildFile; fileRef = F9BE7A9A1D70B76C00B1DAA6 /* NS(Attributed)String+Geometrics.m */; };
 		F9D2561B1D223475003CEFE6 /* VVOSC.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F9D255D51D22343B003CEFE6 /* VVOSC.framework */; };
 		F9D2561D1D223483003CEFE6 /* VVOSC.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = F9D255D51D22343B003CEFE6 /* VVOSC.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		F9E56AFE1A81EF3F0017851A /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DC084BA9168E13B100664E0E /* QuartzCore.framework */; };
@@ -475,6 +476,8 @@
 		F9BAFD6619D236E4001CD2D2 /* RobotoCondensed-Light.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "RobotoCondensed-Light.ttf"; sourceTree = "<group>"; };
 		F9BAFD6719D236E4001CD2D2 /* RobotoCondensed-LightItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "RobotoCondensed-LightItalic.ttf"; sourceTree = "<group>"; };
 		F9BAFD6819D236E4001CD2D2 /* RobotoCondensed-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "RobotoCondensed-Regular.ttf"; sourceTree = "<group>"; };
+		F9BE7A991D70B76C00B1DAA6 /* NS(Attributed)String+Geometrics.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NS(Attributed)String+Geometrics.h"; sourceTree = SOURCE_ROOT; };
+		F9BE7A9A1D70B76C00B1DAA6 /* NS(Attributed)String+Geometrics.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NS(Attributed)String+Geometrics.m"; sourceTree = SOURCE_ROOT; };
 		F9D255981D22343A003CEFE6 /* VVOpenSource.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = VVOpenSource.xcodeproj; path = ../vvopensource/VVOpenSource.xcodeproj; sourceTree = "<group>"; };
 		F9F44F3718BC2A3200101132 /* MMPMultiTouch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MMPMultiTouch.h; path = MobMuPlatEditor/MMPMultiTouch.h; sourceTree = SOURCE_ROOT; };
 		F9F44F3818BC2A3200101132 /* MMPMultiTouch.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MMPMultiTouch.m; path = MobMuPlatEditor/MMPMultiTouch.m; sourceTree = SOURCE_ROOT; };
@@ -536,6 +539,7 @@
 		DC34E24D168BB79800648C2F /* MobMuPlatEd */ = {
 			isa = PBXGroup;
 			children = (
+				F9BE7A6A1D70B74900B1DAA6 /* util */,
 				F9BAFD5519D236E4001CD2D2 /* androidfonts */,
 				DCFBBF39168D1ACB00746B04 /* Controls */,
 				DCE2F0171732BAD3002B897C /* CanvasView.h */,
@@ -634,6 +638,15 @@
 			name = androidfonts;
 			path = MobMuPlatEditor/androidfonts;
 			sourceTree = SOURCE_ROOT;
+		};
+		F9BE7A6A1D70B74900B1DAA6 /* util */ = {
+			isa = PBXGroup;
+			children = (
+				F9BE7A991D70B76C00B1DAA6 /* NS(Attributed)String+Geometrics.h */,
+				F9BE7A9A1D70B76C00B1DAA6 /* NS(Attributed)String+Geometrics.m */,
+			);
+			name = util;
+			sourceTree = "<group>";
 		};
 		F9D255991D22343A003CEFE6 /* Products */ = {
 			isa = PBXGroup;
@@ -1049,6 +1062,7 @@
 				DCE2F00F1732BAA6002B897C /* MMPGrid.m in Sources */,
 				DC5A5AE118825E3200FC97D5 /* MMPLCD.m in Sources */,
 				DCE2F0101732BAA6002B897C /* MMPKnob.m in Sources */,
+				F9BE7A9B1D70B76C00B1DAA6 /* NS(Attributed)String+Geometrics.m in Sources */,
 				F9F44F3918BC2A3200101132 /* MMPMultiTouch.m in Sources */,
 				DCE2F0111732BAA6002B897C /* MMPLabel.m in Sources */,
 				DCE2F0121732BAA6002B897C /* MMPMultiSlider.m in Sources */,

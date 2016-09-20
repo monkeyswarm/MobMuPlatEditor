@@ -9,6 +9,18 @@
 
 #import "MMPControl.h"
 
+typedef NS_ENUM(NSUInteger, MMPHorizontalTextAlignment) {
+  kMMPHorizontalTextAlignmentLeft = 0,
+  kMMPHorizontalTextAlignmentCenter,
+  kMMPHorizontalTextAlignmentRight
+};
+
+typedef NS_ENUM(NSUInteger, MMPVerticalTextAlignment) {
+  kMMPVerticalTextAlignmentTop = 0,
+  kMMPVerticalTextAlignmentCenter,
+  kMMPVerticalTextAlignmentBottom
+};
+
 @interface MMPLabel : MMPControl{
     NSTextView* textView;
 }
@@ -18,6 +30,9 @@
 @property(nonatomic, readonly) NSString *fontName;
 @property(nonatomic, readonly) NSString *androidFontName; //family is always default, this is bold, italic, light/condensed
 @property(nonatomic) BOOL isShowingAndroidFonts;
+
+@property(nonatomic) MMPHorizontalTextAlignment horizontalTextAlignment;
+@property(nonatomic) MMPVerticalTextAlignment verticalTextAlignment;
 
 -(void)setFontFamily:(NSString *)fontFamily fontName:(NSString*)fontName;
 -(void)setAndroidFontName:(NSString*)fontName;

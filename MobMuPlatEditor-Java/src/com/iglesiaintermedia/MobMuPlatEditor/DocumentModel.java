@@ -134,12 +134,13 @@ public class DocumentModel {
 	      //label
 	        else if(control instanceof MMPLabel){
 	        	MMPLabel currLabel = (MMPLabel)control;
-	        	GUIDict.put("text", new String(currLabel.stringValue));
+	        	GUIDict.put("text", new String(currLabel.getStringValue()));
 	        	GUIDict.put("textSize", new Integer(currLabel.textSize));
 	        	GUIDict.put("textFontFamily", new String(currLabel.fontFamily));
 	        	GUIDict.put("textFont", new String(currLabel.fontName));
 	        	GUIDict.put("androidFont", new String(currLabel.androidFontFileName));
-	        	
+	        	GUIDict.put("hAlign", new Integer(currLabel.getHorizontalAlignment()));
+	        	GUIDict.put("vAlign", new Integer(currLabel.getVerticalAlignment()));
 	        }
 	        //grid
 	        else if(control instanceof MMPGrid){
@@ -348,6 +349,12 @@ public class DocumentModel {
 		                    ((MMPLabel)control).setFontFamilyAndName( guiDict.get("textFontFamily").getAsString(), guiDict.get("textFont").getAsString() );
 		                if(guiDict.get("androidFont")!=null) 
 		                    ((MMPLabel)control).setAndroidFontFileName( guiDict.get("androidFont").getAsString());
+		                if(guiDict.get("hAlign") != null) {
+		                	((MMPLabel)control).setHorizontalAlignment(guiDict.get("hAlign").getAsInt());
+		                }
+		                if(guiDict.get("vAlign") != null) {
+		                	((MMPLabel)control).setVerticalAlignment(guiDict.get("vAlign").getAsInt());
+		                }
 		            }
 		            else if(classString.equals("MMPXYSlider")){
 		                control = new MMPXYSlider(newFrame);

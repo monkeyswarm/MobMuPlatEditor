@@ -738,7 +738,7 @@ public class MMPController {
 	        	MMPLabel currLabel = (MMPLabel)control;
 	        	
 	        	windowDelegate.propLabelTextField.getDocument().removeDocumentListener(windowDelegate);
-	        	windowDelegate.propLabelTextField.setText(currLabel.stringValue);
+	        	windowDelegate.propLabelTextField.setText(currLabel.getStringValue());
 	        	windowDelegate.propLabelTextField.getDocument().addDocumentListener(windowDelegate);
 	        	
 	        	windowDelegate.propLabelSizeTextField.removeActionListener(windowDelegate);
@@ -757,6 +757,14 @@ public class MMPController {
 	           windowDelegate.propLabelAndroidFontTypeBox.removeActionListener(windowDelegate);
 	            windowDelegate.propLabelAndroidFontTypeBox.setSelectedItem(currLabel.androidFontFileName);
 	            windowDelegate.propLabelAndroidFontTypeBox.addActionListener(windowDelegate);
+	            
+	            windowDelegate.propLabelPanelHAlignComboBox.removeActionListener(windowDelegate);
+	        	windowDelegate.propLabelPanelHAlignComboBox.setSelectedIndex(currLabel.getHorizontalAlignment());
+	            windowDelegate.propLabelPanelHAlignComboBox.addActionListener(windowDelegate);
+	            
+	            windowDelegate.propLabelPanelVAlignComboBox.removeActionListener(windowDelegate);
+	        	windowDelegate.propLabelPanelVAlignComboBox.setSelectedIndex(currLabel.getVerticalAlignment());
+	            windowDelegate.propLabelPanelVAlignComboBox.addActionListener(windowDelegate);
 	            
 	        }
 	        else if(control instanceof MMPGrid){

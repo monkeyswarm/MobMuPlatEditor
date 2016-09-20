@@ -69,8 +69,10 @@
                 <outlet property="propLabelFontPopButton" destination="101042" id="101050"/>
                 <outlet property="propLabelFontType" destination="101154" id="101159"/>
                 <outlet property="propLabelFontTypeButton" destination="101153" id="101161"/>
+                <outlet property="propLabelHAlignPopButton" destination="Zjg-Av-8ER" id="vfB-QJ-KBz"/>
                 <outlet property="propLabelSizeTextField" destination="100286" id="100375"/>
                 <outlet property="propLabelTextField" destination="100371" id="100373"/>
+                <outlet property="propLabelVAlignPopButton" destination="pQW-Mh-mZN" id="m8W-vb-5zo"/>
                 <outlet property="propLabelView" destination="100272" id="100370"/>
                 <outlet property="propMenuTitleTextField" destination="eb6-rh-nea" id="Zmg-Ty-iSA"/>
                 <outlet property="propMenuView" destination="2Og-FL-jiB" id="0Lg-4b-J0Z"/>
@@ -477,7 +479,7 @@ touch</string>
                                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                         <subviews>
                                                             <button verticalHuggingPriority="750" id="100198">
-                                                                <rect key="frame" x="109" y="17" width="116" height="32"/>
+                                                                <rect key="frame" x="109" y="-4" width="116" height="32"/>
                                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                                 <buttonCell key="cell" type="push" title="Bring Forward" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="100199">
                                                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -488,7 +490,7 @@ touch</string>
                                                                 </connections>
                                                             </button>
                                                             <button verticalHuggingPriority="750" id="101075">
-                                                                <rect key="frame" x="41" y="43" width="137" height="32"/>
+                                                                <rect key="frame" x="41" y="22" width="137" height="32"/>
                                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                                 <buttonCell key="cell" type="push" title="Delete" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="101076">
                                                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -499,7 +501,7 @@ touch</string>
                                                                 </connections>
                                                             </button>
                                                             <button verticalHuggingPriority="750" id="100200">
-                                                                <rect key="frame" x="-3" y="17" width="125" height="32"/>
+                                                                <rect key="frame" x="-3" y="-4" width="125" height="32"/>
                                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                                 <buttonCell key="cell" type="push" title="Bring Backward" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="100201">
                                                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -510,7 +512,7 @@ touch</string>
                                                                 </connections>
                                                             </button>
                                                             <customView id="100211">
-                                                                <rect key="frame" x="-3" y="75" width="224" height="165"/>
+                                                                <rect key="frame" x="-3" y="55" width="230" height="185"/>
                                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                             </customView>
                                                             <colorWell id="100213">
@@ -708,7 +710,7 @@ not rotate with landscape orientation</string>
                                             </connections>
                                         </tabView>
                                         <button verticalHuggingPriority="750" id="101018">
-                                            <rect key="frame" x="5" y="112" width="76" height="32"/>
+                                            <rect key="frame" x="5" y="108" width="76" height="32"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <buttonCell key="cell" type="push" title="Down" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="101019">
                                                 <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -730,7 +732,7 @@ not rotate with landscape orientation</string>
                                             </connections>
                                         </button>
                                         <button verticalHuggingPriority="750" id="101026">
-                                            <rect key="frame" x="165" y="112" width="76" height="32"/>
+                                            <rect key="frame" x="165" y="108" width="76" height="32"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <buttonCell key="cell" type="push" title="Up" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="101027">
                                                 <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -741,7 +743,7 @@ not rotate with landscape orientation</string>
                                             </connections>
                                         </button>
                                         <textField verticalHuggingPriority="750" id="101028">
-                                            <rect key="frame" x="90" y="122" width="86" height="17"/>
+                                            <rect key="frame" x="90" y="118" width="86" height="17"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Page 1/1" id="101029">
                                                 <font key="font" metaFont="system"/>
@@ -910,11 +912,11 @@ A range of N&gt;1 sends integers 0 to N-1.</string>
             </subviews>
         </customView>
         <customView id="100272">
-            <rect key="frame" x="0.0" y="0.0" width="224" height="165"/>
+            <rect key="frame" x="0.0" y="0.0" width="224" height="185"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
             <subviews>
                 <textField verticalHuggingPriority="750" id="100284">
-                    <rect key="frame" x="11" y="93" width="104" height="17"/>
+                    <rect key="frame" x="11" y="116" width="104" height="17"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Label Text Size " id="100285">
                         <font key="font" metaFont="system"/>
@@ -923,7 +925,7 @@ A range of N&gt;1 sends integers 0 to N-1.</string>
                     </textFieldCell>
                 </textField>
                 <textField verticalHuggingPriority="750" id="100286">
-                    <rect key="frame" x="154" y="88" width="62" height="22"/>
+                    <rect key="frame" x="154" y="111" width="62" height="22"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" drawsBackground="YES" id="100287">
                         <numberFormatter key="formatter" formatterBehavior="default10_4" positiveFormat="#,##0.###" negativeFormat="#,##0.###" numberStyle="decimal" paddingCharacter="*" minimumIntegerDigits="1" maximumIntegerDigits="309" maximumFractionDigits="3" decimalSeparator="." groupingSeparator="," currencyDecimalSeparator="." plusSign="+" minusSign="-" notANumberSymbol="NaN" perMillSymbol="‰" percentSymbol="%" exponentSymbol="E" positivePrefix="" positiveSuffix="" negativePrefix="-" negativeSuffix="" id="100288"/>
@@ -936,7 +938,7 @@ A range of N&gt;1 sends integers 0 to N-1.</string>
                     </connections>
                 </textField>
                 <textField verticalHuggingPriority="750" id="100371">
-                    <rect key="frame" x="14" y="128" width="202" height="31"/>
+                    <rect key="frame" x="14" y="148" width="202" height="31"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" drawsBackground="YES" id="100372">
                         <font key="font" metaFont="system"/>
@@ -948,7 +950,7 @@ A range of N&gt;1 sends integers 0 to N-1.</string>
                     </connections>
                 </textField>
                 <textField verticalHuggingPriority="750" id="101145">
-                    <rect key="frame" x="17" y="112" width="220" height="17"/>
+                    <rect key="frame" x="17" y="132" width="220" height="17"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="(hit option-enter to insert new line)" id="101146">
                         <font key="font" metaFont="smallSystem"/>
@@ -957,17 +959,17 @@ A range of N&gt;1 sends integers 0 to N-1.</string>
                     </textFieldCell>
                 </textField>
                 <tabView id="2eS-eT-KXH">
-                    <rect key="frame" x="6" y="-5" width="217" height="95"/>
+                    <rect key="frame" x="6" y="24" width="217" height="91"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <font key="font" metaFont="system"/>
                     <tabViewItems>
                         <tabViewItem label="iOS" identifier="1" id="ftB-TQ-TgO">
                             <view key="view" id="t7j-5u-S3C">
-                                <rect key="frame" x="10" y="33" width="197" height="49"/>
+                                <rect key="frame" x="10" y="33" width="197" height="45"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <subviews>
                                     <textField verticalHuggingPriority="750" id="101048">
-                                        <rect key="frame" x="-1" y="31" width="70" height="17"/>
+                                        <rect key="frame" x="-1" y="27" width="70" height="17"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Label Font" id="101049">
                                             <font key="font" metaFont="system"/>
@@ -976,7 +978,7 @@ A range of N&gt;1 sends integers 0 to N-1.</string>
                                         </textFieldCell>
                                     </textField>
                                     <popUpButton verticalHuggingPriority="750" id="101042">
-                                        <rect key="frame" x="73" y="25" width="125" height="26"/>
+                                        <rect key="frame" x="73" y="21" width="125" height="26"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                         <popUpButtonCell key="cell" type="push" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" id="101043">
                                             <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
@@ -988,7 +990,7 @@ A range of N&gt;1 sends integers 0 to N-1.</string>
                                         </connections>
                                     </popUpButton>
                                     <textField verticalHuggingPriority="750" id="101152">
-                                        <rect key="frame" x="-1" y="6" width="67" height="17"/>
+                                        <rect key="frame" x="-1" y="4" width="67" height="17"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Font Type" id="101156">
                                             <font key="font" metaFont="system"/>
@@ -997,7 +999,7 @@ A range of N&gt;1 sends integers 0 to N-1.</string>
                                         </textFieldCell>
                                     </textField>
                                     <popUpButton verticalHuggingPriority="750" id="101153">
-                                        <rect key="frame" x="73" y="0.0" width="125" height="26"/>
+                                        <rect key="frame" x="73" y="-2" width="125" height="26"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                         <popUpButtonCell key="cell" type="push" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" id="101154">
                                             <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
@@ -1013,11 +1015,11 @@ A range of N&gt;1 sends integers 0 to N-1.</string>
                         </tabViewItem>
                         <tabViewItem label="Android" identifier="2" id="3Qy-V6-EdM">
                             <view key="view" id="ItV-CF-C7d">
-                                <rect key="frame" x="10" y="33" width="197" height="49"/>
+                                <rect key="frame" x="10" y="33" width="197" height="45"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <subviews>
                                     <textField verticalHuggingPriority="750" id="cst-nY-bhh">
-                                        <rect key="frame" x="0.0" y="17" width="67" height="17"/>
+                                        <rect key="frame" x="0.0" y="13" width="67" height="17"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Font Type" id="UQQ-pB-RGc">
                                             <font key="font" metaFont="system"/>
@@ -1026,7 +1028,7 @@ A range of N&gt;1 sends integers 0 to N-1.</string>
                                         </textFieldCell>
                                     </textField>
                                     <popUpButton verticalHuggingPriority="750" id="ymg-Ak-brI">
-                                        <rect key="frame" x="71" y="12" width="125" height="26"/>
+                                        <rect key="frame" x="71" y="8" width="125" height="26"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                         <popUpButtonCell key="cell" type="push" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" id="It2-2O-1vY">
                                             <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
@@ -1045,6 +1047,42 @@ A range of N&gt;1 sends integers 0 to N-1.</string>
                         <outlet property="delegate" destination="-2" id="LUd-dN-Rlt"/>
                     </connections>
                 </tabView>
+                <popUpButton verticalHuggingPriority="750" id="Zjg-Av-8ER">
+                    <rect key="frame" x="12" y="2" width="95" height="26"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <popUpButtonCell key="cell" type="push" title="H: left" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" selectedItem="GEh-Nf-WsB" id="ZtK-zb-u8w">
+                        <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
+                        <font key="font" metaFont="menu"/>
+                        <menu key="menu" title="OtherViews" id="ae8-tr-PMd">
+                            <items>
+                                <menuItem title="H: left" id="GEh-Nf-WsB"/>
+                                <menuItem title="H: center" id="qWQ-o3-7F6" userLabel="H: center"/>
+                                <menuItem title="H: right" id="p4K-E9-q0V" userLabel="H: right"/>
+                            </items>
+                        </menu>
+                    </popUpButtonCell>
+                    <connections>
+                        <action selector="propLabelHAlignChanged:" target="-2" id="Jac-kR-Nnk"/>
+                    </connections>
+                </popUpButton>
+                <popUpButton verticalHuggingPriority="750" id="pQW-Mh-mZN">
+                    <rect key="frame" x="117" y="2" width="95" height="26"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <popUpButtonCell key="cell" type="push" title="V: bottom" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" selectedItem="VpV-di-len" id="dNW-cI-Tty">
+                        <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
+                        <font key="font" metaFont="menu"/>
+                        <menu key="menu" title="OtherViews" id="0cQ-DK-Yjs">
+                            <items>
+                                <menuItem title="V: top" id="cvf-pp-vBs"/>
+                                <menuItem title="V: center" id="bLL-Bl-su0" userLabel="H: center"/>
+                                <menuItem title="V: bottom" state="on" id="VpV-di-len" userLabel="H: right"/>
+                            </items>
+                        </menu>
+                    </popUpButtonCell>
+                    <connections>
+                        <action selector="propLabelVAlignChanged:" target="-2" id="Y9b-jB-DTX"/>
+                    </connections>
+                </popUpButton>
             </subviews>
         </customView>
         <customView id="G65-dv-feR">
@@ -1323,12 +1361,12 @@ or hit choose to specify an absolute path.</string>
                 <popUpButton verticalHuggingPriority="750" id="4yG-qW-o2M">
                     <rect key="frame" x="97" y="61" width="126" height="26"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                    <popUpButtonCell key="cell" type="push" title="All slider values" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" selectedItem="6xm-XT-rOM" id="dmJ-X8-yf4">
+                    <popUpButtonCell key="cell" type="push" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" id="dmJ-X8-yf4">
                         <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
                         <font key="font" metaFont="menu"/>
                         <menu key="menu" id="Qgg-cU-dne">
                             <items>
-                                <menuItem title="All slider values" state="on" id="6xm-XT-rOM"/>
+                                <menuItem title="All slider values" id="6xm-XT-rOM"/>
                                 <menuItem title="Slider index and value" id="3hT-af-baF"/>
                             </items>
                         </menu>

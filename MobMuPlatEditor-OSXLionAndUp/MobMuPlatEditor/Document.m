@@ -665,6 +665,8 @@
             [self.propLabelFontType selectItemWithTitle:[(MMPLabel*)control fontName]];
 
             [self.propLabelAndroidFontPopButton selectItemWithTitle:[(MMPLabel*)control androidFontName]];
+          [self.propLabelHAlignPopButton selectItemAtIndex:((MMPLabel*)control).horizontalTextAlignment];
+          [self.propLabelVAlignPopButton selectItemAtIndex:((MMPLabel*)control).verticalTextAlignment];
 
         }
         else if([control isKindOfClass:[MMPGrid class]]){
@@ -1090,6 +1092,42 @@
   else{
     //can't make the font...
   }
+}
+
+// for undo/redo
+-(void)setPropLabelHAlign:(NSNumber*)inNum{
+  [[self undoManager] registerUndoWithTarget:self selector:@selector(setPropLabelHAlign:)
+                                      object:[NSNumber numberWithInteger:[_propLabelHAlignPopButton indexOfSelectedItem]]];
+  [_propLabelHAlignPopButton selectItemAtIndex:[inNum intValue]];
+}
+
+- (IBAction)propLabelHAlignChanged:(NSPopUpButton *)sender {
+  MMPLabel* currLabel = (MMPLabel*)currentSingleSelection;
+
+  [[self undoManager] registerUndoWithTarget:currLabel selector:@selector(setHorizontalTextAlignmentUndoable:)
+                                      object:[NSNumber numberWithInteger:currLabel.horizontalTextAlignment]];
+  [[self undoManager] registerUndoWithTarget:self selector:@selector(setPropLabelHAlign:)
+                                      object:[NSNumber numberWithInteger:currLabel.horizontalTextAlignment]];
+
+  currLabel.horizontalTextAlignment = [sender indexOfSelectedItem];
+}
+
+//for undo redo
+-(void)setPropLabelVAlign:(NSNumber*)inNum{
+  [[self undoManager] registerUndoWithTarget:self selector:@selector(setPropLabelVAlign:)
+                                      object:[NSNumber numberWithInteger:[_propLabelVAlignPopButton indexOfSelectedItem]]];
+  [_propLabelVAlignPopButton selectItemAtIndex:[inNum intValue]];
+}
+
+- (IBAction)propLabelVAlignChanged:(NSPopUpButton *)sender {
+  MMPLabel* currLabel = (MMPLabel*)currentSingleSelection;
+
+  [[self undoManager] registerUndoWithTarget:currLabel selector:@selector(setVerticalTextAlignmentUndoable:)
+                                      object:[NSNumber numberWithInteger:currLabel.verticalTextAlignment]];
+  [[self undoManager] registerUndoWithTarget:self selector:@selector(setPropLabelVAlign:)
+                                      object:[NSNumber numberWithInteger:currLabel.verticalTextAlignment]];
+
+  currLabel.verticalTextAlignment = [sender indexOfSelectedItem];
 }
 
 //just for proper undo/redo
