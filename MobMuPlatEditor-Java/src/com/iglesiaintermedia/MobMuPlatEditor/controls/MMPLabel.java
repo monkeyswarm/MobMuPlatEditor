@@ -194,6 +194,7 @@ public class MMPLabel extends MMPControl {
 	
 	public void paint(Graphics g) {
 	    AttributedString attributedString = new AttributedString(stringValue);
+	    if(stringValue.length() == 0) return; // avoid bad exception that destroys rendering!
 	    attributedString.addAttribute(TextAttribute.FONT, visibleFont);
 	    // color based on enabled, highlight state
 	    Color color = this.isEnabled() ? 
