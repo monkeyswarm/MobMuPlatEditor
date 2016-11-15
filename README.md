@@ -7,8 +7,7 @@ The application has two versions:
 1) A native OSX version (OSX 10.7 and up)
 2) A Java version for use in all other operating systems. 
 
-more info at http://www.mobmuplat.com
-See the development distribution available at the above website for more info on usage.
+**If you just want the compiled applications**, go to http://www.mobmuplat.com and download the development package .zip file, linked in the "setup" section. More info on usage, including sample files, is in that package.
 
 ###Building for OSX:
 - Get the required submodule (vvopensource) by running:
