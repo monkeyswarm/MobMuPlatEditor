@@ -2253,7 +2253,7 @@ public class MMPWindow implements ChangeListener, ActionListener, FocusListener,
 	        
 	        }
 	        else{//landscape
-	        	frame.getContentPane().setPreferredSize(new Dimension(CANVAS_LEFT+568+CANVAS_TOP, 500));
+	        	frame.getContentPane().setPreferredSize(new Dimension(CANVAS_LEFT+568+CANVAS_TOP, 500+menuBar.getHeight()));
 	            frame.pack();
 	            canvasOuterPanel.setBounds(new Rectangle(CANVAS_LEFT,CANVAS_TOP, 568, 320));
 	            scrollPane.setSize(new Dimension(CANVAS_LEFT+568+CANVAS_TOP, 500));
