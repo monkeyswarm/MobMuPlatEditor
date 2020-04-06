@@ -280,7 +280,7 @@ public class MMPWindow implements ChangeListener, ActionListener, FocusListener,
 		tabbedPane = new JTabbedPane(JTabbedPane.TOP);
 		scrollContentPanel.add(tabbedPane);
 		tabbedPane.setLocation(4, 10);
-		tabbedPane.setSize(245, 420);
+		tabbedPane.setSize(245, 410);
 		tabbedPane.addChangeListener(this);
 		Font defaultFont = UIManager.getDefaults().getFont("TabbedPane.font");
 		tabbedPane.setFont( new Font( defaultFont.getName(), Font.PLAIN, 10 ) );
