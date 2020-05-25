@@ -44,7 +44,7 @@ public class CanvasPanel extends JPanel implements MouseListener{
     	      });*/
  
 		try{
-       URL iconImageURL = CanvasPanel.class.getResource("/infoicon_100x100.png");
+       URL iconImageURL = CanvasPanel.class.getResource("infoicon_100x100.png");
 		 iconImage = ImageIO.read(iconImageURL);
 		Image resizedImage =  iconImage.getScaledInstance(30,30, Image.SCALE_SMOOTH);
 		 buttonBlankLabel = new JLabel(new ImageIcon( resizedImage ));

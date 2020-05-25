@@ -23,6 +23,12 @@ To fix, go to each affected VV framework target (VVBasics-mac, MultiClassXPC, VV
 -The 'vvopensource'submodule is not required.
 ```
 $ cd MobMuPlatEditor/MobMuPlatEditor-Java
-$ javac -d bin -cp lib/gson-2.2.4.jar @sources.txt
-$ java -cp bin:lib/gson-2.2.4.jar:src/com/iglesiaintermedia/MobMuPlatEditor/ com.iglesiaintermedia.MobMuPlatEditor.MMPWindow
+$ javac -cp src:lib/gson-2.2.4.jar @sources.txt
+$ java -cp src:lib/gson-2.2.4.jar com.iglesiaintermedia.MobMuPlatEditor.MMPWindow
 ```
+You can create a jar by copying the gson-2.2.4.jar into /src, then unpacking all its classes into /src/com/... (with "tar xf gson-2.2.4.jar"), then
+```
+$ cd src
+$ jar cvfm MobMuPlatEditor.jar ../manifest.txt .
+```
+
