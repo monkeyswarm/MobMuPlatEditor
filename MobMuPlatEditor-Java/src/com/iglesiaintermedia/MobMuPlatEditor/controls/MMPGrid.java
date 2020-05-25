@@ -306,11 +306,11 @@ public class MMPGrid extends MMPControl {
 	 	   else indexX=  ((Integer)(messageArray.get(0))).intValue() ;
 	 	   
 	 	  int indexY =0;
-	 	   if(messageArray.get(1) instanceof Float)  indexY= (int) ((Float)(messageArray.get(0))).floatValue() ;
+	 	   if(messageArray.get(1) instanceof Float)  indexY= (int) ((Float)(messageArray.get(1))).floatValue() ;
 	 	   else indexY=  ((Integer)(messageArray.get(1))).intValue() ;
 	 	   
 	 	  int val =0;
-	 	   if(messageArray.get(2) instanceof Float)  val= (int) ((Float)(messageArray.get(0))).floatValue() ;
+	 	   if(messageArray.get(2) instanceof Float)  val= (int) ((Float)(messageArray.get(2))).floatValue() ;
 	 	   else val=  ((Integer)(messageArray.get(2))).intValue() ;
 	 	   
 	 	 if(indexX<dimX && indexY<dimY){
