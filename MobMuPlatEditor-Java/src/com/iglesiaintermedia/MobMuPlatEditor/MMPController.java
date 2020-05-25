@@ -143,7 +143,7 @@ public class MMPController {
 				System.out.print("\nat "+new File(".").getAbsolutePath());
 				try{
 				//BufferedReader reader = new BufferedReader( new FileReader (new File("uifontlist.txt")));
-				URL url = this.getClass().getResource("uifontlist.txt");
+				URL url = this.getClass().getResource("/uifontlist.txt");
 				System.out.print("\nread "+url.getPath());
 				//Reader justreader = (new InputStreamReader(stream));
 				BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream()));
@@ -223,7 +223,7 @@ public class MMPController {
 			androidFontFileToFontMap = new HashMap<String, Font>();
 			for (String fontFilename : androidFontFileArray) {
 				try {
-					InputStream is = this.getClass().getResourceAsStream("androidfonts/"+fontFilename+".ttf");
+					InputStream is = this.getClass().getResourceAsStream("/androidfonts/"+fontFilename+".ttf");
 					GraphicsEnvironment ge = 
 							GraphicsEnvironment.getLocalGraphicsEnvironment();
 					Font f = Font.createFont(Font.TRUETYPE_FONT, is);
